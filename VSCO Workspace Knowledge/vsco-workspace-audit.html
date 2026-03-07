@@ -1,0 +1,2531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMG Booth VSCO Workspace Audit Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #1a1a1a;
+            border-right: 1px solid #2a2a2a;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-nav a {
+            padding: 12px 15px;
+            color: #b0b0b0;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 500;
+            display: block;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border-left-color: #00d4ff;
+        }
+
+        .sidebar-nav a.active {
+            background-color: #1f3a4a;
+            color: #00d4ff;
+            border-left-color: #00d4ff;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 40px 50px;
+            flex: 1;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .section-subtitle {
+            color: #808080;
+            font-size: 14px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .card {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #3a3a3a;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #808080;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #1f1f1f;
+            color: #ffffff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #2a2a2a;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #1a1a1a;
+            color: #c0c0c0;
+        }
+
+        tr:hover {
+            background-color: #121212;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-keep { background-color: #1a3a1a; color: #4ade80; }
+        .badge-update { background-color: #1a2a4a; color: #38bdf8; }
+        .badge-merge { background-color: #3a1a4a; color: #d8b4fe; }
+        .badge-delete { background-color: #3a1a1a; color: #f87171; }
+        .badge-create { background-color: #1a3a4a; color: #06b6d4; }
+
+        .badge-critical { background-color: #3a1a1a; color: #f87171; }
+        .badge-high { background-color: #3a2a1a; color: #fb923c; }
+        .badge-medium { background-color: #3a3a1a; color: #facc15; }
+        .badge-low { background-color: #1a3a1a; color: #4ade80; }
+
+        .collapsible {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #e0e0e0;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .collapsible:hover {
+            border-color: #3a3a3a;
+            background-color: #1f1f1f;
+        }
+
+        .collapsible.active {
+            border-color: #00d4ff;
+            background-color: #0f2a3a;
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 15px;
+            background-color: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            margin-bottom: 10px;
+        }
+
+        .collapsible-content.active {
+            display: block;
+        }
+
+        .arrow {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .collapsible.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item.completed {
+            opacity: 0.6;
+            background-color: #0f2a1f;
+            border-color: #1a3a2a;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #00d4ff;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checklist-label {
+            flex: 1;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checklist-label strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .checklist-priority {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 11px;
+        }
+
+        .checklist-effort {
+            display: inline-block;
+            font-size: 11px;
+            color: #808080;
+        }
+
+        .finding {
+            background-color: #3a1a1a;
+            border-left: 4px solid #f87171;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .finding h4 {
+            color: #f87171;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .finding p {
+            color: #c0c0c0;
+            margin-bottom: 8px;
+        }
+
+        .finding.warning {
+            background-color: #3a2a1a;
+            border-left-color: #fb923c;
+        }
+
+        .finding.warning h4 {
+            color: #fb923c;
+        }
+
+        .finding.success {
+            background-color: #1a3a1a;
+            border-left-color: #4ade80;
+        }
+
+        .finding.success h4 {
+            color: #4ade80;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        .comparison-table th {
+            background-color: #1f1f1f;
+            border-bottom: 2px solid #2a2a2a;
+        }
+
+        .comparison-table td {
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .gap {
+            color: #f87171;
+            font-weight: 600;
+        }
+
+        .no-gap {
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+
+            .main-content {
+                margin-left: 250px;
+                padding: 30px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+                border-right: none;
+                border-bottom: 1px solid #2a2a2a;
+            }
+
+            .sidebar-nav {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .highlight {
+            background-color: #2a2a2a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #00d4ff;
+        }
+
+        .info-box {
+            background-color: #0f2a3a;
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR NAVIGATION -->
+        <div class="sidebar">
+            <h1>Audit Report</h1>
+            <nav class="sidebar-nav">
+                <a href="#executive-summary" class="nav-link active">Executive Summary</a>
+                <a href="#account-overview" class="nav-link">Account Overview</a>
+                <a href="#questionnaire-inventory" class="nav-link">Questionnaires</a>
+                <a href="#quote-product-inventory" class="nav-link">Quotes & Products</a>
+                <a href="#automation-map" class="nav-link">Automations</a>
+                <a href="#email-templates" class="nav-link">Email Templates</a>
+                <a href="#contract-inventory" class="nav-link">Contracts</a>
+                <a href="#custom-fields" class="nav-link">Custom Fields</a>
+                <a href="#payments-calendar" class="nav-link">Payments & Calendar</a>
+                <a href="#contact-forms" class="nav-link">Contact Forms</a>
+                <a href="#lead-management" class="nav-link">Lead Management</a>
+                <a href="#redundancy-map" class="nav-link">Redundancy Map</a>
+                <a href="#gap-analysis" class="nav-link">Gap Analysis</a>
+                <a href="#master-action-list" class="nav-link">Master Action List</a>
+            </nav>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="main-content">
+
+            <!-- SECTION 1: EXECUTIVE SUMMARY -->
+            <section id="executive-summary" class="section active">
+                <h2>Executive Summary</h2>
+                <p class="section-subtitle">OMG Booth VSCO Workspace Audit | March 2026</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Overall Health Score</h3>
+                        <div class="value">62%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Critical Issues</h3>
+                        <div class="value">4</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Dead/Stale Items</h3>
+                        <div class="value">40+</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Overhaul Readiness</h3>
+                        <div class="value">35%</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 18px; font-weight: 600;">Key Findings</h3>
+
+                    <div class="finding">
+                        <h4>Critical: Missing "Qualified" Lead Status</h4>
+                        <p>The overhaul plan requires a "Qualified" status to trigger Form 2 automation, but this status does not exist in the current system. This is essential for the new lead qualification workflow.</p>
+                    </div>
+
+                    <div class="finding">
+                        <h4>Critical: No Upgradable Quote Template</h4>
+                        <p>The upsell flow requires an Upgradable quote template with embedded Form 3, contract, and payment—none currently exists. 35+ quote templates exist, but none support this flow.</p>
+                    </div>
+
+                    <div class="finding">
+                        <h4>Critical: Missing Base Packages with Images</h4>
+                        <p>The overhaul requires 3 base packages (Essential, Premium, Full Activation) with product images for quote cards. Currently: 25+ packages exist, but 0 have images attached.</p>
+                    </div>
+
+                    <div class="finding">
+                        <h4>Critical: Automation System Largely Dormant</h4>
+                        <p>Only 3 of 30+ automations are enabled. 25+ automations are disabled and many haven't run in 5-6 years. The system is on manual operation mode.</p>
+                    </div>
+
+                    <div class="finding warning">
+                        <h4>Warning: Questionnaire Bloat & Death</h4>
+                        <p>28 questionnaire templates exist, but 8 are completely dead (0 responses, some with typos). The overhaul consolidates these to 6 core forms, but current structure makes migration complex.</p>
+                    </div>
+
+                    <div class="finding warning">
+                        <h4>Warning: Stale Automation Dependencies</h4>
+                        <p>Multiple automations reference the 11 Event Customizations questionnaires that will be deleted/merged. These automations will break during consolidation if not rebuilt first.</p>
+                    </div>
+
+                    <div class="finding success">
+                        <h4>Strength: Strong Product Revenue Concentration</h4>
+                        <p>OMG Booth Kiosk ($1.33M), OMG Social ($301K), and Virtual Booth Enterprise ($213K) represent core revenue. Clear upsell paths exist.</p>
+                    </div>
+
+                    <div class="finding success">
+                        <h4>Strength: Active Job & Lead Pipeline</h4>
+                        <p>11 active leads, 29 active jobs, 5 active orders. Core operations are functioning; cleanup is needed around the edges.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 18px; font-weight: 600;">Overhaul Impact Summary</h3>
+                    <p style="margin-bottom: 20px; color: #b0b0b0;">The overhaul plan requires significant reconfiguration but is achievable. Key blockers are: missing lead status, missing quote template type, missing product images, and broken automation chains. Estimated effort: 80-120 hours over 4-6 weeks.</p>
+
+                    <table>
+                        <tr>
+                            <th>Area</th>
+                            <th>Current State</th>
+                            <th>Impact</th>
+                            <th>Effort</th>
+                        </tr>
+                        <tr>
+                            <td>Questionnaires</td>
+                            <td>28 forms (8 dead)</td>
+                            <td>High — consolidation required</td>
+                            <td>30-40 hours</td>
+                        </tr>
+                        <tr>
+                            <td>Quote Templates</td>
+                            <td>35+ templates, no Upgradable type</td>
+                            <td>Critical — must create new template</td>
+                            <td>15-20 hours</td>
+                        </tr>
+                        <tr>
+                            <td>Automations</td>
+                            <td>30+ total, 3 active, many broken</td>
+                            <td>High — major rebuild required</td>
+                            <td>25-35 hours</td>
+                        </tr>
+                        <tr>
+                            <td>Products & Images</td>
+                            <td>80+ products, 0 images</td>
+                            <td>Critical — cards require images</td>
+                            <td>20-30 hours</td>
+                        </tr>
+                        <tr>
+                            <td>Email Templates</td>
+                            <td>55+ templates (many duplicates)</td>
+                            <td>Medium — cleanup & archiving</td>
+                            <td>8-12 hours</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <strong>Next Steps:</strong> Review critical findings with the team. Prioritize: (1) creating "Qualified" status, (2) building Upgradable quote template, (3) adding product images, (4) disabling stale automations. Once these are done, questionnaire consolidation can proceed safely.
+                </div>
+            </section>
+
+            <!-- SECTION 2: ACCOUNT OVERVIEW -->
+            <section id="account-overview" class="section">
+                <h2>Account Overview</h2>
+                <p class="section-subtitle">Brand, team, licenses, and core statistics</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 16px; font-weight: 600;">Brand Information</h3>
+                    <table>
+                        <tr>
+                            <th>Brand Name</th>
+                            <th>Direct URL</th>
+                            <th>Embedding URL</th>
+                            <th>BCC Email</th>
+                        </tr>
+                        <tr>
+                            <td><strong>OMG Booth</strong> (default)</td>
+                            <td><code>clients.omgbooth.com</code></td>
+                            <td><code>clients.omgbooth.com/inline/</code></td>
+                            <td><code>omgbooth@bcc.workspace.vsco.co</code></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 16px; font-weight: 600;">Team & Licenses</h3>
+                    <table>
+                        <tr>
+                            <th>Item</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Total User Licenses</td>
+                            <td><span class="badge badge-medium">1 of 2 Used</span></td>
+                        </tr>
+                        <tr>
+                            <td>Current User</td>
+                            <td>Mose James IV (Admin)</td>
+                        </tr>
+                        <tr>
+                            <td>Recommendation</td>
+                            <td>Utilization opportunity: 1 unused license available for team member</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 16px; font-weight: 600;">Pipeline Overview</h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div style="background-color: #0f2a3a; padding: 20px; border-radius: 6px; border-left: 4px solid #00d4ff;">
+                            <div style="color: #808080; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px;">Leads</div>
+                            <div style="color: #00d4ff; font-size: 24px; font-weight: 700;">11 Active</div>
+                            <div style="color: #606060; font-size: 12px; margin-top: 8px;">1,362 closed / 59 school leads</div>
+                        </div>
+                        <div style="background-color: #0f2a3a; padding: 20px; border-radius: 6px; border-left: 4px solid #38bdf8;">
+                            <div style="color: #808080; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px;">Jobs</div>
+                            <div style="color: #38bdf8; font-size: 24px; font-weight: 700;">29 Active</div>
+                            <div style="color: #606060; font-size: 12px; margin-top: 8px;">115 all open / 915 completed</div>
+                        </div>
+                        <div style="background-color: #0f2a3a; padding: 20px; border-radius: 6px; border-left: 4px solid #f87171;">
+                            <div style="color: #808080; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px;">Orders</div>
+                            <div style="color: #f87171; font-size: 24px; font-weight: 700;">5 Active</div>
+                            <div style="color: #606060; font-size: 12px; margin-top: 8px;">1,074 all / 32 past due</div>
+                        </tr>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Active</th>
+                            <th>Total</th>
+                            <th>Completed/Closed</th>
+                            <th>Notes</th>
+                        </tr>
+                        <tr>
+                            <td>Leads</td>
+                            <td>11</td>
+                            <td>1,432</td>
+                            <td>1,362</td>
+                            <td>59 school leads in separate bucket</td>
+                        </tr>
+                        <tr>
+                            <td>Jobs</td>
+                            <td>29</td>
+                            <td>115</td>
+                            <td>915</td>
+                            <td>Core operational pipeline</td>
+                        </tr>
+                        <tr>
+                            <td>Quotes</td>
+                            <td>12</td>
+                            <td>15</td>
+                            <td>12 expired</td>
+                            <td>High expiration rate—review quote lifecycle</td>
+                        </tr>
+                        <tr>
+                            <td>Orders</td>
+                            <td>5</td>
+                            <td>1,074</td>
+                            <td>1,074</td>
+                            <td><span class="badge badge-critical">32 past due</span></td>
+                        </tr>
+                        <tr>
+                            <td>Invoices</td>
+                            <td>5</td>
+                            <td>36</td>
+                            <td>36 past due</td>
+                            <td><span class="badge badge-critical">All 36 past due—collections issue</span></td>
+                        </tr>
+                        <tr>
+                            <td>Messages</td>
+                            <td>1,774 unread</td>
+                            <td>8,008 inbox</td>
+                            <td>5,914 outbox</td>
+                            <td><span class="badge badge-high">6,208 no job assignment—data quality issue</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tasks</td>
+                            <td>2,653 open</td>
+                            <td>5,246</td>
+                            <td>19,907 completed</td>
+                            <td><span class="badge badge-high">2,593 late tasks—process review needed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Contracts</td>
+                            <td>11 pending signature</td>
+                            <td>453</td>
+                            <td>442 completed</td>
+                            <td>3 templates, 1 archived</td>
+                        </tr>
+                        <tr>
+                            <td>Contacts</td>
+                            <td>—</td>
+                            <td>4,058</td>
+                            <td>756 clients</td>
+                            <td>1,135 locations / 390 companies</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 16px; font-weight: 600;">Job Types & Workflows</h3>
+                    <table>
+                        <tr>
+                            <th>Job Type</th>
+                            <th>Workflow</th>
+                            <th>Profit Center</th>
+                        </tr>
+                        <tr>
+                            <td>Corporate Event / Brand Event</td>
+                            <td>New Job Workflow</td>
+                            <td>Corporate Events</td>
+                        </tr>
+                        <tr>
+                            <td>Wedding</td>
+                            <td>New Job Workflow</td>
+                            <td>Weddings</td>
+                        </tr>
+                        <tr>
+                            <td>Social Event</td>
+                            <td>New Job Workflow</td>
+                            <td>Social Events</td>
+                        </tr>
+                        <tr>
+                            <td>School / Collegiate Event</td>
+                            <td>New Job Workflow</td>
+                            <td>Community Events</td>
+                        </tr>
+                        <tr>
+                            <td>Community Event / Nonprofit Event</td>
+                            <td>New Job Workflow</td>
+                            <td>Community Events</td>
+                        </tr>
+                        <tr>
+                            <td>Conference / Trade Show</td>
+                            <td>New Job Workflow</td>
+                            <td>Conference/Trade Show</td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Photo Booth</td>
+                            <td>New Job Workflow</td>
+                            <td>Virtual Photo Booths</td>
+                        </tr>
+                        <tr>
+                            <td>Multi-Market Event/Tour</td>
+                            <td>New Job Workflow</td>
+                            <td>Multi-Market Event/Tour</td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: #ffffff; margin-bottom: 10px; font-size: 14px; font-weight: 600;">Deliverable Workflows</h4>
+                    <table>
+                        <tr>
+                            <th>Workflow Name</th>
+                            <th>Status</th>
+                            <th>Tasks</th>
+                        </tr>
+                        <tr>
+                            <td>Box of Props</td>
+                            <td>Booked</td>
+                            <td>1 task</td>
+                        </tr>
+                        <tr>
+                            <td>Default Deliverable Workflow</td>
+                            <td>None</td>
+                            <td>0 tasks</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <strong>Observations:</strong> Core operational metrics look healthy (11 active leads, 29 active jobs). However, collections issues exist (36 past due invoices, 32 past due orders). Message system has 6,208 messages with no job assignment—this indicates data quality problems or incomplete integrations. Consider a message/task audit.
+                </div>
+            </section>
+
+            <!-- SECTION 3: QUESTIONNAIRE INVENTORY -->
+            <section id="questionnaire-inventory" class="section">
+                <h2>Questionnaire Inventory</h2>
+                <p class="section-subtitle">28 templates analyzed for consolidation into 6-form system</p>
+
+                <div class="finding">
+                    <h4>Consolidation Plan Overview</h4>
+                    <p><strong>Target:</strong> 28 forms → 6 core forms</p>
+                    <p style="margin-top: 8px;"><strong>New 6-form structure:</strong></p>
+                    <ul style="margin-top: 8px; margin-left: 20px; color: #c0c0c0;">
+                        <li><strong>1. New Lead Intake</strong> — Public-facing, replaces 3 dead lead intake forms</li>
+                        <li><strong>2. Event Details</strong> — Consolidates 11 Event Customization variants with conditional logic</li>
+                        <li><strong>3. Event Logistics</strong> — Merges 4+ logistics forms (Corporate, Social, Wedding, Holiday)</li>
+                        <li><strong>4. Design & Branding Brief</strong> — New form for design assets review</li>
+                        <li><strong>5. Pre-Event Report</strong> — Keep existing (101 responses, heavy use)</li>
+                        <li><strong>6. Post-Event Report</strong> — Merge 2 versions (Experience Manager + Smile Squad) with role selector</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Full Questionnaire Matrix</h3>
+                    <table>
+                        <tr>
+                            <th>Form Name</th>
+                            <th>Responses</th>
+                            <th>Status</th>
+                            <th>Consolidation Plan</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <td>1. New Lead Intake</td>
+                            <td>0</td>
+                            <td><span class="badge badge-critical">Dead</span></td>
+                            <td>Rebuild as public lead capture form (Form 1)</td>
+                            <td><span class="badge badge-update">Update</span></td>
+                        </tr>
+                        <tr>
+                            <td>Contact Form Inquiry Step 2 - Additional Info</td>
+                            <td>0</td>
+                            <td><span class="badge badge-critical">Dead</span></td>
+                            <td>Delete — duplicate/orphaned form</td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                        <tr>
+                            <td>Design Assets Review</td>
+                            <td>1</td>
+                            <td><span class="badge badge-critical">Near-dead</span></td>
+                            <td>Merge into new Design & Branding Brief (Form 4)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - 360º</td>
+                            <td>3</td>
+                            <td><span class="badge badge-high">Low use</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Design + Props</td>
+                            <td>5</td>
+                            <td><span class="badge badge-high">Low use</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Design + Props + Social</td>
+                            <td>18</td>
+                            <td><span class="badge badge-medium">Moderate</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Design + Props + Social + Microsite</td>
+                            <td>53</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Design + Social</td>
+                            <td>30</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Design + Social + Microsite</td>
+                            <td>2</td>
+                            <td><span class="badge badge-critical">Near-dead</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Desing + Social (Bragbox)</td>
+                            <td>0</td>
+                            <td><span class="badge badge-critical">Dead — typo</span></td>
+                            <td>Delete — completely inactive, has typo in name</td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - First Day of School</td>
+                            <td>1</td>
+                            <td><span class="badge badge-critical">Near-dead</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Props Only</td>
+                            <td>2</td>
+                            <td><span class="badge badge-critical">Near-dead</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Virtual Booth</td>
+                            <td>28</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Customizations - Virtual Booth Info</td>
+                            <td>45</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Event Logistics</strong></td>
+                            <td><strong>402</strong></td>
+                            <td><span class="badge badge-keep">WORKHORSE</span></td>
+                            <td>Use as base for Form 3; merge other logistics forms</td>
+                            <td><span class="badge badge-update">Update</span></td>
+                        </tr>
+                        <tr>
+                            <td>Lead Intake Form</td>
+                            <td>0</td>
+                            <td><span class="badge badge-critical">Dead</span></td>
+                            <td>Delete — duplicate of "New Lead Intake"</td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                        <tr>
+                            <td>Logistics - Corporate Event</td>
+                            <td>0</td>
+                            <td><span class="badge badge-critical">Dead</span></td>
+                            <td>Consolidate into Event Logistics (Form 3)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Logistics - Holiday Event</td>
+                            <td>6</td>
+                            <td><span class="badge badge-high">Low use</span></td>
+                            <td>Consolidate into Event Logistics (Form 3)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Logistics - Social Event</td>
+                            <td>59</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Logistics (Form 3)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Logistics - Wedding</td>
+                            <td>21</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Logistics (Form 3)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>New Lead In-take</td>
+                            <td>0</td>
+                            <td><span class="badge badge-critical">Dead</span></td>
+                            <td>Delete — duplicate, typo in name</td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                        <tr>
+                            <td>New Lead Logistics - Virtual Booth</td>
+                            <td>181</td>
+                            <td><span class="badge badge-low">Heavy use</span></td>
+                            <td>Consolidate into Event Logistics (Form 3)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Photo Booth Intake Questionnaire</td>
+                            <td>1</td>
+                            <td><span class="badge badge-critical">Near-dead</span></td>
+                            <td>Consolidate into New Lead Intake (Form 1)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reports - Post-Event Report [Experience Manager]</strong></td>
+                            <td><strong>139</strong></td>
+                            <td><span class="badge badge-low">Heavy use</span></td>
+                            <td>Merge with Smile Squad version into Form 6 (role selector)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reports - Post-Event Report [Smile Squad]</strong></td>
+                            <td><strong>65</strong></td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Merge with Experience Manager version into Form 6 (role selector)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reports - Pre-Event Report</strong></td>
+                            <td><strong>101</strong></td>
+                            <td><span class="badge badge-low">Heavy use</span></td>
+                            <td>Keep as-is (Form 5) — currently working well</td>
+                            <td><span class="badge badge-keep">Keep</span></td>
+                        </tr>
+                        <tr>
+                            <td>Step 2 of 2 — Event details</td>
+                            <td>87</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Details (Form 2)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Booth Event Logistics</td>
+                            <td>47</td>
+                            <td><span class="badge badge-low">Active</span></td>
+                            <td>Consolidate into Event Logistics (Form 3)</td>
+                            <td><span class="badge badge-merge">Merge</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <strong>Key Metrics:</strong> 8 forms with 0 responses (dead weight for deletion). Forms to delete: 4. Forms to merge: 22. Forms to keep/update: 2. Response concentration: Event Logistics (402), Pre-Event Report (101), and post-event reports (204 combined) account for 707 of ~1,060 total responses (67%).
+                </div>
+            </section>
+
+            <!-- SECTION 4: QUOTE & PRODUCT INVENTORY -->
+            <section id="quote-product-inventory" class="section">
+                <h2>Quotes & Products</h2>
+                <p class="section-subtitle">35+ quote templates, 80+ products, 25+ packages analyzed</p>
+
+                <div class="finding">
+                    <h4>Critical: Upgradable Quote Template Missing</h4>
+                    <p>The overhaul plan requires an Upgradable quote template that embeds Form 3 (Event Details), contract selection, and payment. This template type does NOT exist. 35+ standard/advanced templates exist, but none support dynamic upselling. This must be built from scratch.</p>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Package Revenue Analysis</h3>
+                    <p style="margin-bottom: 20px; color: #b0b0b0;">Top 10 by revenue (all-time)</p>
+                    <table>
+                        <tr>
+                            <th>Package Name</th>
+                            <th>Price</th>
+                            <th>Orders</th>
+                            <th>Revenue</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td><strong>OMG Booth Kiosk</strong></td>
+                            <td>—</td>
+                            <td>623</td>
+                            <td><strong>$1,328,318</strong></td>
+                            <td><span class="badge badge-keep">CORE</span></td>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td><strong>OMG Social Kiosk</strong></td>
+                            <td>—</td>
+                            <td>153</td>
+                            <td><strong>$301,019</strong></td>
+                            <td><span class="badge badge-keep">CORE</span></td>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td><strong>OMG Print + Social Kiosk</strong></td>
+                            <td>—</td>
+                            <td>144</td>
+                            <td><strong>$258,427</strong></td>
+                            <td><span class="badge badge-keep">CORE</span></td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Booth - Enterprise</td>
+                            <td>$4,500</td>
+                            <td>54</td>
+                            <td>$213,549</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>OMG Instant Kiosk</td>
+                            <td>—</td>
+                            <td>90</td>
+                            <td>$145,147</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>OMG Video Kiosk</td>
+                            <td>—</td>
+                            <td>24</td>
+                            <td>$70,798</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Booth - Pro</td>
+                            <td>$1,850</td>
+                            <td>42</td>
+                            <td>$94,297</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>OMG Array</td>
+                            <td>$5,000</td>
+                            <td>9</td>
+                            <td>$40,300</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Booth - Plus</td>
+                            <td>$1,200</td>
+                            <td>18</td>
+                            <td>$29,398</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>OMG 360º Video Booth</td>
+                            <td>$2,500</td>
+                            <td>7</td>
+                            <td>$16,300</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Critical Gap: Base Packages Missing</h3>
+                    <p style="margin-bottom: 20px; color: #b0b0b0;">Overhaul plan requires 3 foundational packages for upsell quote flow:</p>
+                    <table>
+                        <tr>
+                            <th>Package</th>
+                            <th>Target Price</th>
+                            <th>Current State</th>
+                            <th>Action Required</th>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td><strong>Essential</strong></td>
+                            <td>$1,200–$1,500</td>
+                            <td><span class="badge badge-delete">DOES NOT EXIST</span></td>
+                            <td><span class="badge badge-create">Create</span> + add product images</td>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td><strong>Premium</strong></td>
+                            <td>$2,500–$3,500</td>
+                            <td><span class="badge badge-delete">DOES NOT EXIST</span></td>
+                            <td><span class="badge badge-create">Create</span> + add product images</td>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td><strong>Full Activation</strong></td>
+                            <td>$5,000+</td>
+                            <td><span class="badge badge-delete">DOES NOT EXIST</span></td>
+                            <td><span class="badge badge-create">Create</span> + add product images</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Product Image Gap</h3>
+                    <p style="margin-bottom: 20px; color: #b0b0b0;">80+ products across all categories</p>
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Product Count</th>
+                            <th>Images Attached</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td>Activation Fees</td>
+                            <td>7</td>
+                            <td><span class="badge badge-delete">0</span></td>
+                            <td><span class="badge badge-critical">Critical — required for quote cards</span></td>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td>Add-Ons</td>
+                            <td>10+</td>
+                            <td><span class="badge badge-delete">0</span></td>
+                            <td><span class="badge badge-critical">Critical — required for quote cards</span></td>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td>Design & Branding</td>
+                            <td>5</td>
+                            <td><span class="badge badge-delete">0</span></td>
+                            <td><span class="badge badge-critical">Critical — required for quote cards</span></td>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td>Equipment</td>
+                            <td>9</td>
+                            <td><span class="badge badge-delete">0</span></td>
+                            <td><span class="badge badge-critical">Critical — required for quote cards</span></td>
+                        </tr>
+                        <tr style="background-color: #3a1a1a;">
+                            <td>All Other Categories</td>
+                            <td>45+</td>
+                            <td><span class="badge badge-delete">0</span></td>
+                            <td><span class="badge badge-critical">Critical — required for quote cards</span></td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 20px; color: #f87171; font-weight: 600;">Total gap: 80+ products with 0 images. Upgradable quote template requires product images for visual card display.</p>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Quote Templates Analysis</h3>
+                    <p style="margin-bottom: 20px; color: #b0b0b0;">35+ quote templates (Standard + Advanced). Assessment:</p>
+                    <ul style="margin-left: 20px; color: #c0c0c0; margin-bottom: 20px;">
+                        <li><strong>Date-specific templates (archive):</strong> OMG Booth Corporate 2022, OMG Booth Wedding 2023, OMG Booth Holiday 2022, School.PICS 2020/2021 — at least 8 templates should be archived</li>
+                        <li><strong>Duplicate variants:</strong> Multiple "OMG Social Experience", "OMG Print and Social Experience", "OMG Virtual Experience" variants with slight pricing differences</li>
+                        <li><strong>Upgrade-path templates:</strong> No templates support dynamic upselling or embedded forms</li>
+                        <li><strong>Missing template type:</strong> "Upgradable" template type does not exist (must be built)</li>
+                    </ul>
+                    <p style="color: #b0b0b0;"><strong>Recommendation:</strong> Consolidate 35+ templates down to ~10 core templates: (1) Essential, (2) Premium, (3) Full Activation, (4) Virtual Booth (Base), (5) Virtual Booth (Enterprise), (6) Weddings, (7) Education, (8) Corporate Day Rate, (9) Video Campaign, (10) Custom Quote.</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Dead Products (0 orders):</strong> Additional OMG Go Photographers, Additional Standalone Sharing Station, Studio Quality DSLR Camera Upgrade, Boomerang Feature, Karaoke/Dub Smash Capture, Light Painting, Relocation Fee, Returned Check Fee, Data Capture Polls and Surveys (VB Asset). Consider archiving or reviewing for deletion.
+                </div>
+            </section>
+
+            <!-- SECTION 5: AUTOMATION MAP -->
+            <section id="automation-map" class="section">
+                <h2>Automation Map</h2>
+                <p class="section-subtitle">30+ automations analyzed; 25+ disabled and breaking</p>
+
+                <div class="finding">
+                    <h4>Critical: Automation System Largely Dormant</h4>
+                    <p>Only 3 of 30+ automations are currently enabled. 25+ are disabled. Many haven't run in 5-6 years. Multiple automations reference questionnaire forms that will be deleted/merged during the overhaul, creating a breaking-point risk.</p>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Automation Status Summary</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div style="background-color: #0f2a3a; padding: 20px; border-radius: 6px; border-left: 4px solid #00d4ff;">
+                            <div style="color: #808080; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600;">Active Automations</div>
+                            <div style="color: #00d4ff; font-size: 24px; font-weight: 700;">3</div>
+                        </div>
+                        <div style="background-color: #1a2a3a; padding: 20px; border-radius: 6px; border-left: 4px solid #606060;">
+                            <div style="color: #808080; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600;">Disabled (Total)</div>
+                            <div style="color: #808080; font-size: 24px; font-weight: 700;">27</div>
+                        </div>
+                        <div style="background-color: #3a1a1a; padding: 20px; border-radius: 6px; border-left: 4px solid #f87171;">
+                            <div style="color: #808080; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600;">At Risk (Breaking)</div>
+                            <div style="color: #f87171; font-size: 24px; font-weight: 700;">15+</div>
+                        </div>
+                    </div>
+
+                    <h4 style="color: #ffffff; margin-top: 25px; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Active Automations (Keep)</h4>
+                    <table>
+                        <tr>
+                            <th>Automation Name</th>
+                            <th>Trigger</th>
+                            <th>Executions</th>
+                            <th>Last Run</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td>New Lead Auto Responder - General</td>
+                            <td>Lead > Created</td>
+                            <td>562</td>
+                            <td>4 days ago</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td>Send OMG Asset Library Request</td>
+                            <td>Questionnaire > Submitted</td>
+                            <td>13</td>
+                            <td>7 months ago</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td>Send SMS to New Lead</td>
+                            <td>Lead > Created</td>
+                            <td>85</td>
+                            <td>4 days ago</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Disabled Automations at Risk (Breaking During Overhaul)</h3>
+                    <p style="margin-bottom: 20px; color: #b0b0b0;">These automations reference questionnaire forms that will be consolidated/deleted:</p>
+                    <table>
+                        <tr>
+                            <th>Automation</th>
+                            <th>Trigger</th>
+                            <th>References</th>
+                            <th>Impact</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Email: Customizations Design + Props</td>
+                            <td>Contract > Accepted</td>
+                            <td>Event Customizations - Design + Props (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span> or rebuild</td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Email: Customizations Design + Props + Social</td>
+                            <td>Contract > Accepted</td>
+                            <td>Event Customizations - Design + Props + Social (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span> or rebuild</td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Email: Customizations Design + Props + Social + Microsite</td>
+                            <td>Contract > Accepted</td>
+                            <td>Event Customizations - Design + Props + Social + Microsite (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span> or rebuild</td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Email: Customizations Design + Social</td>
+                            <td>Contract > Accepted</td>
+                            <td>Event Customizations - Design + Social (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span> or rebuild</td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Quote: Education</td>
+                            <td>Questionnaire > Submitted</td>
+                            <td>New Lead Intake (RESTRUCTURING)</td>
+                            <td><span class="badge badge-high">May break</span></td>
+                            <td><span class="badge badge-update">Update</span></td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Quote: Holiday Event</td>
+                            <td>Questionnaire > Submitted</td>
+                            <td>Logistics - Holiday Event (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Quote: Social Event</td>
+                            <td>Questionnaire > Submitted</td>
+                            <td>Logistics - Social Event (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Quote: Wedding</td>
+                            <td>Questionnaire > Submitted</td>
+                            <td>Logistics - Wedding (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td>Send Virtual Booth Quote</td>
+                            <td>Questionnaire > Submitted</td>
+                            <td>Event Customizations - Virtual Booth (MERGING)</td>
+                            <td><span class="badge badge-critical">Will break</span></td>
+                            <td><span class="badge badge-delete">Delete</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">All Other Disabled Automations (Stale, 3-6 years)</h3>
+                    <p style="margin-bottom: 20px; color: #b0b0b0;">18 automations disabled with no recent activity:</p>
+                    <table>
+                        <tr>
+                            <th>Automation</th>
+                            <th>Last Run</th>
+                            <th>Executions</th>
+                            <th>Recommendation</th>
+                        </tr>
+                        <tr>
+                            <td>Advance to Fulfillment Stage</td>
+                            <td>6 days ago (but disabled)</td>
+                            <td>519</td>
+                            <td><span class="badge badge-update">Review & potentially re-enable</span></td>
+                        </tr>
+                        <tr>
+                            <td>Client Portal Email</td>
+                            <td>16 days ago (but disabled)</td>
+                            <td>647</td>
+                            <td><span class="badge badge-update">Review & potentially re-enable</span></td>
+                        </tr>
+                        <tr>
+                            <td>Customizations Reminder</td>
+                            <td>6 years ago</td>
+                            <td>21</td>
+                            <td><span class="badge badge-delete">Delete (references merged forms)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Due Soon Email</td>
+                            <td>2 months ago (but disabled)</td>
+                            <td>152</td>
+                            <td><span class="badge badge-update">Review & re-enable for collections</span></td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Due Today Email</td>
+                            <td>1 month ago (but disabled)</td>
+                            <td>161</td>
+                            <td><span class="badge badge-update">Review & re-enable for collections</span></td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Past Due Email</td>
+                            <td>3 months ago (but disabled)</td>
+                            <td>344</td>
+                            <td><span class="badge badge-update">Review & re-enable for collections</span></td>
+                        </tr>
+                        <tr>
+                            <td>New Lead - Generic</td>
+                            <td>5 years ago</td>
+                            <td>88</td>
+                            <td><span class="badge badge-delete">Delete (superseded by Auto Responder - General)</span></td>
+                        </tr>
+                        <tr>
+                            <td>New Lead - Holiday Event</td>
+                            <td>3 years ago</td>
+                            <td>9</td>
+                            <td><span class="badge badge-delete">Delete (inactive)</span></td>
+                        </tr>
+                        <tr>
+                            <td>New Lead - Wedding</td>
+                            <td>3 years ago</td>
+                            <td>51</td>
+                            <td><span class="badge badge-delete">Delete (inactive)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Travel Required? (Local)</td>
+                            <td>5 years ago</td>
+                            <td>88</td>
+                            <td><span class="badge badge-delete">Delete (stale logic)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Travel Required? (Typical Travel)</td>
+                            <td>6 years ago</td>
+                            <td>3</td>
+                            <td><span class="badge badge-delete">Delete (stale logic)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Within Metro Atlanta Area</td>
+                            <td>Never</td>
+                            <td>0</td>
+                            <td><span class="badge badge-delete">Delete (never executed)</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <strong>Overhaul Plan Missing Automations:</strong> Build 2 new critical automations: (1) Form 2 submitted → set "Qualified" status → send Upgradable quote, (2) Quote booked → send Event Logistics form + contract.
+                </div>
+            </section>
+
+            <!-- SECTION 6: EMAIL TEMPLATES -->
+            <section id="email-templates" class="section">
+                <h2>Email Templates</h2>
+                <p class="section-subtitle">55+ templates cataloged; significant duplication</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Template Categories & Status</h3>
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>Assessment</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <td>General Use (system defaults)</td>
+                            <td>~5</td>
+                            <td><span class="badge badge-keep">Keep</span> — active, system defaults</td>
+                            <td>No change</td>
+                        </tr>
+                        <tr>
+                            <td>Follow Up variants</td>
+                            <td>5+</td>
+                            <td><span class="badge badge-high">Duplicate — consolidate</span></td>
+                            <td><span class="badge badge-merge">Merge into 1-2</span></td>
+                        </tr>
+                        <tr>
+                            <td>Send Quote variants</td>
+                            <td>5+</td>
+                            <td><span class="badge badge-high">Duplicate — consolidate</span></td>
+                            <td><span class="badge badge-merge">Merge into generic quote template</span></td>
+                        </tr>
+                        <tr>
+                            <td>Booked & Contract variants</td>
+                            <td>3+</td>
+                            <td><span class="badge badge-medium">Some duplication</span></td>
+                            <td><span class="badge badge-update">Clean up & streamline</span></td>
+                        </tr>
+                        <tr>
+                            <td>Questionnaire Invitation</td>
+                            <td>~8</td>
+                            <td><span class="badge badge-high">Will obsolete after form consolidation</span></td>
+                            <td><span class="badge badge-update">Rebuild for new 6-form system</span></td>
+                        </tr>
+                        <tr>
+                            <td>Order Receipts & Invoicing</td>
+                            <td>~10</td>
+                            <td><span class="badge badge-keep">Functional</span></td>
+                            <td>Review for clarity/branding</td>
+                        </tr>
+                        <tr>
+                            <td>VB-specific templates</td>
+                            <td>3</td>
+                            <td><span class="badge badge-keep">Needed for Virtual Booth workflow</span></td>
+                            <td>Keep and update as needed</td>
+                        </tr>
+                        <tr>
+                            <td>System defaults (green checkmark)</td>
+                            <td>~8</td>
+                            <td><span class="badge badge-keep">Active system templates</span></td>
+                            <td>Monitor for override needs</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <strong>Consolidation Opportunities:</strong> 55+ templates can be reduced to ~30 by: (1) Merging 5+ "Follow Up" variants into 2 (generic + VB-specific), (2) Merging 5+ "Send Quote" variants into 1 generic template with conditional content, (3) Streamlining Booked/Contract variants from 3+ to 2, (4) Rebuilding questionnaire invitations for new 6-form system.
+                </div>
+            </section>
+
+            <!-- SECTION 7: CONTRACT INVENTORY -->
+            <section id="contract-inventory" class="section">
+                <h2>Contracts</h2>
+                <p class="section-subtitle">3 active templates + 1 archived</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Contract Templates</h3>
+                    <table>
+                        <tr>
+                            <th>Template Name</th>
+                            <th>Active Leads</th>
+                            <th>Active Jobs</th>
+                            <th>Usage</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td><strong>General Service Contract</strong></td>
+                            <td>143</td>
+                            <td>187</td>
+                            <td><span class="badge badge-keep">Primary workhorse</span></td>
+                            <td><span class="badge badge-keep">Keep</span></td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Booth General Service Contract</td>
+                            <td>none</td>
+                            <td>18</td>
+                            <td>Specialized for VB jobs</td>
+                            <td><span class="badge badge-keep">Keep</span></td>
+                        </tr>
+                        <tr>
+                            <td>Forbes Virtual Booth General Service Contract</td>
+                            <td>none</td>
+                            <td>2</td>
+                            <td>Forbes-specific branding</td>
+                            <td><span class="badge badge-update">Review — may consolidate with VB template</span></td>
+                        </tr>
+                        <tr style="background-color: #1a2a1a;">
+                            <td>1 Archived</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>Not active</td>
+                            <td><span class="badge badge-delete">Archived</span></td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Pending Signatures</h4>
+                    <p style="color: #b0b0b0; margin-bottom: 15px;">11 contracts pending signature. Follow up recommended on aged contracts.</p>
+
+                    <h4 style="color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Completed</h4>
+                    <p style="color: #b0b0b0;">442 contracts completed. Healthy conversion rate.</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>Note:</strong> Overhaul plan includes embedding contract selection into Upgradable quote template. Ensure contract templates support dynamic reference before deploying new quote type.
+                </div>
+            </section>
+
+            <!-- SECTION 8: CUSTOM FIELDS -->
+            <section id="custom-fields" class="section">
+                <h2>Custom Fields & Tokens</h2>
+                <p class="section-subtitle">99 custom fields (all apply to Jobs)</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Custom Field Categories</h3>
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Field Count</th>
+                            <th>Purpose</th>
+                            <th>Health</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Design Fields</strong></td>
+                            <td>~12</td>
+                            <td>Color preferences, brand guidelines, approval status, deadline, description, format, finalized</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Event Fields</strong></td>
+                            <td>~8</td>
+                            <td>Booth start/end time, backdrop, custom share message</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pre-Event Report Fields</strong></td>
+                            <td>~10</td>
+                            <td>Backup plan, design finalized, equipment list</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Post-Event Report Fields</strong></td>
+                            <td>~12</td>
+                            <td>Atmosphere rating, equipment handling, equipment performance, booth space adequate, data issues</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Logistics Fields</strong></td>
+                            <td>~10</td>
+                            <td>Venue access, additional notes</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Other/Legacy Fields</strong></td>
+                            <td>~47</td>
+                            <td>Various purpose; review needed</td>
+                            <td><span class="badge badge-high">Review recommended</span></td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Recommendation</h4>
+                    <p style="color: #b0b0b0;">Audit the 47 "Other/Legacy" fields for obsolescence, duplication, or consolidation opportunities. No critical issues identified in active field categories. Consider cross-referencing with questionnaire consolidation to ensure field coverage remains intact post-overhaul.</p>
+                </div>
+            </section>
+
+            <!-- SECTION 9: PAYMENTS, CALENDAR & INTEGRATIONS -->
+            <section id="payments-calendar" class="section">
+                <h2>Payments, Calendar & Integrations</h2>
+                <p class="section-subtitle">Payment processors, calendar settings, and connected services</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Payment Methods</h3>
+                    <table>
+                        <tr>
+                            <th>Processor</th>
+                            <th>Status</th>
+                            <th>Configuration</th>
+                            <th>Assessment</th>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td><strong>Square</strong></td>
+                            <td><span class="badge badge-keep">Connected</span></td>
+                            <td>ID: EE9RRS3CC3669 (All Brands)</td>
+                            <td>Primary payment processor</td>
+                        </tr>
+                        <tr>
+                            <td>Stripe</td>
+                            <td><span class="badge badge-delete">Not Connected</span></td>
+                            <td>—</td>
+                            <td><span class="badge badge-medium">Opportunity: add for redundancy & backup processing</span></td>
+                        </tr>
+                        <tr>
+                            <td>Offline: Mail a Check</td>
+                            <td><span class="badge badge-keep">Enabled</span></td>
+                            <td>Manual</td>
+                            <td>Legacy option; low use expected</td>
+                        </tr>
+                        <tr>
+                            <td>Offline: Pay via CashApp</td>
+                            <td><span class="badge badge-keep">Enabled</span></td>
+                            <td>Manual</td>
+                            <td>Legacy option; low use expected</td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Payment Schedules</h4>
+                    <ul style="margin-left: 20px; color: #c0c0c0;">
+                        <li>100% Due Upon Signing</li>
+                        <li>50% Deposit (50% at signing, remainder Net 15)</li>
+                        <li>Payment in Full</li>
+                        <li>Submit Purchase Order</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Calendar Configuration</h3>
+                    <table>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Value</th>
+                        </tr>
+                        <tr>
+                            <td>Timezone</td>
+                            <td>EST/EDT (New York)</td>
+                        </tr>
+                        <tr>
+                            <td>Week Starts</td>
+                            <td>Sunday</td>
+                        </tr>
+                        <tr>
+                            <td>Date Format</td>
+                            <td>12/31/2026</td>
+                        </tr>
+                        <tr>
+                            <td>Time Format</td>
+                            <td>1:00pm (12-hour)</td>
+                        </tr>
+                        <tr>
+                            <td>Temperature Unit</td>
+                            <td>°F (Fahrenheit)</td>
+                        </tr>
+                        <tr>
+                            <td>Double Booking Warning</td>
+                            <td>Tentative + Confirmed Events + Calendar Feeds</td>
+                        </tr>
+                        <tr>
+                            <td>Google Calendar Integration</td>
+                            <td>Connected (mose@omgbooth.com)</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Integrations & API</h3>
+                    <table>
+                        <tr>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td>Google Calendar</td>
+                            <td><span class="badge badge-keep">Connected</span></td>
+                            <td>mose@omgbooth.com</td>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td>Square</td>
+                            <td><span class="badge badge-keep">Connected</span></td>
+                            <td>Payment processing</td>
+                        </tr>
+                        <tr>
+                            <td>Gallery Integration</td>
+                            <td><span class="badge badge-delete">Not Connected</span></td>
+                            <td>Available: ShootProof, Pic-Time</td>
+                        </tr>
+                        <tr>
+                            <td>API</td>
+                            <td><span class="badge badge-keep">Key Created</span></td>
+                            <td>Read-only access</td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Recommendations</h4>
+                    <ul style="margin-left: 20px; color: #c0c0c0;">
+                        <li>Add Stripe as secondary payment processor for redundancy</li>
+                        <li>Connect gallery integration (ShootProof or Pic-Time) to enhance client deliverables</li>
+                        <li>Review API read-only access — consider expanding to write for automation possibilities</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SECTION 10: CONTACT FORMS -->
+            <section id="contact-forms" class="section">
+                <h2>Contact Forms</h2>
+                <p class="section-subtitle">5 public-facing contact forms</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Contact Form Inventory</h3>
+                    <table>
+                        <tr>
+                            <th>Form Name</th>
+                            <th>URL</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr style="background-color: #0f2a1f;">
+                            <td><strong>Book the Booth</strong></td>
+                            <td><code>clients.omgbooth.com/</code></td>
+                            <td>Primary lead capture for booth rentals</td>
+                            <td><span class="badge badge-keep">Primary</span></td>
+                        </tr>
+                        <tr>
+                            <td>OMG Web Inquiry</td>
+                            <td><code>clients.omgbooth.com/contact/646f2b</code></td>
+                            <td>General inquiry form</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>School.PICS Contact Form</td>
+                            <td><code>clients.omgbooth.com/contact/1e7ef5</code></td>
+                            <td>School/education-specific lead capture</td>
+                            <td><span class="badge badge-keep">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>VB Subscription</td>
+                            <td><code>clients.omgbooth.com/contact/dfb128</code></td>
+                            <td>Virtual Booth subscription inquiry</td>
+                            <td><span class="badge badge-medium">Review purpose overlap</span></td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Booth Inquiry</td>
+                            <td><code>clients.omgbooth.com/contact/abf438</code></td>
+                            <td>Virtual Booth inquiry</td>
+                            <td><span class="badge badge-medium">Review purpose overlap</span></td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Observation</h4>
+                    <p style="color: #b0b0b0;">5 forms exist, but potential redundancy between "VB Subscription" and "Virtual Booth Inquiry". Consider: Do these serve different purposes? If not, consolidate to reduce lead scatter. Review form routing and lead assignment logic.</p>
+                </div>
+            </section>
+
+            <!-- SECTION 11: LEAD MANAGEMENT -->
+            <section id="lead-management" class="section">
+                <h2>Lead Management</h2>
+                <p class="section-subtitle">Lead sources, statuses, and qualification pipeline</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Lead Sources (18 hierarchical)</h3>
+                    <ul style="margin-left: 20px; color: #c0c0c0; margin-bottom: 20px;">
+                        <li><strong>Online Ad</strong>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>Facebook Ad</li>
+                                <li>Google AdWords</li>
+                                <li>The Knot</li>
+                            </ul>
+                        </li>
+                        <li><strong>Physical Ad</strong>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>Magazine</li>
+                            </ul>
+                        </li>
+                        <li><strong>Referral</strong>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>Event Manager</li>
+                                <li>Friend</li>
+                                <li>Photographer</li>
+                                <li>Previous Client</li>
+                                <li>Vendor</li>
+                            </ul>
+                        </li>
+                        <li><strong>Web</strong>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>Blog</li>
+                                <li>Facebook</li>
+                                <li>Google Search</li>
+                                <li>Instagram</li>
+                                <li>Pinterest</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4 style="color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Observation</h4>
+                    <p style="color: #b0b0b0; margin-bottom: 20px;">"The Knot" is configured as a lead source, but it's primarily a wedding planning platform. Verify: (1) Is this still driving leads? (2) Should this be archived for a photo booth company? (3) Consider adding event platform sources (AllSeating, Splash, etc.) if relevant.</p>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Lead Statuses (16 total)</h3>
+
+                    <div class="finding">
+                        <h4>CRITICAL: "Qualified" Status Missing</h4>
+                        <p>The overhaul plan requires a "Qualified" status to trigger Form 2 automation and the Upgradable quote flow. This status does NOT currently exist. All 16 statuses must be reviewed in context of the new pipeline.</p>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>Status</th>
+                            <th>Kind</th>
+                            <th>Auto-Changes</th>
+                            <th>Usage</th>
+                        </tr>
+                        <tr>
+                            <td>New</td>
+                            <td>New</td>
+                            <td>→ Initial Contact after email; → Sent Quote after quote; → Needs Follow Up after 3 days</td>
+                            <td>Entry point</td>
+                        </tr>
+                        <tr>
+                            <td>Initial Contact</td>
+                            <td>General</td>
+                            <td>→ Sent Quote; → Needs Follow Up after 3 days</td>
+                            <td>Active conversation</td>
+                        </tr>
+                        <tr>
+                            <td>Sent Quote</td>
+                            <td>General</td>
+                            <td>→ Needs Follow Up after 3 days</td>
+                            <td>Quote sent to lead</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">QUALIFIED (MISSING)</span></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge badge-critical">MUST CREATE</span></td>
+                        </tr>
+                        <tr>
+                            <td>Scheduling: In Progress</td>
+                            <td>New</td>
+                            <td>→ New after booking; → Scheduling: Stale after 7 days</td>
+                            <td>Booking in progress</td>
+                        </tr>
+                        <tr>
+                            <td>Scheduling: Stale</td>
+                            <td>Stale</td>
+                            <td>→ Scheduling: In Progress after resume; Close after 7 days</td>
+                            <td>Stalled booking</td>
+                        </tr>
+                        <tr>
+                            <td>Meeting Scheduled</td>
+                            <td>General</td>
+                            <td>none</td>
+                            <td>Meeting booked with lead</td>
+                        </tr>
+                        <tr>
+                            <td>Needs Follow Up</td>
+                            <td>General</td>
+                            <td>→ Stale after 1 week</td>
+                            <td>Requires action</td>
+                        </tr>
+                        <tr>
+                            <td>Stale</td>
+                            <td>Stale</td>
+                            <td>→ Meeting Scheduled after event; → Ongoing Contact after email</td>
+                            <td>Inactive 1+ week</td>
+                        </tr>
+                        <tr>
+                            <td>Ongoing Contact</td>
+                            <td>General</td>
+                            <td>→ Stale after 2 weeks</td>
+                            <td>Regular follow-up</td>
+                        </tr>
+                        <tr>
+                            <td>Follow Up: 1 Week</td>
+                            <td>General</td>
+                            <td>→ Needs Follow Up after 1 week</td>
+                            <td>Scheduled follow-up</td>
+                        </tr>
+                        <tr>
+                            <td>Follow Up: 2 Weeks</td>
+                            <td>General</td>
+                            <td>→ Needs Follow Up after 2 weeks</td>
+                            <td>Scheduled follow-up</td>
+                        </tr>
+                        <tr>
+                            <td>Waiting on Customer</td>
+                            <td>General</td>
+                            <td>none</td>
+                            <td>Awaiting lead response</td>
+                        </tr>
+                        <tr>
+                            <td>No Response</td>
+                            <td>General</td>
+                            <td>none</td>
+                            <td>Lead unresponsive</td>
+                        </tr>
+                        <tr>
+                            <td>Sent Follow Up w/ Quote</td>
+                            <td>General</td>
+                            <td>none</td>
+                            <td>Custom status</td>
+                        </tr>
+                        <tr>
+                            <td>requesting more info</td>
+                            <td>General</td>
+                            <td>none</td>
+                            <td>Custom status</td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: #ffffff; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Action Required</h4>
+                    <p style="color: #b0b0b0;">Create "Qualified" status and define auto-change rules for new automation flows. Consider: What triggers qualification? (Form 2 submitted? Quote accepted? Custom field?) Clarify automation path before implementation.</p>
+                </div>
+            </section>
+
+            <!-- SECTION 12: REDUNDANCY MAP -->
+            <section id="redundancy-map" class="section">
+                <h2>Redundancy Map</h2>
+                <p class="section-subtitle">Overlapping and duplicate items across all categories</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Cross-Category Redundancy Analysis</h3>
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Redundancy Type</th>
+                            <th>Affected Items</th>
+                            <th>Impact</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td><strong>Questionnaires</strong></td>
+                            <td>Duplicate Lead Intake Forms</td>
+                            <td>3 forms with 0 responses: "New Lead Intake", "Lead Intake Form", "New Lead In-take"</td>
+                            <td><span class="badge badge-critical">Dead weight</span></td>
+                            <td><span class="badge badge-delete">Delete 2; rebuild 1</span></td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td><strong>Questionnaires</strong></td>
+                            <td>11 Event Customization variants</td>
+                            <td>Design, Design+Props, Design+Social, etc. — overlapping functionality</td>
+                            <td>High confusion; complex automation</td>
+                            <td><span class="badge badge-merge">Consolidate into 1 form with conditional logic</span></td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td><strong>Questionnaires</strong></td>
+                            <td>4 Logistics Variants</td>
+                            <td>Corporate, Social, Wedding, Holiday + main "Event Logistics"</td>
+                            <td>Data scattered; hard to report on</td>
+                            <td><span class="badge badge-merge">Merge into 1 form with event-type selector</span></td>
+                        </tr>
+                        <tr style="background-color: #2a1a1a;">
+                            <td><strong>Questionnaires</strong></td>
+                            <td>2 Post-Event Reports</td>
+                            <td>Experience Manager + Smile Squad versions</td>
+                            <td>Data inconsistency; role-based duplicate</td>
+                            <td><span class="badge badge-merge">Merge with role selector</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email Templates</strong></td>
+                            <td>5+ Follow Up variants</td>
+                            <td>Follow Up, Follow Up 2, Follow Up With Quote, Follow Up - Virtual Booth, Follow Up to Virtual Booth Lead</td>
+                            <td>Maintenance burden; inconsistent messaging</td>
+                            <td><span class="badge badge-merge">Consolidate to 2 (generic + VB-specific)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email Templates</strong></td>
+                            <td>5+ Send Quote variants</td>
+                            <td>Generic Social, Generic Social New, Holiday Event, Upcoming Call, Virtual Booth Generic</td>
+                            <td>Maintenance burden; outdated variants</td>
+                            <td><span class="badge badge-merge">Consolidate to 1 generic template with conditional content</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email Templates</strong></td>
+                            <td>3+ Booked/Contract variants</td>
+                            <td>Booked + Contract, Booked and Contract Ready, Booked - Customizations</td>
+                            <td>Confusion on which to use</td>
+                            <td><span class="badge badge-update">Streamline to 2 (contract + customizations)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quote Templates</strong></td>
+                            <td>Date-specific variants</td>
+                            <td>2022, 2023 versioned templates (at least 8)</td>
+                            <td>Outdated; confuses users</td>
+                            <td><span class="badge badge-delete">Archive old versions</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quote Templates</strong></td>
+                            <td>Similar pricing packages</td>
+                            <td>Multiple "OMG Social Experience" variants with slight price differences</td>
+                            <td>Unclear which to quote with</td>
+                            <td><span class="badge badge-update">Consolidate or clarify use cases</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contact Forms</strong></td>
+                            <td>Virtual Booth form redundancy</td>
+                            <td>"VB Subscription" + "Virtual Booth Inquiry" — similar purposes?</td>
+                            <td>Lead scatter; routing confusion</td>
+                            <td><span class="badge badge-medium">Review and potentially consolidate</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Automations</strong></td>
+                            <td>Multiple "Send Quote" automations</td>
+                            <td>Send Quote: Education, Holiday, Social, Wedding, Virtual Booth (5 separate automations)</td>
+                            <td>Fragile — breaks with form consolidation</td>
+                            <td><span class="badge badge-delete">Replace with 1 generic automation post-consolidation</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Automations</strong></td>
+                            <td>Generic lead automations</td>
+                            <td>New Lead - Generic, New Lead - Holiday Event, New Lead - Wedding + Auto Responder - General</td>
+                            <td>Overlap; inconsistent execution</td>
+                            <td><span class="badge badge-delete">Delete old; optimize Auto Responder</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <strong>Redundancy Summary:</strong> 40+ items flagged for consolidation/deletion. Primary drivers: (1) questionnaire bloat (11 event customization variants), (2) email template duplication (15+ variants), (3) date-specific quote templates, (4) stale automation chains. Consolidation will streamline operations, reduce maintenance, and lower error risk during overhaul.
+                </div>
+            </section>
+
+            <!-- SECTION 13: GAP ANALYSIS -->
+            <section id="gap-analysis" class="section">
+                <h2>Gap Analysis</h2>
+                <p class="section-subtitle">Overhaul plan requirements vs. current state</p>
+
+                <div class="card">
+                    <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 16px; font-weight: 600;">Requirement vs. Current State</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Overhaul Plan Requires</th>
+                            <th>Current State</th>
+                            <th>Gap</th>
+                            <th>Priority</th>
+                        </tr>
+                        <tr>
+                            <td><strong>3 base packages with images (Essential, Premium, Full Activation)</strong></td>
+                            <td>25+ packages exist; 0 have images</td>
+                            <td><span class="gap">CRITICAL — must create from scratch + add images to all products</span></td>
+                            <td><span class="badge badge-critical">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Upgradable quote template with embedded Form 3 + contract + payment</strong></td>
+                            <td>35+ standard/advanced templates; none support dynamic upselling; no embedded forms</td>
+                            <td><span class="gap">CRITICAL — must build new template type</span></td>
+                            <td><span class="badge badge-critical">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>"Qualified" lead status for Form 2 automation trigger</strong></td>
+                            <td>16 statuses exist; no "Qualified" status</td>
+                            <td><span class="gap">CRITICAL — must create and wire to automation</span></td>
+                            <td><span class="badge badge-critical">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product images for quote cards</strong></td>
+                            <td>80+ products; 0 images</td>
+                            <td><span class="gap">CRITICAL — required for visual display on cards</span></td>
+                            <td><span class="badge badge-critical">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>6 consolidated questionnaire forms</strong></td>
+                            <td>28 questionnaires (8 dead, 11 overlapping)</td>
+                            <td><span class="gap">HIGH — forms must be consolidated, automated, tested, old forms deleted, data migrated</span></td>
+                            <td><span class="badge badge-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Automation: Form 2 submitted → set "Qualified" → send Upgradable quote</strong></td>
+                            <td>No matching automation; would require Form 2 response → status change → quote send</td>
+                            <td><span class="gap">HIGH — must create workflow</span></td>
+                            <td><span class="badge badge-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Automation: Quote booked → send Event Logistics form + contract</strong></td>
+                            <td>No matching automation; stale "Send Email: Event Details" from 5 years ago</td>
+                            <td><span class="gap">HIGH — must rebuild workflow</span></td>
+                            <td><span class="badge badge-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Clean lead pipeline (qualification funnel)</strong></td>
+                            <td>11 active leads, 1,362 closed; funnel health unclear</td>
+                            <td><span class="no-gap">MEDIUM — operational baseline exists; review and optimize</span></td>
+                            <td><span class="badge badge-medium">Medium</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email template consolidation</strong></td>
+                            <td>55+ templates (15+ duplicates, 35+ templates for forms being consolidated)</td>
+                            <td><span class="gap">MEDIUM — must audit, consolidate, delete, and rebuild for new forms</span></td>
+                            <td><span class="badge badge-medium">Medium</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Custom quote page CSS</strong></td>
+                            <td>No custom CSS applied</td>
+                            <td><span class="no-gap">LOW — optional branding enhancement</span></td>
+                            <td><span class="badge badge-low">Low</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <strong>Gap Summary:</strong> 4 critical blockers must be resolved before form consolidation: "Qualified" status, Upgradable quote template, base packages, and product images. Once these are in place, questionnaire consolidation can proceed safely. Estimated effort: 80–120 hours over 4–6 weeks. High confidence that plan is achievable with current system.
+                </div>
+            </section>
+
+            <!-- SECTION 14: MASTER ACTION LIST -->
+            <section id="master-action-list" class="section">
+                <h2>Master Action List</h2>
+                <p class="section-subtitle">Prioritized implementation checklist with localStorage persistence</p>
+
+                <div class="info-box">
+                    <strong>Instructions:</strong> Check off items as completed. Progress is saved to your browser's local storage. Use this checklist to track overhaul implementation from start to finish.
+                </div>
+
+                <h3 style="color: #ffffff; margin-bottom: 20px; margin-top: 30px; font-size: 16px; font-weight: 600;">CRITICAL BLOCKERS (Complete First)</h3>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Create "Qualified" lead status</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Define status in lead management. Add to automation trigger. Define auto-change rules. Document lead qualification criteria.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-critical">Critical</span>
+                                <span class="checklist-priority">Priority: 1</span>
+                                <span class="checklist-effort">Effort: 2–3 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Build Upgradable quote template</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Create new "Upgradable" template type. Embed Form 3 (Event Details) questionnaire. Integrate contract selection. Add payment step. Test with essential/premium/full packages.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-critical">Critical</span>
+                                <span class="checklist-priority">Priority: 2</span>
+                                <span class="checklist-effort">Effort: 15–20 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Create 3 base packages with images</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Create "Essential" ($1,200–$1,500), "Premium" ($2,500–$3,500), "Full Activation" ($5,000+) packages. Define included services for each tier. Upload product images for visual cards.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-critical">Critical</span>
+                                <span class="checklist-priority">Priority: 3</span>
+                                <span class="checklist-effort">Effort: 10–15 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Add product images to all 80+ products</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Upload or create product images for all packages and add-ons. Ensure consistent sizing and branding. Required for Upgradable quote card display.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-critical">Critical</span>
+                                <span class="checklist-priority">Priority: 4</span>
+                                <span class="checklist-effort">Effort: 20–30 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <h3 style="color: #ffffff; margin-bottom: 20px; margin-top: 30px; font-size: 16px; font-weight: 600;">HIGH PRIORITY (Complete After Blockers)</h3>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Delete 8 dead-weight questionnaires</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Delete: Contact Form Inquiry Step 2, Event Customizations - Desing + Social (Bragbox), Lead Intake Form, New Lead In-take, Logistics - Corporate Event. Archive: Design Assets Review, Event Customizations - First Day of School, Photo Booth Intake.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 5</span>
+                                <span class="checklist-effort">Effort: 1–2 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Consolidate 11 Event Customizations into 1 Event Details form</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Build single Event Details form with conditional logic for: design preferences, props selection, social customization, microsite options, virtual booth variants. Merge 109 total responses from 11 forms.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 6</span>
+                                <span class="checklist-effort">Effort: 12–18 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Consolidate 4 Logistics forms into 1 Event Logistics form</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Merge: Logistics - Corporate, Social, Wedding, Holiday, and Virtual Booth Event Logistics. Build single Event Logistics form with event-type conditional logic. Use existing "Event Logistics" (402 responses) as base.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 7</span>
+                                <span class="checklist-effort">Effort: 10–14 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Merge 2 Post-Event Reports with role selector</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Combine "Reports - Post-Event Report [Experience Manager]" (139 responses) + "[Smile Squad]" (65 responses). Add role-based conditional logic or section visibility. Test form routing.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 8</span>
+                                <span class="checklist-effort">Effort: 6–10 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Disable/delete 20+ stale automations</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Delete automations with no runs in 3–6 years: Travel Required, New Lead variants, etc. Disable form-specific automations that will break: Send Quote variants, Customizations emails. Document which to keep vs. delete.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 9</span>
+                                <span class="checklist-effort">Effort: 4–6 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Build new automation: Form 2 → Qualified → Upgradable quote</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Create automation: Event Details form submitted → set lead to "Qualified" → send Upgradable quote template. Test with test leads. Monitor for execution.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 10</span>
+                                <span class="checklist-effort">Effort: 8–12 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Build new automation: Quote booked → send Event Logistics form + contract</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Create automation: Quote > Booked → send Event Logistics questionnaire + contract invitation. Test full workflow. Cross-reference with contract templates.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 11</span>
+                                <span class="checklist-effort">Effort: 8–12 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Archive date-specific quote templates (2022, 2023 variants)</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Review and archive: OMG Booth Corporate 2022, OMG Booth Wedding 2023, Holiday 2022, School.PICS 2020/2021, and other date-tagged versions. Clean up quote template list.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-high">High</span>
+                                <span class="checklist-priority">Priority: 12</span>
+                                <span class="checklist-effort">Effort: 2–3 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <h3 style="color: #ffffff; margin-bottom: 20px; margin-top: 30px; font-size: 16px; font-weight: 600;">MEDIUM PRIORITY (Parallel Track)</h3>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Consolidate "Follow Up" email templates (5+ variants → 2)</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Merge generic Follow Up variants into 1 template. Create separate VB-specific template if needed. Review template logic and consolidate.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-medium">Medium</span>
+                                <span class="checklist-priority">Priority: 13</span>
+                                <span class="checklist-effort">Effort: 3–5 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Consolidate "Send Quote" email templates (5+ variants → 1–2)</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Create generic quote template with conditional content for different package types. Archive outdated Holiday/Education/Social-specific versions.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-medium">Medium</span>
+                                <span class="checklist-priority">Priority: 14</span>
+                                <span class="checklist-effort">Effort: 4–6 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Consolidate 35+ quote templates down to ~10 core templates</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Keep: Essential, Premium, Full Activation, Virtual Booth (Base), VB Enterprise, Weddings, Education, Corporate Day Rate, Video Campaign, Custom. Archive/delete all others.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-medium">Medium</span>
+                                <span class="checklist-priority">Priority: 15</span>
+                                <span class="checklist-effort">Effort: 6–10 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Add Stripe as payment processor (backup)</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Connect Stripe account. Configure payment settings. Test transactions. Keep Square as primary; Stripe as redundancy.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-medium">Medium</span>
+                                <span class="checklist-priority">Priority: 16</span>
+                                <span class="checklist-effort">Effort: 2–4 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Connect gallery integration (ShootProof or Pic-Time)</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Evaluate ShootProof vs. Pic-Time. Connect selected platform. Test client access. Configure deliverable workflows.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-medium">Medium</span>
+                                <span class="checklist-priority">Priority: 17</span>
+                                <span class="checklist-effort">Effort: 4–6 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Review & consolidate 99 custom fields</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Audit all fields. Identify obsolete, duplicate, or low-use fields. Consolidate where possible. Ensure design, event, logistics, and report fields are mapped to new forms.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-medium">Medium</span>
+                                <span class="checklist-priority">Priority: 18</span>
+                                <span class="checklist-effort">Effort: 6–10 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Review 5 contact forms for redundancy</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Determine if "VB Subscription" and "Virtual Booth Inquiry" serve different purposes. Consolidate if redundant. Verify all 5 forms route leads correctly.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-medium">Medium</span>
+                                <span class="checklist-priority">Priority: 19</span>
+                                <span class="checklist-effort">Effort: 2–3 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <h3 style="color: #ffffff; margin-bottom: 20px; margin-top: 30px; font-size: 16px; font-weight: 600;">LOW PRIORITY (Post-Overhaul)</h3>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Add custom CSS to quote pages (branding)</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Customize quote page styling for brand consistency. Add OMG Booth logo, colors, fonts. Test on mobile and desktop.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-low">Low</span>
+                                <span class="checklist-priority">Priority: 20</span>
+                                <span class="checklist-effort">Effort: 4–6 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Clean up 6,208 messages with no job assignment</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Investigate message routing issues. Assign messages to appropriate jobs or archive as needed. Review automation for message tagging.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-low">Low</span>
+                                <span class="checklist-priority">Priority: 21</span>
+                                <span class="checklist-effort">Effort: 8–12 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Address 2,593 late tasks and 2,653 open tasks</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Conduct task audit. Clear obsolete tasks. Prioritize open tasks. Implement task management process to prevent backlog.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-low">Low</span>
+                                <span class="checklist-priority">Priority: 22</span>
+                                <span class="checklist-effort">Effort: 10–15 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Address 36 past due invoices (collections)</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Initiate collection follow-up. Re-enable invoice reminder automations. Update payment schedules if needed. Allocate collections responsibility.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-low">Low</span>
+                                <span class="checklist-priority">Priority: 23</span>
+                                <span class="checklist-effort">Effort: 3–5 hours (planning) + ongoing</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Review lead source hierarchy & "The Knot" relevance</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Audit "The Knot" lead source performance. Determine if still relevant for photo booth company. Consider adding event platform sources (AllSeating, Splash, etc.).</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-low">Low</span>
+                                <span class="checklist-priority">Priority: 24</span>
+                                <span class="checklist-effort">Effort: 1–2 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox">
+                        <div class="checklist-label">
+                            <strong>Activate second user license</strong>
+                            <div style="margin-top: 8px; color: #b0b0b0; font-size: 13px;">Invite team member to second license. Configure permissions and access levels. Train on platform usage.</div>
+                            <div style="margin-top: 8px;">
+                                <span class="badge badge-low">Low</span>
+                                <span class="checklist-priority">Priority: 25</span>
+                                <span class="checklist-effort">Effort: 1–2 hours</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="info-box" style="margin-top: 30px;">
+                    <strong>Estimated Total Effort:</strong> 80–120 hours over 4–6 weeks. Critical blockers (items 1–4): 47–68 hours. High priority (items 5–12): 50–75 hours. Medium & low priority (items 13–25): Can be done in parallel or after overhaul core completion.
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        // Sidebar Navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                // Add active class to clicked link and corresponding section
+                link.classList.add('active');
+                const targetId = link.getAttribute('href').substring(1);
+                document.getElementById(targetId).classList.add('active');
+
+                // Smooth scroll to top of section
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Collapsible sections
+        const collapsibles = document.querySelectorAll('.collapsible');
+        collapsibles.forEach(collapsible => {
+            collapsible.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content && content.classList.contains('collapsible-content')) {
+                    content.classList.toggle('active');
+                }
+            });
+        });
+
+        // Checkbox persistence for Master Action List
+        const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+        checkboxes.forEach((checkbox, index) => {
+            // Load state from localStorage
+            const saved = localStorage.getItem(`checklist-item-${index}`);
+            if (saved === 'true') {
+                checkbox.checked = true;
+                checkbox.closest('.checklist-item').classList.add('completed');
+            }
+
+            // Save state on change
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(`checklist-item-${index}`, this.checked);
+                this.closest('.checklist-item').classList.toggle('completed');
+            });
+        });
+    </script>
+</body>
+</html>

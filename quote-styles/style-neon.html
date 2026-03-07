@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Activation — Quote Page Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: #050505;
+  color: #e8e8e8;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.back-link {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  color: rgba(0, 255, 170, 0.4);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: color 0.2s;
+}
+.back-link:hover { color: #00ffaa; }
+
+.page-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.brand-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.brand-logo {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #00ffaa;
+  text-shadow: 0 0 40px rgba(0, 255, 170, 0.2);
+  margin-bottom: 0.3rem;
+}
+
+.brand-tagline {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: rgba(0, 255, 170, 0.25);
+  font-weight: 500;
+}
+
+.glow-line {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffaa, transparent);
+  margin: 2rem auto;
+  box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+}
+
+.quote-box {
+  background: rgba(10, 10, 10, 0.8);
+  border: 1px solid rgba(0, 255, 170, 0.08);
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.quote-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(0, 255, 170, 0.4);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.quote-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.quote-for {
+  font-size: 0.88rem;
+  color: rgba(232, 232, 232, 0.35);
+  margin-bottom: 2rem;
+}
+
+.quote-message {
+  font-size: 0.9rem;
+  color: rgba(232, 232, 232, 0.5);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 255, 170, 0.06);
+}
+
+.package {
+  background: rgba(0, 255, 170, 0.02);
+  border: 1px solid rgba(0, 255, 170, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 0.8rem;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.package::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0), transparent);
+  transition: all 0.3s;
+}
+
+.package:hover {
+  border-color: rgba(0, 255, 170, 0.2);
+  background: rgba(0, 255, 170, 0.04);
+}
+
+.package:hover::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.5), transparent);
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+}
+
+.package.featured {
+  border-color: rgba(0, 255, 170, 0.2);
+}
+
+.package.featured::before {
+  background: linear-gradient(90deg, transparent, #00ffaa, transparent);
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+}
+
+.package-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  background: rgba(0, 255, 170, 0.1);
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  border-radius: 99px;
+  color: #00ffaa;
+  font-weight: 700;
+}
+
+.package-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+
+.package-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.package-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #00ffaa;
+}
+
+.package-desc {
+  font-size: 0.82rem;
+  color: rgba(232, 232, 232, 0.35);
+  margin-bottom: 1rem;
+}
+
+.package-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem 1rem;
+}
+
+.package-grid span {
+  font-size: 0.78rem;
+  color: rgba(232, 232, 232, 0.45);
+  padding: 0.2rem 0;
+  padding-left: 0.8rem;
+  position: relative;
+}
+
+.package-grid span::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: rgba(0, 255, 170, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+}
+
+.addons-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(0, 255, 170, 0.3);
+  margin: 2rem 0 1rem;
+  font-weight: 600;
+}
+
+.addon-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(0, 255, 170, 0.04);
+  font-size: 0.85rem;
+}
+
+.addon-row span:first-child { color: rgba(232, 232, 232, 0.5); }
+.addon-row span:last-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: rgba(0, 255, 170, 0.4);
+}
+
+.summary-box {
+  background: rgba(10, 10, 10, 0.8);
+  border: 1px solid rgba(0, 255, 170, 0.08);
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.45rem 0;
+  font-size: 0.85rem;
+  color: rgba(232, 232, 232, 0.35);
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0 0;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(0, 255, 170, 0.12);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.summary-total span:last-child {
+  font-family: 'JetBrains Mono', monospace;
+  color: #00ffaa;
+  text-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
+}
+
+.cta-btn {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: #00ffaa;
+  color: #050505;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 255, 170, 0.25);
+}
+
+.expiry {
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(0, 255, 170, 0.2);
+  margin-top: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.css-block {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0, 255, 170, 0.06);
+}
+
+.css-block h3 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(0, 255, 170, 0.3);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.css-code {
+  background: rgba(0, 10, 5, 0.8);
+  border: 1px solid rgba(0, 255, 170, 0.08);
+  border-radius: 10px;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: rgba(0, 255, 170, 0.5);
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: rgba(0, 255, 170, 0.08);
+  border: 1px solid rgba(0, 255, 170, 0.15);
+  color: rgba(0, 255, 170, 0.6);
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { background: rgba(0, 255, 170, 0.15); }
+
+@media (max-width: 600px) {
+  .page-wrapper { padding: 3rem 1rem; }
+  .quote-box, .summary-box { padding: 1.5rem; }
+  .package-header { flex-direction: column; gap: 0.3rem; }
+  .package-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="page-wrapper">
+  <div class="brand-header">
+    <div class="brand-logo">OMG BOOTH</div>
+    <div class="brand-tagline">Experiential Media &bull; Atlanta</div>
+  </div>
+
+  <div class="glow-line"></div>
+
+  <div class="quote-box">
+    <div class="quote-title">Activation Proposal</div>
+    <div class="quote-name">Brand Activation &mdash; Product Launch</div>
+    <div class="quote-for">Prepared for Jordan Rivera &mdash; Nike ATL</div>
+
+    <div class="quote-message">
+      Jordan &mdash; here's the proposal for your product launch activation. We've designed three tiers that scale from a focused photo moment to a full experiential takeover. Every option includes our signature clean aesthetic and real-time content delivery that gets people posting immediately.
+    </div>
+
+    <div class="package">
+      <div class="package-header">
+        <div class="package-name">Capture</div>
+        <div class="package-price">$2,500</div>
+      </div>
+      <div class="package-desc">Photo-first setup with branded overlay and instant social sharing.</div>
+      <div class="package-grid">
+        <span>4-Hour Booth</span>
+        <span>Custom Branded Overlay</span>
+        <span>Instant Text Delivery</span>
+        <span>Social Sharing Wall</span>
+        <span>Hashtag Integration</span>
+        <span>1 Attendant</span>
+      </div>
+    </div>
+
+    <div class="package featured">
+      <span class="package-badge">Best Value</span>
+      <div class="package-header">
+        <div class="package-name">Amplify</div>
+        <div class="package-price">$4,500</div>
+      </div>
+      <div class="package-desc">Multi-format content with data capture and branded microsite.</div>
+      <div class="package-grid">
+        <span>5-Hour Booth</span>
+        <span>Photos + GIFs + Video</span>
+        <span>Custom Backdrop</span>
+        <span>On-Site Prints</span>
+        <span>Lead Capture System</span>
+        <span>Branded Microsite</span>
+        <span>Real-Time Analytics</span>
+        <span>2 Attendants</span>
+      </div>
+    </div>
+
+    <div class="package">
+      <div class="package-header">
+        <div class="package-name">Takeover</div>
+        <div class="package-price">$7,500</div>
+      </div>
+      <div class="package-desc">Full-scale brand activation with 360° booth, slo-mo, data capture, and dedicated experience team.</div>
+      <div class="package-grid">
+        <span>6-Hour Activation</span>
+        <span>360° Booth + Standard</span>
+        <span>Slo-Mo Video</span>
+        <span>Full Custom Branding</span>
+        <span>Step-and-Repeat</span>
+        <span>Lead Capture + CRM</span>
+        <span>Prints + Digital + Gallery</span>
+        <span>Experience Manager + 2 Staff</span>
+      </div>
+    </div>
+
+    <div class="addons-title">Add-Ons</div>
+    <div class="addon-row"><span>Additional Hour</span><span>+$500</span></div>
+    <div class="addon-row"><span>Second Activation Zone</span><span>+$2,000</span></div>
+    <div class="addon-row"><span>Custom AR Filter</span><span>+$800</span></div>
+    <div class="addon-row"><span>Post-Event Analytics Report</span><span>+$350</span></div>
+    <div class="addon-row"><span>Same-Day Content Package</span><span>+$500</span></div>
+  </div>
+
+  <div class="summary-box">
+    <div class="summary-row"><span>Amplify Package</span><span>$4,500</span></div>
+    <div class="summary-row"><span>Additional Hour</span><span>$500</span></div>
+    <div class="summary-row"><span>Post-Event Analytics</span><span>$350</span></div>
+    <div class="summary-row"><span>Sales Tax (8%)</span><span>$428</span></div>
+    <div class="summary-total"><span>Total</span><span>$5,778</span></div>
+  </div>
+
+  <button class="cta-btn">Lock It In</button>
+  <div class="expiry">expires: 2026-03-21</div>
+
+  <div class="css-block">
+    <h3>VSCO Workspace Custom CSS &mdash; Paste into Page CSS</h3>
+    <div class="css-code" id="cssCode"><button class="copy-btn" onclick="copyCSS()">Copy</button>@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800');
+
+body {
+  --headline-font: 'Syne', sans-serif;
+  --default-font: 'Syne', sans-serif;
+  --monospace-font: 'JetBrains Mono', monospace;
+}
+
+/* Neon Activation — OMG Booth
+   Paste into: Settings > Branding > Advanced Design > Page CSS
+   Set Page Background color to: #050505
+   Set Box Background color to: #0a0a0a */</div>
+  </div>
+</div>
+
+<script>
+function copyCSS() {
+  const code = document.getElementById('cssCode').textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(code);
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy', 2000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlanta Warmth — Quote Page Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: #111010;
+  color: #f0ece4;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.back-link {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  color: rgba(232, 168, 73, 0.6);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: color 0.2s;
+}
+.back-link:hover { color: #e8a849; }
+
+.page-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.brand-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.brand-logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, #e8a849, #d4783a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.3rem;
+}
+
+.brand-tagline {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(232, 168, 73, 0.35);
+}
+
+.divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e8a849, transparent);
+  margin: 2rem auto;
+}
+
+.quote-box {
+  background: #1a1714;
+  border: 1px solid rgba(232, 168, 73, 0.12);
+  border-radius: 14px;
+  padding: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.quote-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(232, 168, 73, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.quote-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.quote-for {
+  font-size: 0.9rem;
+  color: rgba(240, 236, 228, 0.4);
+  margin-bottom: 2rem;
+}
+
+.quote-message {
+  font-size: 0.92rem;
+  color: rgba(240, 236, 228, 0.6);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(232, 168, 73, 0.08);
+}
+
+.package {
+  background: rgba(232, 168, 73, 0.03);
+  border: 1px solid rgba(232, 168, 73, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.package:hover {
+  border-color: rgba(232, 168, 73, 0.3);
+  background: rgba(232, 168, 73, 0.06);
+}
+
+.package.featured {
+  border-color: rgba(232, 168, 73, 0.3);
+  background: rgba(232, 168, 73, 0.06);
+  position: relative;
+}
+
+.package.featured::before {
+  content: 'RECOMMENDED';
+  position: absolute;
+  top: -0.5rem;
+  right: 1rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.15rem 0.6rem;
+  background: linear-gradient(135deg, #e8a849, #d4783a);
+  color: #111;
+  border-radius: 99px;
+  font-weight: 700;
+}
+
+.package-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+
+.package-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.package-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e8a849;
+}
+
+.package-desc {
+  font-size: 0.82rem;
+  color: rgba(240, 236, 228, 0.45);
+  margin-bottom: 0.8rem;
+}
+
+.package-features {
+  list-style: none;
+  margin: 0;
+}
+
+.package-features li {
+  padding: 0.3rem 0;
+  padding-left: 1.2rem;
+  position: relative;
+  font-size: 0.82rem;
+  color: rgba(240, 236, 228, 0.55);
+}
+
+.package-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #e8a849;
+  font-size: 0.75rem;
+}
+
+.addons-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(232, 168, 73, 0.4);
+  margin: 2rem 0 0.8rem;
+}
+
+.addon-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.addon-item {
+  background: rgba(232, 168, 73, 0.03);
+  border: 1px solid rgba(232, 168, 73, 0.08);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addon-item:hover {
+  border-color: rgba(232, 168, 73, 0.2);
+}
+
+.addon-item-name {
+  font-size: 0.82rem;
+  color: rgba(240, 236, 228, 0.7);
+}
+
+.addon-item-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: rgba(232, 168, 73, 0.6);
+  margin-top: 0.2rem;
+}
+
+.summary-box {
+  background: #1a1714;
+  border: 1px solid rgba(232, 168, 73, 0.12);
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.88rem;
+  color: rgba(240, 236, 228, 0.45);
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0 0;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(232, 168, 73, 0.15);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.summary-total span:last-child {
+  font-family: 'JetBrains Mono', monospace;
+  color: #e8a849;
+}
+
+.cta-btn {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #e8a849, #d4783a);
+  color: #111;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s;
+  letter-spacing: 0.02em;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(232, 168, 73, 0.3);
+}
+
+.expiry {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(232, 168, 73, 0.25);
+  margin-top: 1rem;
+}
+
+.payment-note {
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(240, 236, 228, 0.3);
+  margin-top: 0.5rem;
+}
+
+.css-block {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(232, 168, 73, 0.1);
+}
+
+.css-block h3 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(232, 168, 73, 0.5);
+  margin-bottom: 1rem;
+}
+
+.css-code {
+  background: rgba(10, 10, 8, 0.8);
+  border: 1px solid rgba(232, 168, 73, 0.1);
+  border-radius: 10px;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: rgba(232, 168, 73, 0.6);
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: rgba(232, 168, 73, 0.12);
+  border: 1px solid rgba(232, 168, 73, 0.2);
+  color: #e8a849;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { background: rgba(232, 168, 73, 0.2); }
+
+@media (max-width: 600px) {
+  .page-wrapper { padding: 3rem 1rem; }
+  .quote-box, .summary-box { padding: 1.5rem; }
+  .addon-grid { grid-template-columns: 1fr; }
+  .package-header { flex-direction: column; gap: 0.3rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="page-wrapper">
+  <div class="brand-header">
+    <div class="brand-logo">OMG BOOTH</div>
+    <div class="brand-tagline">Atlanta Experiential Media</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="quote-box">
+    <div class="quote-title">Proposal</div>
+    <div class="quote-name">Spring Social Photo Experience</div>
+    <div class="quote-for">Prepared for Marcus Thompson &mdash; Coca-Cola Events</div>
+
+    <div class="quote-message">
+      Marcus, great speaking with you about the spring team event! Here's what we've put together. The Premium package is what I'd recommend based on the vibe you described &mdash; but all three options will deliver an incredible experience for your team.
+    </div>
+
+    <div class="package">
+      <div class="package-header">
+        <div class="package-name">Essential</div>
+        <div class="package-price">$1,800</div>
+      </div>
+      <div class="package-desc">The foundation &mdash; everything you need for a great booth experience.</div>
+      <ul class="package-features">
+        <li>3-hour photo booth with custom overlay</li>
+        <li>Digital delivery via text & email</li>
+        <li>Curated prop collection</li>
+        <li>On-site booth attendant</li>
+      </ul>
+    </div>
+
+    <div class="package featured">
+      <div class="package-header">
+        <div class="package-name">Premium</div>
+        <div class="package-price">$2,800</div>
+      </div>
+      <div class="package-desc">The full experience &mdash; branded, shareable, and print-ready.</div>
+      <ul class="package-features">
+        <li>4-hour booth with photos + GIFs</li>
+        <li>Custom branded backdrop</li>
+        <li>On-site 4x6 prints for every guest</li>
+        <li>Post-event gallery microsite</li>
+        <li>Social sharing with branded hashtag</li>
+        <li>2 on-site attendants</li>
+      </ul>
+    </div>
+
+    <div class="package">
+      <div class="package-header">
+        <div class="package-name">Full Activation</div>
+        <div class="package-price">$4,200</div>
+      </div>
+      <div class="package-desc">The flagship &mdash; a complete brand activation with 360° video and data capture.</div>
+      <ul class="package-features">
+        <li>5-hour 360° booth experience</li>
+        <li>Slo-mo video + photos + GIFs</li>
+        <li>Full custom branding package</li>
+        <li>Guest data & lead capture</li>
+        <li>On-site prints + digital delivery</li>
+        <li>Dedicated Experience Manager</li>
+      </ul>
+    </div>
+
+    <div class="addons-title">Optional Add-Ons</div>
+    <div class="addon-grid">
+      <div class="addon-item">
+        <div class="addon-item-name">Additional Hour</div>
+        <div class="addon-item-price">+$400</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-item-name">Second Booth</div>
+        <div class="addon-item-price">+$1,200</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-item-name">Step-and-Repeat</div>
+        <div class="addon-item-price">+$350</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-item-name">Same-Day Gallery</div>
+        <div class="addon-item-price">+$250</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <div class="summary-row"><span>Premium Experience</span><span>$2,800</span></div>
+    <div class="summary-row"><span>Additional Hour</span><span>$400</span></div>
+    <div class="summary-row"><span>Sales Tax (8%)</span><span>$256</span></div>
+    <div class="summary-total"><span>Total</span><span>$3,456</span></div>
+  </div>
+
+  <button class="cta-btn">Continue to Contract & Payment</button>
+  <div class="expiry">This proposal expires March 21, 2026</div>
+  <div class="payment-note">50% retainer due at booking &bull; balance due 5 days before event</div>
+
+  <div class="css-block">
+    <h3>VSCO Workspace Custom CSS &mdash; Paste into Page CSS</h3>
+    <div class="css-code" id="cssCode"><button class="copy-btn" onclick="copyCSS()">Copy</button>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700');
+
+body {
+  --headline-font: 'Space Grotesk', sans-serif;
+  --default-font: 'Space Grotesk', sans-serif;
+  --monospace-font: 'JetBrains Mono', monospace;
+}
+
+/* Atlanta Warmth — OMG Booth
+   Paste into: Settings > Branding > Advanced Design > Page CSS
+   Set Page Background color to: #111010
+   Set Box Background color to: #1a1714 */</div>
+  </div>
+</div>
+
+<script>
+function copyCSS() {
+  const code = document.getElementById('cssCode').textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(code);
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy', 2000);
+}
+</script>
+</body>
+</html>

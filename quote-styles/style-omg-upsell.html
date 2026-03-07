@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — Upsell Quote Style</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #f5f4f1;
+  color: #1a1a1a;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.back-link {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  color: rgba(30, 30, 30, 0.4);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  z-index: 100;
+}
+.back-link:hover { color: #1a1a1a; }
+
+.page-wrapper {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+/* HEADER */
+.quote-header {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.brand-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.brand-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand-name span { color: #e8a849; }
+
+.quote-total-top {
+  text-align: right;
+}
+
+.quote-total-top .label {
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.quote-total-top .amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.quote-meta {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.quote-meta strong { color: #1a1a1a; font-weight: 600; }
+
+.message-box {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.7;
+}
+
+/* UPSELL SECTION */
+.upsell-section {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.upsell-header {
+  margin-bottom: 0.3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.upsell-sub {
+  font-size: 0.82rem;
+  color: #999;
+  margin-bottom: 1.5rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.product-card {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+}
+
+.product-card:hover {
+  border-color: #ddd;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+.product-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  background: #e8e4de;
+  position: relative;
+}
+
+/* Placeholder gradient images */
+.img-360 { background: linear-gradient(135deg, #1a1a2e, #3a3a5e); }
+.img-gif { background: linear-gradient(135deg, #2e1a2e, #5e3a5e); }
+.img-print { background: linear-gradient(135deg, #2e2e1a, #5e5e3a); }
+.img-360::after, .img-gif::after, .img-print::after {
+  position: absolute;
+  bottom: 0.8rem;
+  left: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 0.05em;
+}
+.img-360::after { content: '360°'; }
+.img-gif::after { content: 'GIF'; }
+.img-print::after { content: 'PRINT'; }
+
+.product-badge {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: white;
+  z-index: 2;
+}
+
+.badge-popular { background: #e8a849; }
+.badge-trending { background: #e06c5d; }
+.badge-new { background: #5bb67a; }
+
+.product-body { padding: 1rem; }
+
+.product-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+  line-height: 1.3;
+}
+
+.product-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #e8a849;
+  margin-bottom: 0.5rem;
+}
+
+.product-desc {
+  font-size: 0.78rem;
+  color: #888;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+}
+
+.add-btn {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  background: linear-gradient(135deg, #e8a849, #d4923a);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.add-btn:hover {
+  background: linear-gradient(135deg, #d4923a, #c4822a);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(232, 168, 73, 0.3);
+}
+
+.add-btn.added {
+  background: #5bb67a;
+}
+
+/* OPTIONAL ENHANCEMENTS */
+.enhancements-section {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.enhancements-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+
+.enhancement-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.enhancement-row:last-child { border-bottom: none; }
+
+.enh-info { flex: 1; }
+
+.enh-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.enh-desc {
+  font-size: 0.78rem;
+  color: #999;
+  margin-top: 0.15rem;
+}
+
+.enh-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.enh-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.enh-qty {
+  width: 36px;
+  height: 32px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.enh-add-btn {
+  padding: 0.3rem 0.7rem;
+  background: #e8a849;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.enh-add-btn:hover { background: #d4923a; }
+
+/* ORDER SUMMARY */
+.summary-section {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.summary-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  color: #666;
+}
+
+.summary-line.total {
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 2px solid #eee;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.summary-line.total span:last-child {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.payment-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.payment-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  font-size: 0.82rem;
+  color: #999;
+}
+
+.payment-line strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* CTA */
+.cta-section {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.approve-btn {
+  display: inline-block;
+  padding: 1rem 4rem;
+  background: linear-gradient(135deg, #e8a849, #d4923a);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.02em;
+}
+
+.approve-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(232, 168, 73, 0.35);
+}
+
+.expiry-text {
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-top: 0.8rem;
+}
+
+/* INCLUDED SECTION */
+.included-section {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.included-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.included-sub {
+  font-size: 0.82rem;
+  color: #999;
+  margin-bottom: 1.2rem;
+}
+
+.included-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.included-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+  padding: 0.3rem 0;
+}
+
+.included-item .check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(232, 168, 73, 0.1);
+  color: #e8a849;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+
+/* HOW IT WORKS SECTION */
+.process-section {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.process-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.process-steps {
+  display: flex;
+  gap: 1rem;
+}
+
+.process-step {
+  flex: 1;
+  text-align: center;
+  padding: 1rem 0.5rem;
+}
+
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(232, 168, 73, 0.1);
+  color: #e8a849;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.step-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.step-desc {
+  font-size: 0.72rem;
+  color: #999;
+  line-height: 1.4;
+}
+
+/* CSS BLOCK */
+.css-block {
+  margin-top: 3rem;
+  padding: 2rem 2.5rem;
+  background: #1a1a1a;
+  border-radius: 14px;
+}
+
+.css-block h3 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(232, 168, 73, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.css-block p {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.css-code {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: rgba(232, 168, 73, 0.6);
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: rgba(232, 168, 73, 0.12);
+  border: 1px solid rgba(232, 168, 73, 0.2);
+  color: #e8a849;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+.copy-btn:hover { background: rgba(232, 168, 73, 0.2); }
+
+.setup-note {
+  margin-top: 1.5rem;
+  padding: 1.2rem 1.5rem;
+  background: rgba(232, 168, 73, 0.06);
+  border: 1px solid rgba(232, 168, 73, 0.12);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.setup-note strong { color: #e8a849; }
+
+.setup-note ul {
+  margin: 0.5rem 0 0 1.2rem;
+  list-style: disc;
+}
+
+.setup-note li { margin: 0.3rem 0; }
+
+@media (max-width: 700px) {
+  .page-wrapper { padding: 2rem 1rem; }
+  .product-grid { grid-template-columns: 1fr; }
+  .included-grid { grid-template-columns: 1fr; }
+  .process-steps { flex-direction: column; }
+  .brand-row { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+  .quote-meta { flex-direction: column; gap: 0.3rem; }
+  .enhancement-row { flex-direction: column; gap: 0.6rem; align-items: flex-start; }
+  .enh-controls { align-self: flex-end; }
+  .upsell-section, .enhancements-section, .summary-section, .quote-header, .included-section, .process-section { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <div class="quote-header">
+    <div class="brand-row">
+      <div class="brand-name">OMG <span>Booth</span></div>
+      <div class="quote-total-top">
+        <div class="label">Total:</div>
+        <div class="amount">$2,945.00</div>
+      </div>
+    </div>
+    <div class="quote-meta">
+      <div><strong>Proposal for:</strong> Sarah Mitchell, Deloitte</div>
+      <div><strong>Event:</strong> Dec 14, 2026</div>
+      <div><strong>Expires:</strong> Mar 28, 2026</div>
+    </div>
+    <div class="message-box">
+      Hey Sarah! So excited about your holiday party. Here's your custom quote — I've included our Premium Experience as the base, and added some popular upgrades below that your guests will love. Select anything that catches your eye and hit Approve when you're ready!
+    </div>
+  </div>
+
+  <!-- WHAT'S INCLUDED -->
+  <div class="included-section">
+    <div class="included-title">Your Premium Experience Includes</div>
+    <div class="included-sub">4-hour photo booth experience with everything below</div>
+    <div class="included-grid">
+      <div class="included-item"><span class="check">&#10003;</span> 4 Hours of Booth Time</div>
+      <div class="included-item"><span class="check">&#10003;</span> Custom Branded Overlay</div>
+      <div class="included-item"><span class="check">&#10003;</span> Photos + GIFs</div>
+      <div class="included-item"><span class="check">&#10003;</span> Instant Text & Email Delivery</div>
+      <div class="included-item"><span class="check">&#10003;</span> Curated Prop Collection</div>
+      <div class="included-item"><span class="check">&#10003;</span> Custom Backdrop</div>
+      <div class="included-item"><span class="check">&#10003;</span> 2 On-Site Attendants</div>
+      <div class="included-item"><span class="check">&#10003;</span> Post-Event Gallery</div>
+    </div>
+  </div>
+
+  <!-- UPSELL CARDS -->
+  <div class="upsell-section">
+    <div class="upsell-header">Most clients add one of these...</div>
+    <div class="upsell-sub">Chosen by our most booked clients</div>
+
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-img img-360" style="display:flex;align-items:center;justify-content:center;">
+          <span class="product-badge badge-popular">Most Popular</span>
+          <span style="font-size:2.5rem;color:rgba(255,255,255,0.12);font-weight:700;">360°</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">360° Video Upgrade</div>
+          <div class="product-price">$800.00</div>
+          <div class="product-desc">Upgrade to our 360° platform for cinematic slow-motion video that guests can't stop sharing.</div>
+          <button class="add-btn" onclick="this.classList.toggle('added'); this.textContent = this.classList.contains('added') ? '✓ Added' : 'Add to My Booking'">Add to My Booking</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img img-gif" style="display:flex;align-items:center;justify-content:center;">
+          <span class="product-badge badge-trending">Trending</span>
+          <span style="font-size:2.5rem;color:rgba(255,255,255,0.12);font-weight:700;">SLO</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Slo-Mo Video Booth</div>
+          <div class="product-price">$600.00</div>
+          <div class="product-desc">Dramatic slow-motion video clips with confetti, props, and wind effects. Pure content gold.</div>
+          <button class="add-btn" onclick="this.classList.toggle('added'); this.textContent = this.classList.contains('added') ? '✓ Added' : 'Add to My Booking'">Add to My Booking</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img img-print" style="display:flex;align-items:center;justify-content:center;">
+          <span class="product-badge badge-new">Guest Fav</span>
+          <span style="font-size:2.5rem;color:rgba(255,255,255,0.12);font-weight:700;">4×6</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">On-Site Print Station</div>
+          <div class="product-price">$350.00</div>
+          <div class="product-desc">Guests get instant 4×6 branded prints they take home. The keepsake everyone actually wants.</div>
+          <button class="add-btn" onclick="this.classList.toggle('added'); this.textContent = this.classList.contains('added') ? '✓ Added' : 'Add to My Booking'">Add to My Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTIONAL ENHANCEMENTS -->
+  <div class="enhancements-section">
+    <div class="enhancements-title">Optional Enhancements</div>
+
+    <div class="enhancement-row">
+      <div class="enh-info">
+        <div class="enh-name">Additional Hour &mdash; $400/hr</div>
+        <div class="enh-desc">Need more time? Extend your booth rental by the hour.</div>
+      </div>
+      <div class="enh-controls">
+        <span class="enh-price">$400.00 &times;</span>
+        <input type="number" class="enh-qty" value="1" min="1" max="5">
+        <button class="enh-add-btn">add</button>
+      </div>
+    </div>
+
+    <div class="enhancement-row">
+      <div class="enh-info">
+        <div class="enh-name">Standby Hour &mdash; $100/hr</div>
+        <div class="enh-desc">Non-operational hours for dinner, speeches, or transitions.</div>
+      </div>
+      <div class="enh-controls">
+        <span class="enh-price">$100.00 &times;</span>
+        <input type="number" class="enh-qty" value="1" min="1" max="5">
+        <button class="enh-add-btn">add</button>
+      </div>
+    </div>
+
+    <div class="enhancement-row">
+      <div class="enh-info">
+        <div class="enh-name">Custom Step-and-Repeat &mdash; $350</div>
+        <div class="enh-desc">Branded backdrop with your logo and event design. Red carpet energy.</div>
+      </div>
+      <div class="enh-controls">
+        <span class="enh-price">$350.00 &times;</span>
+        <input type="number" class="enh-qty" value="1" min="1" max="3">
+        <button class="enh-add-btn">add</button>
+      </div>
+    </div>
+
+    <div class="enhancement-row">
+      <div class="enh-info">
+        <div class="enh-name">Lead Capture Module &mdash; $250</div>
+        <div class="enh-desc">Collect guest emails, phone numbers, and custom fields at the booth.</div>
+      </div>
+      <div class="enh-controls">
+        <span class="enh-price">$250.00 &times;</span>
+        <input type="number" class="enh-qty" value="1" min="1" max="1">
+        <button class="enh-add-btn">add</button>
+      </div>
+    </div>
+
+    <div class="enhancement-row">
+      <div class="enh-info">
+        <div class="enh-name">Same-Day Gallery &mdash; $200</div>
+        <div class="enh-desc">All photos live on a branded gallery page the same day. Share one link.</div>
+      </div>
+      <div class="enh-controls">
+        <span class="enh-price">$200.00 &times;</span>
+        <input type="number" class="enh-qty" value="1" min="1" max="1">
+        <button class="enh-add-btn">add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="process-section">
+    <div class="process-title">What Happens Next</div>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">1</div>
+        <div class="step-name">Approve</div>
+        <div class="step-desc">Select your upgrades and approve this quote</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">2</div>
+        <div class="step-name">Sign</div>
+        <div class="step-desc">Review and sign your contract digitally</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">3</div>
+        <div class="step-name">Pay</div>
+        <div class="step-desc">50% retainer secures your date</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">4</div>
+        <div class="step-name">Plan</div>
+        <div class="step-desc">We'll send you a logistics form to fill out</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-section">
+    <div class="summary-title">Order Summary</div>
+    <div class="summary-line"><span>Premium Experience (4 hrs)</span><span>$2,800.00</span></div>
+    <div class="summary-line"><span>Sales Tax (8.9%)</span><span>$249.20</span></div>
+    <div class="summary-line total"><span>Total</span><span>$3,049.20</span></div>
+
+    <div class="payment-info">
+      <div class="payment-line"><span>Retainer due at booking (50%)</span><strong>$1,524.60</strong></div>
+      <div class="payment-line"><span>Balance due 5 days before event</span><strong>$1,524.60</strong></div>
+    </div>
+  </div>
+
+  <!-- APPROVE CTA -->
+  <div class="cta-section">
+    <button class="approve-btn">Approve Quote</button>
+    <div class="expiry-text">This proposal expires March 28, 2026</div>
+  </div>
+
+  <!-- CSS REFERENCE -->
+  <div class="css-block">
+    <h3>How to Recreate This in VSCO Workspace</h3>
+    <p>This layout uses native Workspace features — no code needed for the card layout. The CSS below handles fonts and accent colors.</p>
+
+    <div class="css-code" id="cssCode"><button class="copy-btn" onclick="copyCSS()">Copy</button>@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700');
+
+body {
+  --headline-font: 'DM Sans', sans-serif;
+  --default-font: 'DM Sans', sans-serif;
+  --monospace-font: 'JetBrains Mono', monospace;
+}
+
+/* OMG Booth — Upsell Quote Style
+   Paste into: Settings > Branding > Advanced Design > Page CSS
+   Set Page Background color to: #f5f4f1
+   Set Box Background color to: #ffffff */</div>
+
+    <div class="setup-note">
+      <strong>To get the card layout with product images in VSCO Workspace:</strong>
+      <ul>
+        <li><strong>Add images to your products</strong> &mdash; Go to Settings > Products & Services, edit each product, upload a photo. This is what makes the card layout appear.</li>
+        <li><strong>Use Upgradable Quotes</strong> &mdash; When building a quote, create an "Advanced Quote" with tiered packages. Clients see options and can select/add.</li>
+        <li><strong>Set up add-ons as separate products</strong> &mdash; Create individual products for each enhancement (Additional Hour, Step-and-Repeat, etc.) and add them to the quote as optional items.</li>
+        <li><strong>Add product badges</strong> &mdash; Product descriptions support text that appears below the image. Use compelling copy like the screenshot example.</li>
+        <li><strong>Payment schedule</strong> &mdash; Set up a 50/50 payment schedule (retainer + balance) in the quote. Workspace auto-generates two invoices.</li>
+        <li><strong>Include questionnaire + contract</strong> &mdash; Add your Event Details questionnaire and contract to the quote flow. Client sees: pricing > questionnaire > contract > payment in one seamless link.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function copyCSS() {
+  const code = document.getElementById('cssCode').textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(code);
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy', 2000);
+}
+</script>
+</body>
+</html>

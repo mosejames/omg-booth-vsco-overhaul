@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — VSCO Workspace Questionnaire Overhaul</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #222222;
+  --bg-card-hover: #2a2a2a;
+  --border: #333333;
+  --border-light: #444444;
+  --text-primary: #f0ece4;
+  --text-secondary: #a09a8e;
+  --text-muted: #6b655a;
+  --accent-warm: #e8a849;
+  --accent-warm-dim: #c48a30;
+  --accent-coral: #e06c5d;
+  --accent-green: #5bb67a;
+  --accent-amber: #d4a84b;
+  --accent-red: #d45b5b;
+  --accent-blue: #5b8fd4;
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* LAYOUT */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.sidebar-logo h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  letter-spacing: -0.02em;
+}
+
+.sidebar-logo p {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+
+.sidebar nav { padding: 0.5rem 0; }
+
+.sidebar nav a {
+  display: block;
+  padding: 0.55rem 1.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 400;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.sidebar nav a:hover {
+  color: var(--text-primary);
+  background: rgba(232, 168, 73, 0.05);
+}
+
+.sidebar nav a.active {
+  color: var(--accent-warm);
+  border-left-color: var(--accent-warm);
+  background: rgba(232, 168, 73, 0.08);
+  font-weight: 500;
+}
+
+.sidebar nav .nav-number {
+  display: inline-block;
+  width: 1.4rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+}
+
+.main {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 3rem 6rem;
+}
+
+/* MOBILE NAV */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-warm);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(232, 168, 73, 0.4);
+}
+
+.mobile-nav-toggle svg { fill: var(--bg-primary); }
+
+/* HERO */
+.hero {
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero .eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-warm);
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.hero h1 span { color: var(--accent-warm); }
+
+.hero .subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* SECTIONS */
+section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
+}
+
+.section-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-warm-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.section-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section-header p {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 2rem 0 0.8rem;
+  letter-spacing: -0.01em;
+}
+
+h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--accent-warm);
+}
+
+p { margin-bottom: 0.8rem; }
+
+/* TABLES */
+.table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+thead th {
+  background: var(--bg-card);
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+tbody td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+.responses-count {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.badge-keep { background: rgba(91, 182, 122, 0.15); color: var(--accent-green); border: 1px solid rgba(91, 182, 122, 0.3); }
+.badge-merge { background: rgba(212, 168, 75, 0.15); color: var(--accent-amber); border: 1px solid rgba(212, 168, 75, 0.3); }
+.badge-delete { background: rgba(212, 91, 91, 0.15); color: var(--accent-red); border: 1px solid rgba(212, 91, 91, 0.3); }
+
+/* STATS BAR */
+.stats-bar {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 120px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+
+.stat-card .stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.stat-card .stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.stat-keep .stat-value { color: var(--accent-green); }
+.stat-merge .stat-value { color: var(--accent-amber); }
+.stat-delete .stat-value { color: var(--accent-red); }
+
+/* FLOW DIAGRAM */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 2rem 0;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.flow-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  min-width: 140px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.flow-step .flow-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent-warm-dim);
+  margin-bottom: 0.3rem;
+}
+
+.flow-step .flow-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.flow-step .flow-trigger {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.flow-arrow {
+  flex-shrink: 0;
+  color: var(--accent-warm-dim);
+  font-size: 1.2rem;
+  padding: 0 0.3rem;
+}
+
+/* BLUEPRINT CARDS */
+.blueprint {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.blueprint-header {
+  padding: 1.2rem 1.5rem;
+  background: rgba(232, 168, 73, 0.06);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.blueprint-header:hover { background: rgba(232, 168, 73, 0.1); }
+
+.blueprint-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.blueprint-header h3 .bp-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-warm-dim);
+  background: rgba(232, 168, 73, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.blueprint-toggle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  transition: transform 0.3s;
+}
+
+.blueprint.collapsed .blueprint-toggle { transform: rotate(-90deg); }
+.blueprint.collapsed .blueprint-body { display: none; }
+
+.blueprint-body { padding: 1.5rem; }
+
+.bp-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.bp-meta-item label {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.bp-meta-item span {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.bp-section {
+  margin: 1.2rem 0;
+}
+
+.bp-section-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-warm);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.field-list {
+  list-style: none;
+  margin: 0.5rem 0;
+}
+
+.field-list li {
+  padding: 0.35rem 0 0.35rem 1.2rem;
+  position: relative;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.field-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-light);
+}
+
+.field-list li strong { color: var(--text-primary); font-weight: 500; }
+
+.field-list li code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  background: rgba(232, 168, 73, 0.1);
+  color: var(--accent-warm);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.bp-note {
+  background: rgba(232, 168, 73, 0.06);
+  border: 1px solid rgba(232, 168, 73, 0.15);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  font-size: 0.85rem;
+  margin: 1rem 0;
+  color: var(--text-secondary);
+}
+
+.bp-note strong { color: var(--accent-warm); }
+
+.bp-note.bp-warning {
+  background: rgba(212, 91, 91, 0.06);
+  border-color: rgba(212, 91, 91, 0.2);
+}
+
+.bp-note.bp-warning strong { color: var(--accent-red); }
+
+/* AUTOMATION CARDS */
+.auto-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+}
+
+.auto-card h4 { margin-top: 0; }
+
+.auto-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 0.3rem 1rem;
+  font-size: 0.88rem;
+  margin: 0.4rem 0;
+}
+
+.auto-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding-top: 0.1rem;
+}
+
+.auto-value { color: var(--text-secondary); }
+.auto-value strong { color: var(--text-primary); font-weight: 500; }
+
+.auto-path {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-warm);
+  background: rgba(232, 168, 73, 0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  display: inline-block;
+  margin: 0.1rem 0;
+}
+
+/* CHECKLIST */
+.checklist { list-style: none; margin: 1.5rem 0; }
+
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.7rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-size: 0.88rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.checklist li:hover { border-color: var(--border-light); }
+
+.checklist li.checked {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.checklist li input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border: 2px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.1rem;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.checklist li input[type="checkbox"]:checked {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+.checklist li input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -1px;
+  left: 2px;
+  font-size: 0.75rem;
+  color: white;
+  font-weight: 700;
+}
+
+.checklist-progress {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-green);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  min-width: 60px;
+  text-align: right;
+}
+
+/* TOKEN TABLE */
+.token-table code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  background: rgba(232, 168, 73, 0.1);
+  color: var(--accent-warm);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+.token-table td:first-child { white-space: nowrap; }
+
+/* UTILITY */
+.callout {
+  background: var(--bg-card);
+  border-left: 3px solid var(--accent-warm);
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9rem;
+}
+
+.callout strong { color: var(--accent-warm); }
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+/* PRINT */
+@media print {
+  .sidebar, .mobile-nav-toggle { display: none !important; }
+  .main { max-width: 100%; padding: 1rem; }
+  .blueprint.collapsed .blueprint-body { display: block !important; }
+  body { background: white; color: #222; font-size: 11px; }
+  .blueprint, .auto-card, .stat-card, .checklist li { border-color: #ccc; background: white; }
+  .badge-keep { background: #e6f5ec; color: #2a7a45; border-color: #2a7a45; }
+  .badge-merge { background: #fef5e0; color: #9a7520; border-color: #9a7520; }
+  .badge-delete { background: #fde8e8; color: #b23030; border-color: #b23030; }
+  .section-header { border-color: #ccc; }
+  .hero h1 span, .section-number, h4 { color: #b8860b; }
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    left: -280px;
+    top: 0;
+    width: 280px;
+    transition: left 0.3s ease;
+    z-index: 300;
+  }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 250;
+  }
+  .sidebar-overlay.show { display: block; }
+  .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+  .main { padding: 2rem 1.2rem 5rem; }
+  .hero h1 { font-size: 1.6rem; }
+  .flow { flex-direction: column; align-items: stretch; }
+  .flow-arrow { transform: rotate(90deg); text-align: center; }
+  .bp-meta { grid-template-columns: 1fr; }
+  .stats-bar { flex-direction: column; }
+  .auto-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>OMG Booth</h2>
+      <p>VSCO Workspace Overhaul</p>
+    </div>
+    <nav>
+      <a href="#the-problem"><span class="nav-number">01</span> The Problem</a>
+      <a href="#new-system"><span class="nav-number">02</span> The New System</a>
+      <a href="#products"><span class="nav-number">03</span> Product & Quote Setup</a>
+      <a href="#blueprints"><span class="nav-number">04</span> Form Blueprints</a>
+      <a href="#automation"><span class="nav-number">05</span> Automation Wiring</a>
+      <a href="#checklist"><span class="nav-number">06</span> Master Action List</a>
+      <a href="#tokens"><span class="nav-number">07</span> Token Reference</a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- MOBILE NAV BUTTON -->
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="eyebrow">Operations Manual</div>
+      <h1>Questionnaire System <span>Overhaul</span></h1>
+      <p class="subtitle">Consolidating 26 questionnaires down to 6, built around an upsell quote flow. A complete walkthrough for rebuilding OMG Booth's VSCO Workspace intake, product catalog, quote experience, and reporting system.</p>
+    </header>
+
+    <!-- SECTION 1: THE PROBLEM -->
+    <section id="the-problem">
+      <div class="section-header">
+        <div class="section-number">Section 01</div>
+        <h2>The Problem</h2>
+        <p>Full account audit reveals systemic bloat: 28 questionnaires (8 dead), 80+ products with zero images, 30 automations (27 disabled), 35+ quote templates (none Upgradable), and critical missing infrastructure for the upsell flow.</p>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card stat-keep">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Keep</div>
+        </div>
+        <div class="stat-card stat-merge">
+          <div class="stat-value">15</div>
+          <div class="stat-label">Merge</div>
+        </div>
+        <div class="stat-card stat-delete">
+          <div class="stat-value">8</div>
+          <div class="stat-label">Delete</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Questionnaire</th><th>Responses</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Contact Form Inquiry Step 2 - Additional Info</td><td class="responses-count">0</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>Design Assets Review</td><td class="responses-count">1</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Customizations - 360&deg;</td><td class="responses-count">3</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Customizations - Design + Props</td><td class="responses-count">5</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Customizations - Design + Props + Social</td><td class="responses-count">18</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Customizations - Design + Props + Social + Microsite</td><td class="responses-count">53</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Customizations - Design + Social</td><td class="responses-count">30</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Customizations - Design + Social + Microsite</td><td class="responses-count">2</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>Event Customizations - Desing + Social (Bragbox)</td><td class="responses-count">0</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>Event Customizations - First Day of School</td><td class="responses-count">1</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>Event Customizations - Props Only</td><td class="responses-count">2</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>Event Customizations - Virtual Booth</td><td class="responses-count">28</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Customizations - Virtual Booth Info</td><td class="responses-count">45</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Event Logistics</td><td class="responses-count">402</td><td><span class="badge badge-keep">Keep</span></td></tr>
+            <tr><td>Logistics - Corporate Event</td><td class="responses-count">0</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>Logistics - Holiday Event</td><td class="responses-count">6</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Logistics - Social Event</td><td class="responses-count">59</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Logistics - Wedding</td><td class="responses-count">21</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>New Lead In-take</td><td class="responses-count">0</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>New Lead Logistics - Virtual Booth</td><td class="responses-count">181</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Photo Booth Intake Questionnaire</td><td class="responses-count">1</td><td><span class="badge badge-delete">Delete</span></td></tr>
+            <tr><td>Reports - Post-Event Report [Experience Manager]</td><td class="responses-count">139</td><td><span class="badge badge-keep">Keep</span></td></tr>
+            <tr><td>Reports - Post-Event Report [Smile Squad]</td><td class="responses-count">65</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Reports - Pre-Event Report</td><td class="responses-count">101</td><td><span class="badge badge-keep">Keep</span></td></tr>
+            <tr><td>Step 2 of 2 &mdash; Event details</td><td class="responses-count">84</td><td><span class="badge badge-merge">Merge</span></td></tr>
+            <tr><td>Virtual Booth Event Logistics</td><td class="responses-count">47</td><td><span class="badge badge-merge">Merge</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Key issues:</strong> 11 "Event Customizations" variants that each handle a specific service combo, 4 separate logistics forms by event type, multiple dead forms with 0 responses, and no single clean intake path for new leads.
+      </div>
+
+      <h3>Full Account Audit Snapshot</h3>
+      <p>Beyond questionnaires, the audit uncovered issues across the entire VSCO Workspace account. These must be addressed alongside the form consolidation.</p>
+
+      <div class="stats-bar">
+        <div class="stat-card" style="border-color: var(--accent-coral);">
+          <div class="stat-value" style="color: var(--accent-coral);">62%</div>
+          <div class="stat-label">Health Score</div>
+        </div>
+        <div class="stat-card" style="border-color: var(--accent-coral);">
+          <div class="stat-value" style="color: var(--accent-coral);">4</div>
+          <div class="stat-label">Critical Blockers</div>
+        </div>
+        <div class="stat-card" style="border-color: var(--accent-warm);">
+          <div class="stat-value" style="color: var(--accent-warm);">40+</div>
+          <div class="stat-label">Dead/Stale Items</div>
+        </div>
+        <div class="stat-card" style="border-color: var(--accent-green);">
+          <div class="stat-value" style="color: var(--accent-green);">35%</div>
+          <div class="stat-label">Overhaul Ready</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Area</th><th>Current State</th><th>Impact</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Lead Status: "Qualified"</strong></td><td style="color: var(--accent-coral);">Does not exist</td><td>Blocks Form 2 automation trigger &mdash; must create first</td></tr>
+            <tr><td><strong>Upgradable Quote Template</strong></td><td style="color: var(--accent-coral);">None (35+ standard templates)</td><td>Blocks the entire upsell quote flow &mdash; must build</td></tr>
+            <tr><td><strong>Product Images</strong></td><td style="color: var(--accent-coral);">0 of 80+ products have images</td><td>No images = no visual product cards in quotes</td></tr>
+            <tr><td><strong>Automations</strong></td><td style="color: var(--accent-coral);">3 active / 27 disabled</td><td>System running on manual mode; 15+ will break during overhaul</td></tr>
+            <tr><td><strong>Email Templates</strong></td><td>55+ (15+ duplicates)</td><td>Consolidate to ~30; rebuild for new 6-form system</td></tr>
+            <tr><td><strong>Custom Fields</strong></td><td>99 fields (47 legacy)</td><td>Review legacy fields for cleanup; ensure token mappings</td></tr>
+            <tr><td><strong>Past Due Invoices</strong></td><td style="color: var(--accent-coral);">36 past due</td><td>Collections issue &mdash; re-enable invoice reminder automations</td></tr>
+            <tr><td><strong>Unassigned Messages</strong></td><td>6,208 with no job</td><td>Data quality issue &mdash; review routing</td></tr>
+            <tr><td><strong>Open/Late Tasks</strong></td><td>2,653 open / 2,593 late</td><td>Process review needed post-overhaul</td></tr>
+            <tr><td><strong>Contracts</strong></td><td>3 templates (General = workhorse, 442 completed)</td><td>Healthy &mdash; embed in quote template</td></tr>
+            <tr><td><strong>Payments</strong></td><td>Square connected, 4 schedules</td><td>Working &mdash; consider Stripe as backup</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Revenue Concentration &mdash; What's Actually Selling</h3>
+      <p>The audit pulled real revenue data. These are OMG Booth's top-performing products. The new package tiers should map to these proven sellers.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Product</th><th>Orders</th><th>Revenue</th><th>Maps To</th></tr>
+          </thead>
+          <tbody>
+            <tr style="border-left: 3px solid var(--accent-green);"><td><strong>OMG Booth Kiosk</strong></td><td>623</td><td>$1,328,318</td><td>Premium Experience base</td></tr>
+            <tr style="border-left: 3px solid var(--accent-green);"><td><strong>OMG Social Kiosk</strong></td><td>153</td><td>$301,019</td><td>Essential Experience base</td></tr>
+            <tr style="border-left: 3px solid var(--accent-green);"><td><strong>OMG Print + Social Kiosk</strong></td><td>144</td><td>$258,427</td><td>Premium w/ print add-on</td></tr>
+            <tr><td>Virtual Booth - Enterprise</td><td>54</td><td>$213,549</td><td>Keep as standalone</td></tr>
+            <tr><td>OMG Instant Kiosk</td><td>90</td><td>$145,147</td><td>Essential Experience variant</td></tr>
+            <tr><td>OMG Video Kiosk</td><td>24</td><td>$70,798</td><td>Slo-Mo / Video upgrade</td></tr>
+            <tr><td>Virtual Booth - Pro</td><td>42</td><td>$94,297</td><td>Keep as standalone</td></tr>
+            <tr><td>OMG Array</td><td>9</td><td>$40,300</td><td>Full Activation tier</td></tr>
+            <tr><td>OMG 360&deg; Video Booth</td><td>7</td><td>$16,300</td><td>360&deg; upgrade product</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bp-note">
+        <strong>Pricing insight:</strong> OMG Booth Kiosk at $2,135 avg/order (623 orders) validates the Premium tier at ~$2,800. OMG Social at $1,967 avg validates the Essential tier at ~$1,800. OMG Array at $4,478 avg validates the Full Activation tier at ~$4,200. These aren't guesses &mdash; they're backed by actual order history.
+      </div>
+    </section>
+
+    <!-- SECTION 2: THE NEW SYSTEM -->
+    <section id="new-system">
+      <div class="section-header">
+        <div class="section-number">Section 02</div>
+        <h2>The New System</h2>
+        <p>6 forms mapped to the client journey. Each fires at the right moment via automation.</p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">Form 1</div>
+          <div class="flow-name">Lead Intake</div>
+          <div class="flow-trigger">Website / Link</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="flow-num">Form 2</div>
+          <div class="flow-name">Event Details</div>
+          <div class="flow-trigger">Post-Qualification</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="border-color: var(--accent-warm); background: rgba(232,168,73,0.06);">
+          <div class="flow-num" style="color: var(--accent-warm);">Upsell Quote</div>
+          <div class="flow-name">Products + Form 3 + Contract + Payment</div>
+          <div class="flow-trigger">One Link &mdash; Client Books</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="flow-num">Form 4</div>
+          <div class="flow-name">Design Brief</div>
+          <div class="flow-trigger">2-3 Weeks Before</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="flow-num">Form 5 &amp; 6</div>
+          <div class="flow-name">Reports</div>
+          <div class="flow-trigger">Pre &amp; Post Event</div>
+        </div>
+      </div>
+
+      <h3>How It Works</h3>
+      <p>Every new lead enters through <strong>Form 1</strong> (public, embedded on your website). After you qualify them and change their lead status, <strong>Form 2</strong> fires automatically to collect event specifics needed for the proposal.</p>
+      <p>You use their Form 2 answers to build an <strong>Upsell Quote</strong> &mdash; a single link where the client sees product cards with images, selects their package, adds optional upgrades (360&deg;, slo-mo, print station), fills out <strong>Form 3</strong> (logistics), signs the contract, and pays &mdash; all in one flow. No back-and-forth.</p>
+      <p>As the event approaches, <strong>Form 4</strong> collects design assets and branding details 2-3 weeks out. Your team uses <strong>Form 5</strong> (pre-event) and <strong>Form 6</strong> (post-event) internally for operational reporting, triggered automatically around the event date.</p>
+
+      <div class="bp-note">
+        <strong>No conditional logic:</strong> VSCO Workspace doesn't support show/hide fields based on previous answers. The new forms use clear <strong>Headline</strong> and <strong>Paragraph</strong> layout fields to create labeled sections with instructions like "Skip to the next section if not applicable." This is clean, simple, and works.
+      </div>
+    </section>
+
+    <!-- SECTION 3: PRODUCT & QUOTE SETUP -->
+    <section id="products">
+      <div class="section-header">
+        <div class="section-number">Section 03</div>
+        <h2>Product & Quote Setup</h2>
+        <p>Build the products, packages, and add-ons that power the upsell quote experience. When products have images, VSCO Workspace renders them as visual cards clients can browse and select.</p>
+      </div>
+
+      <div class="callout">
+        <strong>Why this matters:</strong> VSCO Workspace's "Upgradable" quote type displays products as cards with images, descriptions, and prices. The client picks a package, adds upgrades, fills out the embedded logistics questionnaire, signs the contract, and pays &mdash; all in one link. This replaces sending separate quotes, questionnaires, and contracts as individual emails.
+      </div>
+
+      <div class="bp-note">
+        <strong>Audit finding:</strong> 80+ products exist in VSCO Workspace across categories (Activation Fees, Add-Ons, Design &amp; Branding, Equipment, etc.) but <strong>zero have images attached</strong>. Top revenue products: OMG Booth Kiosk ($1.33M), OMG Social ($301K), Print + Social ($258K). The new tier structure maps to these proven sellers.
+      </div>
+
+      <h3>Step 1 &mdash; Create Base Packages</h3>
+      <p>Go to <span class="auto-path">Settings &rsaquo; Products &rsaquo; New Product</span>. Create one product per package tier. Upload a hero image for each. These prices are validated against actual order history.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Product Name</th><th>Price</th><th>What's Included</th><th>Based On</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Essential Experience</strong></td><td>$1,800</td><td>3-hour booth, custom overlay, digital delivery, 1 attendant</td><td>OMG Social Kiosk ($1,967 avg, 153 orders)</td></tr>
+            <tr><td><strong>Premium Experience</strong></td><td>$2,800</td><td>4-hour booth, photos + GIFs + video, backdrop, on-site prints, social sharing wall, 2 attendants</td><td>OMG Booth Kiosk ($2,135 avg, 623 orders)</td></tr>
+            <tr><td><strong>Full Activation</strong></td><td>$4,200</td><td>5-hour booth, 360&deg; + standard booth, slo-mo, full branding, step-and-repeat, lead capture, experience manager + 2 staff</td><td>OMG Array ($4,478 avg, 9 orders)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bp-note">
+        <strong>Image tip:</strong> Upload a high-quality product image for each package. Go to <span class="auto-path">Products &rsaquo; [Product] &rsaquo; Images</span>. When a product has an image, VSCO Workspace automatically renders it as a visual card in "Upgradable" quotes. No image = plain text row. The image is the difference between a boring line item and a premium product card.
+      </div>
+
+      <h3>Step 2 &mdash; Create Upsell Products</h3>
+      <p>These are standalone products the client can add to their booking. Each gets its own image and card in the quote.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Product Name</th><th>Price</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>360&deg; Booth Upgrade</strong></td><td>$800</td><td>Add a 360&deg; video booth experience alongside standard</td></tr>
+            <tr><td><strong>Slo-Mo Station</strong></td><td>$600</td><td>Cinematic slow-motion video capture</td></tr>
+            <tr><td><strong>Print Station</strong></td><td>$400</td><td>On-site photo printing (4x6 or strips)</td></tr>
+            <tr><td><strong>Custom AR Filter</strong></td><td>$800</td><td>Branded augmented reality filter for the booth</td></tr>
+            <tr><td><strong>LED Enclosure Upgrade</strong></td><td>$500</td><td>Illuminated booth enclosure with custom color</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Step 3 &mdash; Create Add-On Products</h3>
+      <p>Smaller line items shown in an "Optional Enhancements" section. These use quantity selectors.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Product Name</th><th>Price</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Additional Hour</strong></td><td>$350/hr</td><td>Extend booth time</td></tr>
+            <tr><td><strong>Standby Hour</strong></td><td>$150/hr</td><td>Booth on-site but inactive (setup buffer)</td></tr>
+            <tr><td><strong>Step-and-Repeat Backdrop</strong></td><td>$500</td><td>Custom branded backdrop</td></tr>
+            <tr><td><strong>Lead Capture Module</strong></td><td>$300</td><td>Data collection at the booth (name, email, phone)</td></tr>
+            <tr><td><strong>Same-Day Content Package</strong></td><td>$500</td><td>Edited highlight reel delivered same day</td></tr>
+            <tr><td><strong>Post-Event Analytics Report</strong></td><td>$350</td><td>Engagement metrics, content stats, lead data export</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Existing products to archive (0 orders):</strong> Additional OMG Go Photographers, Additional Standalone Sharing Station, Studio Quality DSLR Camera Upgrade, Boomerang Feature, Karaoke/Dub Smash Capture, Light Painting, Relocation Fee, Returned Check Fee, Data Capture Polls and Surveys. These are dead weight &mdash; archive or delete.
+      </div>
+
+      <h3>Step 4 &mdash; Build the Quote Template</h3>
+      <p>Go to <span class="auto-path">Settings &rsaquo; Quote Templates &rsaquo; New Template</span>. This is where everything comes together.</p>
+
+      <div class="bp-note">
+        <strong>Audit finding:</strong> 35+ quote templates exist (Standard + Advanced), but <strong>none are Upgradable type</strong>. At least 8 are date-specific (2020-2023) and should be archived. Multiple "OMG Social Experience" variants exist with slight pricing differences. Target: consolidate to ~10 core templates, with the new Upgradable template as the primary quoting tool.
+      </div>
+
+      <div class="auto-card">
+        <h4>Quote Template Configuration</h4>
+        <div class="auto-row">
+          <span class="auto-label">Quote Type</span>
+          <span class="auto-value"><strong>Upgradable</strong> &mdash; this enables the visual product card layout</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Products</span>
+          <span class="auto-value">Add all base packages and upsell products. The client selects one package and optionally adds upgrades.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Add-Ons Section</span>
+          <span class="auto-value">Add the smaller add-on products. These appear with quantity selectors so the client can pick and choose.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Questionnaire</span>
+          <span class="auto-value"><strong>Embed Form 3 (Event Logistics)</strong> &mdash; the client fills it out as part of the booking flow, right after selecting products</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Contract</span>
+          <span class="auto-value"><strong>Attach your contract template</strong> &mdash; client reviews and e-signs after filling out logistics</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Payment</span>
+          <span class="auto-value"><strong>Enable payment collection</strong> &mdash; retainer or full payment. Client pays after signing the contract. Configure payment schedule in <span class="auto-path">Settings &rsaquo; Payments</span>.</span>
+        </div>
+      </div>
+
+      <div class="bp-note">
+        <strong>The client experience:</strong> They receive one link. They see product cards with images. They pick a package, add upgrades, fill in logistics, sign the contract, and pay &mdash; one smooth flow. You get a booked job with all the info you need without sending 4 separate emails.
+      </div>
+
+      <h3>Step 5 &mdash; Product Images That Sell</h3>
+      <p>Each product image should be a clean, branded mockup. Suggestions:</p>
+      <ul class="field-list">
+        <li><strong>Essential Experience</strong> &mdash; Clean photo of booth setup at a social event</li>
+        <li><strong>Premium Experience</strong> &mdash; Photo showing booth + backdrop + props + prints</li>
+        <li><strong>Full Activation</strong> &mdash; Wide shot of a large-scale brand activation</li>
+        <li><strong>360&deg; Booth Upgrade</strong> &mdash; Still from a 360&deg; video with motion blur</li>
+        <li><strong>Slo-Mo Station</strong> &mdash; Cinematic frame from slo-mo footage</li>
+        <li><strong>Print Station</strong> &mdash; Photo of branded prints being handed out</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Badge tip:</strong> In VSCO Workspace, you can mark a product as "Most Popular" or featured. This shows a badge on the product card. Use it on the <strong>Premium Experience</strong> to guide clients toward the mid-tier package.
+      </div>
+    </section>
+
+    <!-- SECTION 4: FORM BLUEPRINTS -->
+    <section id="blueprints">
+      <div class="section-header">
+        <div class="section-number">Section 04</div>
+        <h2>Form Blueprints</h2>
+        <p>Detailed field-by-field specifications for each of the 6 new forms. Click to expand.</p>
+      </div>
+
+      <!-- FORM 1 -->
+      <div class="blueprint" id="bp1">
+        <div class="blueprint-header" onclick="toggleBlueprint('bp1')">
+          <h3><span class="bp-num">01</span> New Lead Intake</h3>
+          <span class="blueprint-toggle">&#9660;</span>
+        </div>
+        <div class="blueprint-body">
+          <div class="bp-meta">
+            <div class="bp-meta-item"><label>Purpose</label><span>First touchpoint. Qualifies leads, auto-creates lead in Workspace.</span></div>
+            <div class="bp-meta-item"><label>When Sent</label><span>Embedded on website, shared via link</span></div>
+            <div class="bp-meta-item"><label>Public Form</label><span>Yes &mdash; auto-create lead enabled</span></div>
+            <div class="bp-meta-item"><label>Redirect</label><span>Thank you page on OMG Booth website</span></div>
+          </div>
+
+          <div class="bp-note">
+            <strong>Token note:</strong> Use a <code>{{job.type}}</code> dropdown to auto-set the job type based on the client's selection. Since this form has token-linked fields, responses will always create a <em>new lead</em> (not attach to existing jobs). The <code>{{job.type}}</code> dropdown will override the default job type setting.
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Fields</div>
+            <ul class="field-list">
+              <li><strong>Contact Name</strong> &mdash; Text (required)</li>
+              <li><strong>Email</strong> &mdash; Text (required)</li>
+              <li><strong>Phone</strong> &mdash; Text (required)</li>
+              <li><strong>Organization / Company</strong> &mdash; Text</li>
+              <li><strong>Event Type</strong> &mdash; Dropdown: Corporate, Social, School/University, Wedding, Nonprofit, Other &mdash; linked to <code>{{job.type}}</code></li>
+              <li><strong>Event Date</strong> &mdash; Date (approximate)</li>
+              <li><strong>Estimated Guest Count</strong> &mdash; Text</li>
+              <li><strong>Experience Interest</strong> &mdash; Checkboxes: Photo Booth, GIF/Video Booth, 360&deg; Booth, Branded Activation, Not Sure</li>
+              <li><strong>Brief Description of Event / Goals</strong> &mdash; Textarea</li>
+              <li><strong>How Did You Hear About Us?</strong> &mdash; Dropdown</li>
+              <li><strong>Budget Range</strong> &mdash; Dropdown</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Replaces</div>
+            <ul class="field-list">
+              <li>Contact Form Inquiry Step 2 - Additional Info</li>
+              <li>New Lead In-take</li>
+              <li>Photo Booth Intake Questionnaire</li>
+              <li>Step 2 of 2 &mdash; Event details (partially)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM 2 -->
+      <div class="blueprint" id="bp2">
+        <div class="blueprint-header" onclick="toggleBlueprint('bp2')">
+          <h3><span class="bp-num">02</span> Event Details</h3>
+          <span class="blueprint-toggle">&#9660;</span>
+        </div>
+        <div class="blueprint-body">
+          <div class="bp-meta">
+            <div class="bp-meta-item"><label>Purpose</label><span>Collect specifics needed to build the upsell quote. Their answers tell you which package to recommend, which upgrades to highlight, and what to pre-fill on the quote. Replaces all 11 "Event Customizations" variants.</span></div>
+            <div class="bp-meta-item"><label>When Sent</label><span>Automation: lead status changes to "Qualified" or manual send after initial conversation</span></div>
+            <div class="bp-meta-item"><label>Public Form</label><span>No</span></div>
+            <div class="bp-meta-item"><label>Editability</label><span>Lock "Until Job is booked"</span></div>
+          </div>
+
+          <div class="bp-note">
+            <strong>Handling no conditional logic:</strong> Use Headline and Paragraph layout fields to create clearly labeled sections. Add a Paragraph at the top: "Please complete the sections that apply to your event. Skip any sections that don't apply."
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Event Overview</div>
+            <ul class="field-list">
+              <li><strong>Event Date</strong> &mdash; Date</li>
+              <li><strong>Start Time</strong> &mdash; Text</li>
+              <li><strong>End Time</strong> &mdash; Text</li>
+              <li><strong>Venue Name</strong> &mdash; Text</li>
+              <li><strong>Venue Address</strong> &mdash; Textarea</li>
+              <li><strong>Indoor / Outdoor</strong> &mdash; Dropdown: Indoor, Outdoor, Both</li>
+              <li><strong>Expected Guest Count</strong> &mdash; Text</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Branding & Content Goals</div>
+            <ul class="field-list">
+              <li><strong>Primary Purpose of Booth</strong> &mdash; Checkboxes: Brand Awareness, Entertainment, Lead Capture, Social Content, Other</li>
+              <li><strong>Branding Level</strong> &mdash; Dropdown: Fully Custom, Light Branding, No Branding</li>
+              <li><strong>Content Types Desired</strong> &mdash; Checkboxes: Photos, GIFs, Boomerangs, Video, Slo-Mo</li>
+              <li><strong>Do You Need Lead/Data Capture at the Booth?</strong> &mdash; Dropdown: Yes, No, Not Sure</li>
+              <li><strong>Social Sharing Requirements</strong> &mdash; Text (hashtag, handles, microsite URL)</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Print & Digital Preferences</div>
+            <ul class="field-list">
+              <li><strong>Digital Delivery Method</strong> &mdash; Dropdown: Text, Email, Both</li>
+              <li><strong>Do You Need On-Site Prints?</strong> &mdash; Dropdown: Yes, No</li>
+              <li><strong>Print Size Preference</strong> &mdash; Dropdown (sizes)</li>
+              <li><strong>Do You Need a Gallery/Microsite After the Event?</strong> &mdash; Dropdown: Yes, No, Not Sure</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Special Requests</div>
+            <ul class="field-list">
+              <li><strong>Props</strong> &mdash; Dropdown: Bring Your Own, OMG Provides, None</li>
+              <li><strong>Backdrops or Step-and-Repeat Needed?</strong> &mdash; Dropdown: Yes, No</li>
+              <li><strong>Any Specific Theme or Creative Direction?</strong> &mdash; Textarea</li>
+              <li><strong>Additional Notes</strong> &mdash; Textarea</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Replaces (11 forms)</div>
+            <ul class="field-list">
+              <li>Event Customizations - 360&deg;</li>
+              <li>Event Customizations - Design + Props</li>
+              <li>Event Customizations - Design + Props + Social</li>
+              <li>Event Customizations - Design + Props + Social + Microsite</li>
+              <li>Event Customizations - Design + Social</li>
+              <li>Event Customizations - Design + Social + Microsite</li>
+              <li>Event Customizations - Desing + Social (Bragbox)</li>
+              <li>Event Customizations - First Day of School</li>
+              <li>Event Customizations - Props Only</li>
+              <li>Event Customizations - Virtual Booth</li>
+              <li>Event Customizations - Virtual Booth Info</li>
+            </ul>
+          </div>
+
+          <div class="bp-note">
+            <strong>Feeds the upsell quote:</strong> Once the client submits this form, you have everything needed to build their quote. If they selected 360&deg; interest, include the 360&deg; Upgrade product. If they want prints, add the Print Station. If they need lead capture, add that module. Their answers = your product selection. Then send the quote &mdash; one link with product cards, logistics questionnaire, contract, and payment.
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM 3 -->
+      <div class="blueprint" id="bp3">
+        <div class="blueprint-header" onclick="toggleBlueprint('bp3')">
+          <h3><span class="bp-num">03</span> Event Logistics</h3>
+          <span class="blueprint-toggle">&#9660;</span>
+        </div>
+        <div class="blueprint-body">
+          <div class="bp-meta">
+            <div class="bp-meta-item"><label>Purpose</label><span>Day-of operational details. Embedded inside the upsell quote flow &mdash; client fills it out between selecting products and signing the contract. Replaces 6 logistics forms + virtual booth logistics.</span></div>
+            <div class="bp-meta-item"><label>When Sent</label><span><strong>Embedded in quote template</strong> (no separate automation needed). Client completes it as part of booking.</span></div>
+            <div class="bp-meta-item"><label>Public Form</label><span>No</span></div>
+            <div class="bp-meta-item"><label>Editability</label><span>Lock based on job date (5 days before event)</span></div>
+          </div>
+
+          <div class="bp-note">
+            <strong>Embedded in quote flow:</strong> This form is attached to your quote template (see Section 03). The client sees: product cards &rarr; this logistics questionnaire &rarr; contract &rarr; payment. No separate email needed. They complete everything in one sitting.
+          </div>
+
+          <div class="bp-note">
+            <strong>Token tip:</strong> Link venue fields to job custom fields via tokens. Pre-fill venue name and address from Form 2 data using <code>{{job.custom.venue-name}}</code> and <code>{{job.custom.venue-address}}</code>.
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Venue & Access</div>
+            <ul class="field-list">
+              <li><strong>Venue Name</strong> &mdash; Text (pre-fill via token)</li>
+              <li><strong>Venue Address</strong> &mdash; Textarea (pre-fill via token)</li>
+              <li><strong>Load-In Time</strong> &mdash; Text</li>
+              <li><strong>Load-In Entrance / Instructions</strong> &mdash; Textarea</li>
+              <li><strong>Elevator or Stairs?</strong> &mdash; Dropdown: Elevator, Stairs, Ground Level, Both</li>
+              <li><strong>Parking Instructions</strong> &mdash; Textarea</li>
+              <li><strong>Are Other Vendors Loading In Simultaneously?</strong> &mdash; Dropdown: Yes, No, Not Sure</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Setup Requirements</div>
+            <ul class="field-list">
+              <li><strong>Setup Location Description</strong> &mdash; Textarea</li>
+              <li><strong>Power Outlet Access</strong> &mdash; Dropdown: Within 10ft, Need Extension, Generator Needed</li>
+              <li><strong>WiFi Network Name</strong> &mdash; Text</li>
+              <li><strong>WiFi Password</strong> &mdash; Text</li>
+              <li><strong>Table Provided or Do We Bring Our Own?</strong> &mdash; Dropdown: Venue Provides, OMG Brings</li>
+              <li><strong>Ceiling Height or Space Restrictions</strong> &mdash; Textarea</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Day-of Contacts</div>
+            <ul class="field-list">
+              <li><strong>On-Site Contact Name</strong> &mdash; Text</li>
+              <li><strong>On-Site Contact Phone</strong> &mdash; Text</li>
+              <li><strong>On-Site Contact Email</strong> &mdash; Text</li>
+              <li><strong>Secondary Contact</strong> &mdash; Text</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Timeline</div>
+            <ul class="field-list">
+              <li><strong>Event Start Time</strong> &mdash; Text</li>
+              <li><strong>Event End Time</strong> &mdash; Text</li>
+              <li><strong>Booth Open Time</strong> &mdash; Text</li>
+              <li><strong>Booth Close Time</strong> &mdash; Text</li>
+              <li><strong>Any Scheduled Activations or Announcements?</strong> &mdash; Textarea</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Virtual Booth Section</div>
+            <ul class="field-list">
+              <li><em>Headline layout field:</em> <strong>"VIRTUAL BOOTH CLIENTS ONLY &mdash; skip if in-person"</strong></li>
+              <li><strong>Virtual Booth URL Preferences</strong> &mdash; Text</li>
+              <li><strong>Delivery Method</strong> &mdash; Dropdown</li>
+              <li><strong>Custom Landing Page Needs</strong> &mdash; Textarea</li>
+              <li><strong>Start Date for Virtual Access</strong> &mdash; Date</li>
+              <li><strong>End Date for Virtual Access</strong> &mdash; Date</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Replaces</div>
+            <ul class="field-list">
+              <li>Event Logistics (402 responses &mdash; workhorse)</li>
+              <li>Logistics - Corporate Event</li>
+              <li>Logistics - Holiday Event</li>
+              <li>Logistics - Social Event</li>
+              <li>Logistics - Wedding</li>
+              <li>New Lead Logistics - Virtual Booth</li>
+              <li>Virtual Booth Event Logistics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM 4 -->
+      <div class="blueprint" id="bp4">
+        <div class="blueprint-header" onclick="toggleBlueprint('bp4')">
+          <h3><span class="bp-num">04</span> Design & Branding Brief</h3>
+          <span class="blueprint-toggle">&#9660;</span>
+        </div>
+        <div class="blueprint-body">
+          <div class="bp-meta">
+            <div class="bp-meta-item"><label>Purpose</label><span>Collect all creative assets and design preferences.</span></div>
+            <div class="bp-meta-item"><label>When Sent</label><span>Automation: 2-3 weeks before event date (date-relative)</span></div>
+            <div class="bp-meta-item"><label>Public Form</label><span>No</span></div>
+            <div class="bp-meta-item"><label>Editability</label><span>Lock based on job date (7 days before event)</span></div>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Fields</div>
+            <ul class="field-list">
+              <li><strong>Brand Name</strong> &mdash; Text (as it should appear on overlay)</li>
+              <li><strong>Primary Logo</strong> &mdash; File upload</li>
+              <li><strong>Secondary Logo</strong> &mdash; File upload (if applicable)</li>
+              <li><strong>Brand Colors</strong> &mdash; Text (hex codes or description)</li>
+              <li><strong>Fonts</strong> &mdash; Text (if specified)</li>
+              <li><strong>Overlay / Frame Style Preference</strong> &mdash; Dropdown: Classic, Modern, Minimal, Bold, Custom</li>
+              <li><strong>Tagline or Text to Include on Overlay</strong> &mdash; Textarea</li>
+              <li><strong>Social Handles to Display</strong> &mdash; Text</li>
+              <li><strong>Hashtag to Display</strong> &mdash; Text</li>
+              <li><strong>Design Inspiration or Reference Images</strong> &mdash; File upload</li>
+              <li><strong>Approval Contact Name</strong> &mdash; Text</li>
+              <li><strong>Approval Contact Email</strong> &mdash; Text</li>
+              <li><strong>Additional Design Notes</strong> &mdash; Textarea</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Replaces</div>
+            <ul class="field-list">
+              <li>Design Assets Review</li>
+              <li>Branding portions from Event Customizations forms</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM 5 -->
+      <div class="blueprint" id="bp5">
+        <div class="blueprint-header" onclick="toggleBlueprint('bp5')">
+          <h3><span class="bp-num">05</span> Pre-Event Report (Internal)</h3>
+          <span class="blueprint-toggle">&#9660;</span>
+        </div>
+        <div class="blueprint-body">
+          <div class="bp-meta">
+            <div class="bp-meta-item"><label>Purpose</label><span>Experience Manager / staff fills out before event. Already working well.</span></div>
+            <div class="bp-meta-item"><label>When Sent</label><span>Automation: 2 days before event date</span></div>
+            <div class="bp-meta-item"><label>Status</label><span>Keep existing form (101 responses). Review and update field names if needed.</span></div>
+            <div class="bp-meta-item"><label>Visibility</label><span>Make fields Private where appropriate</span></div>
+          </div>
+
+          <div class="bp-note">
+            <strong>Action required:</strong> Review existing Pre-Event Report form. Update any outdated field names. Ensure field visibility is set to <strong>Private</strong> for internal-only fields. No rebuild needed &mdash; this form is battle-tested.
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM 6 -->
+      <div class="blueprint" id="bp6">
+        <div class="blueprint-header" onclick="toggleBlueprint('bp6')">
+          <h3><span class="bp-num">06</span> Post-Event Report (Internal)</h3>
+          <span class="blueprint-toggle">&#9660;</span>
+        </div>
+        <div class="blueprint-body">
+          <div class="bp-meta">
+            <div class="bp-meta-item"><label>Purpose</label><span>Merge Experience Manager (139 responses) and Smile Squad (65 responses) into one unified form with a role selector.</span></div>
+            <div class="bp-meta-item"><label>When Sent</label><span>Automation: 1 day after event date</span></div>
+            <div class="bp-meta-item"><label>Public Form</label><span>No</span></div>
+            <div class="bp-meta-item"><label>Visibility</label><span>Private for internal-only fields</span></div>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Fields</div>
+            <ul class="field-list">
+              <li><strong>Role</strong> &mdash; Dropdown: Experience Manager, Smile Squad Member, Other</li>
+              <li><strong>Event Name</strong> &mdash; Text (pre-fill via <code>{{job.name}}</code>)</li>
+              <li><strong>Event Date</strong> &mdash; Date (pre-fill via token)</li>
+              <li><strong>Client Name</strong> &mdash; Text (pre-fill via <code>{{primary_contact.name}}</code>)</li>
+              <li><strong>Overall Event Rating</strong> &mdash; Dropdown: 1, 2, 3, 4, 5</li>
+              <li><strong>Guest Engagement Level</strong> &mdash; Dropdown: Low, Medium, High</li>
+              <li><strong>Equipment Issues</strong> &mdash; Textarea</li>
+              <li><strong>Client Satisfaction Notes</strong> &mdash; Textarea</li>
+              <li><strong>Content Delivery Confirmation</strong> &mdash; Checkbox</li>
+              <li><strong>Number of Photos / GIFs / Videos Captured</strong> &mdash; Text</li>
+              <li><strong>Notable Moments or Highlights</strong> &mdash; Textarea</li>
+              <li><strong>Issues or Concerns to Flag</strong> &mdash; Textarea</li>
+              <li><strong>Recommendations for Future Events with This Client</strong> &mdash; Textarea</li>
+              <li><strong>Additional Notes</strong> &mdash; Textarea</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Replaces</div>
+            <ul class="field-list">
+              <li>Reports - Post-Event Report [Experience Manager] (139 responses)</li>
+              <li>Reports - Post-Event Report [Smile Squad] (65 responses)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: AUTOMATION WIRING -->
+    <section id="automation">
+      <div class="section-header">
+        <div class="section-number">Section 05</div>
+        <h2>Automation Wiring</h2>
+        <p>How to set up the VSCO Workspace automations that send each questionnaire at the right time.</p>
+      </div>
+
+      <div class="callout">
+        <strong>Where to build automations:</strong> Go to <span class="auto-path">Settings &rsaquo; Automations &rsaquo; New Automation</span>. Each automation has three parts: an <strong>Observable</strong> (trigger), optional <strong>Conditions</strong>, and one or more <strong>Actions</strong>.
+      </div>
+
+      <div class="bp-note" style="border-left-color: var(--accent-coral);">
+        <strong>Audit finding &mdash; automation system is largely dormant:</strong> Only <strong>3 of 30 automations are active</strong>. The 3 working automations: (1) New Lead Auto Responder - General (562 runs), (2) Send OMG Asset Library Request (13 runs), (3) Send SMS to New Lead (85 runs). Everything else is disabled. Additionally, <strong>9 automations reference questionnaires being merged</strong> and will break during consolidation &mdash; delete these before merging forms. 8 more are stale (3-6 years inactive) and should be deleted outright.
+      </div>
+
+      <h3>Current Automations to Keep</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Automation</th><th>Trigger</th><th>Runs</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>New Lead Auto Responder - General</td><td>Lead &rsaquo; Created</td><td>562</td><td><span class="badge badge-keep">Keep</span> &mdash; auto-reply working</td></tr>
+            <tr><td>Send SMS to New Lead</td><td>Lead &rsaquo; Created</td><td>85</td><td><span class="badge badge-keep">Keep</span> &mdash; instant SMS response</td></tr>
+            <tr><td>Send OMG Asset Library Request</td><td>Questionnaire &rsaquo; Submitted</td><td>13</td><td><span class="badge badge-keep">Keep</span> &mdash; review if still relevant</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Automations to Delete Before Overhaul</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Automation</th><th>Why Delete</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Send Email: Customizations Design + Props</td><td>References form being merged</td></tr>
+            <tr><td>Send Email: Customizations Design + Props + Social</td><td>References form being merged</td></tr>
+            <tr><td>Send Email: Customizations Design + Props + Social + Microsite</td><td>References form being merged</td></tr>
+            <tr><td>Send Email: Customizations Design + Social</td><td>References form being merged</td></tr>
+            <tr><td>Send Quote: Holiday Event / Social Event / Wedding / Virtual Booth</td><td>All reference logistics forms being merged</td></tr>
+            <tr><td>New Lead - Generic / Holiday / Wedding</td><td>Superseded by Auto Responder - General</td></tr>
+            <tr><td>Travel Required? (Local + Typical)</td><td>Stale 5-6 years, never re-enabled</td></tr>
+            <tr><td>Within Metro Atlanta Area</td><td>0 executions ever</td></tr>
+            <tr><td>Customizations Reminder</td><td>6 years stale, references deleted forms</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Automations to Re-Enable</h3>
+      <p>The audit found 3 high-value disabled automations related to collections. Re-enabling these could recover revenue from the 36 past-due invoices.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Automation</th><th>Last Run</th><th>Total Runs</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Invoice Due Soon Email</strong></td><td>2 months ago</td><td>152</td></tr>
+            <tr><td><strong>Invoice Due Today Email</strong></td><td>1 month ago</td><td>161</td></tr>
+            <tr><td><strong>Invoice Past Due Email</strong></td><td>3 months ago</td><td>344</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>New Automations to Build</h3>
+
+      <!-- AUTO 1 -->
+      <div class="auto-card">
+        <h4>Form 1: New Lead Intake</h4>
+        <div class="auto-row">
+          <span class="auto-label">Setup</span>
+          <span class="auto-value"><strong>No automation needed.</strong> This is a public form. Embed on your website or share the direct link. Leads auto-create when submitted.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Steps</span>
+          <span class="auto-value">
+            1. Build the questionnaire in <span class="auto-path">Settings &rsaquo; Questionnaires</span><br>
+            2. Check <strong>"Public Form"</strong> and enable <strong>auto-create lead</strong><br>
+            3. Set redirect URL to your thank-you page<br>
+            4. Copy the public URL or embed code for your website
+          </span>
+        </div>
+      </div>
+
+      <!-- AUTO 2 -->
+      <div class="auto-card">
+        <h4>Form 2: Event Details &rarr; Send After Qualification</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Lead &rsaquo; Lead Status Changed</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value">Immediately</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value"><strong>Lead Status = "Qualified"</strong> (create this status in Settings &rsaquo; Lead Sources if it doesn't exist)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Action</span>
+          <span class="auto-value"><strong>Send Email</strong> &mdash; Use a Questionnaire Invitation template. Include <code>{{item.name_link}}</code> token so the questionnaire link auto-populates.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Click Path</span>
+          <span class="auto-value"><span class="auto-path">Settings &rsaquo; Automations &rsaquo; New Automation &rsaquo; Observable: Lead &rsaquo; Lead Status Changed &rsaquo; Condition: Status = Qualified &rsaquo; Action: Send Email</span></span>
+        </div>
+      </div>
+
+      <!-- UPSELL QUOTE -->
+      <div class="auto-card" style="border-color: rgba(232,168,73,0.3); background: rgba(232,168,73,0.03);">
+        <h4 style="color: var(--accent-warm);">Upsell Quote &rarr; Send After Event Details Received</h4>
+        <div class="auto-row">
+          <span class="auto-label">Trigger</span>
+          <span class="auto-value"><strong>Manual.</strong> After reviewing Form 2 answers, you build the quote with the right products and send it. This is intentionally not automated &mdash; you want to customize which products appear based on their needs.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Steps</span>
+          <span class="auto-value">
+            1. Review client's Form 2 (Event Details) responses<br>
+            2. Create a new quote from your <strong>Upsell Quote Template</strong><br>
+            3. Add/remove products based on their answers (360&deg; interest? Include it. No prints? Remove it.)<br>
+            4. The template already has <strong>Form 3 (Logistics)</strong>, <strong>Contract</strong>, and <strong>Payment</strong> embedded<br>
+            5. Send the quote &mdash; client gets one link for everything
+          </span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Click Path</span>
+          <span class="auto-value"><span class="auto-path">Job &rsaquo; Quotes &rsaquo; New Quote &rsaquo; Select Upsell Template &rsaquo; Adjust Products &rsaquo; Send</span></span>
+        </div>
+      </div>
+
+      <!-- AUTO 3 -->
+      <div class="auto-card">
+        <h4>Form 3: Event Logistics &rarr; Embedded in Quote</h4>
+        <div class="auto-row">
+          <span class="auto-label">Setup</span>
+          <span class="auto-value"><strong>No separate automation needed.</strong> Form 3 is embedded in the quote template. The client fills it out as part of the booking flow (after selecting products, before signing the contract).</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Config</span>
+          <span class="auto-value">In your Quote Template, attach the <strong>Event Logistics</strong> questionnaire. VSCO Workspace presents it inline between product selection and the contract signature page.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Fallback</span>
+          <span class="auto-value">If the client books via phone or you skip the quote flow, send Form 3 manually or set up a fallback automation: <strong>Job Stage &rarr; Booked</strong> &rarr; check if logistics questionnaire is empty &rarr; send email.</span>
+        </div>
+      </div>
+
+      <!-- AUTO 4 -->
+      <div class="auto-card">
+        <h4>Form 4: Design Brief &rarr; Send 2-3 Weeks Before Event</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong> (or the primary event type for your jobs)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>21 days before</strong> (or 14 days &mdash; your call)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value"><strong>Job Stage = Booked</strong> or <strong>Fulfillment</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Action</span>
+          <span class="auto-value"><strong>Send Email</strong> &mdash; Questionnaire Invitation template with <code>{{item.name_link}}</code></span>
+        </div>
+      </div>
+
+      <!-- AUTO 5 -->
+      <div class="auto-card">
+        <h4>Form 5: Pre-Event Report &rarr; Send 2 Days Before Event</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>2 days before</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value"><strong>Job Stage = Booked</strong> or <strong>Fulfillment</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Action</span>
+          <span class="auto-value"><strong>Send Email</strong> &mdash; Internal email to assigned team member(s) with questionnaire link</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Note</span>
+          <span class="auto-value">This is an <strong>internal</strong> form. Send to your staff, not the client.</span>
+        </div>
+      </div>
+
+      <!-- AUTO 6 -->
+      <div class="auto-card">
+        <h4>Form 6: Post-Event Report &rarr; Send 1 Day After Event</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>1 day after</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value"><strong>Job Stage = Fulfillment</strong> or <strong>Booked</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Action</span>
+          <span class="auto-value"><strong>Send Email</strong> &mdash; Internal email to assigned team member(s) with questionnaire link</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Note</span>
+          <span class="auto-value">Both Experience Managers and Smile Squad members receive this. The <strong>Role</strong> dropdown at the top of the form lets them self-identify.</span>
+        </div>
+      </div>
+
+      <div class="bp-note">
+        <strong>Email template tip:</strong> Create a <strong>Questionnaire Invitation</strong> email template for each form. Use the <code>{{item.name_link}}</code> token to auto-insert the questionnaire link. Pre-fill the subject line with something like "Action Needed: Event Details for {{job.name}}". The token ensures each client gets their own unique questionnaire URL.
+      </div>
+    </section>
+
+    <!-- SECTION 5: CHECKLIST -->
+    <section id="checklist">
+      <div class="section-header">
+        <div class="section-number">Section 06</div>
+        <h2>Master Action List</h2>
+        <p>Merged from the audit findings and overhaul plan. Ordered by priority &mdash; critical blockers first. Progress saves in your browser. Estimated total: 80-120 hours over 4-6 weeks.</p>
+      </div>
+
+      <div class="checklist-progress">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+        <div class="progress-text" id="progressText">0 / 30</div>
+      </div>
+
+      <h3 style="color: var(--accent-coral); margin-bottom: 1rem;">Critical Blockers &mdash; Do These First</h3>
+      <ul class="checklist" id="checklist">
+        <li><input type="checkbox" data-key="chk-0"> Create <strong>"Qualified" lead status</strong> in <span class="auto-path">Settings &rsaquo; Lead Sources</span> &mdash; required for Form 2 automation trigger <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-1"> Back up / screenshot all 28 existing questionnaire field configurations before touching anything <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-2"> Create <strong>base package products</strong> with images: Essential ($1,800), Premium ($2,800), Full Activation ($4,200) <em style="color: var(--text-muted);">(10-15 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-3"> Create <strong>upsell products</strong> with images: 360&deg; Upgrade, Slo-Mo Station, Print Station, AR Filter, LED Enclosure <em style="color: var(--text-muted);">(6-8 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-4"> Create <strong>add-on products</strong>: Additional Hour, Standby Hour, Step-and-Repeat, Lead Capture, Same-Day Content, Analytics Report <em style="color: var(--text-muted);">(3-4 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-5"> Build <strong>Upgradable Quote Template</strong> &mdash; add all products, embed Form 3 + General Service Contract + Square payment <em style="color: var(--text-muted);">(15-20 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-6"> Mark <strong>Premium Experience</strong> as "Most Popular" in the quote template</li>
+      </ul>
+
+      <h3 style="color: var(--accent-warm); margin: 2rem 0 1rem;">High Priority &mdash; Build the New System</h3>
+      <ul class="checklist">
+        <li><input type="checkbox" data-key="chk-7"> Create custom fields in <strong>Settings &rsaquo; Custom Fields</strong> for any new tokens (venue name, venue address, etc.) &mdash; audit found 99 existing, review 47 legacy fields <em style="color: var(--text-muted);">(3-4 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-8"> Build <strong>Form 1</strong> (New Lead Intake) &mdash; make public, set auto-create lead, set redirect URL <em style="color: var(--text-muted);">(4-6 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-9"> Build <strong>Form 2</strong> (Event Details) &mdash; consolidates 11 Event Customizations variants + "Step 2 of 2" (187 combined responses) <em style="color: var(--text-muted);">(12-18 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-10"> Build <strong>Form 3</strong> (Event Logistics) &mdash; use existing "Event Logistics" (402 responses) as base, merge 4 type-specific variants + 2 virtual booth forms <em style="color: var(--text-muted);">(10-14 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-11"> Build <strong>Form 4</strong> (Design &amp; Branding Brief) &mdash; absorbs Design Assets Review (1 response), add file uploads <em style="color: var(--text-muted);">(6-8 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-12"> Update <strong>Form 5</strong> (Pre-Event Report) &mdash; battle-tested (101 responses), clean up field names, set visibility to Private <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-13"> Build <strong>Form 6</strong> (Post-Event Report) &mdash; merge EM (139 responses) + Smile Squad (65 responses), add role selector <em style="color: var(--text-muted);">(6-10 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-14"> <strong>Delete 15+ stale automations</strong> that reference forms being merged (see Section 05 delete table) <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-15"> <strong>Re-enable invoice automations</strong>: Invoice Due Soon, Invoice Due Today, Invoice Past Due &mdash; 36 past due invoices need attention <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-16"> Create <strong>email templates</strong> for Forms 2, 4, 5, and 6 (Form 3 is embedded in quote) <em style="color: var(--text-muted);">(4-6 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-17"> Set up automation: <strong>Lead status &rarr; Qualified</strong> &rarr; send Event Details questionnaire <em style="color: var(--text-muted);">(3-4 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-18"> Set up automation: <strong>21 days before event</strong> &rarr; send Design Brief <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-19"> Set up automation: <strong>2 days before event</strong> &rarr; send Pre-Event Report (internal) <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-20"> Set up automation: <strong>1 day after event</strong> &rarr; send Post-Event Report (internal) <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-21"> <strong>Archive 8+ date-specific quote templates</strong> (2020, 2021, 2022, 2023 versions) <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
+      </ul>
+
+      <h3 style="color: var(--accent-green); margin: 2rem 0 1rem;">Launch &amp; Cleanup</h3>
+      <ul class="checklist">
+        <li><input type="checkbox" data-key="chk-22"> Apply <strong>custom CSS</strong> to quote pages via <span class="auto-path">Settings &rsaquo; Branding &rsaquo; Advanced Design &rsaquo; Page CSS</span> (see <a href="quote-styles/index.html" style="color: var(--accent-warm);">Style Gallery</a>) <em style="color: var(--text-muted);">(4-6 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-23"> <strong>Test full flow</strong> with a dummy lead: intake &rarr; qualify &rarr; event details &rarr; upsell quote with product cards &rarr; logistics &rarr; contract &rarr; payment &rarr; design brief &rarr; reports <em style="color: var(--text-muted);">(4-6 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-24"> Embed <strong>New Lead Intake</strong> public form on OMG Booth website <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-25"> <strong>Consolidate email templates</strong>: merge 5+ Follow Up variants &rarr; 2, merge 5+ Send Quote variants &rarr; 1, streamline Booked/Contract variants <em style="color: var(--text-muted);">(6-10 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-26"> <strong>Archive dead products</strong> (0 orders): Boomerang Feature, Karaoke/Dub Smash, Light Painting, Relocation Fee, etc. <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-27"> <strong>Review 5 contact forms</strong> for redundancy &mdash; "VB Subscription" vs "Virtual Booth Inquiry" may be duplicates <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-28"> Archive / delete old questionnaires &mdash; DELETE list first (8 dead forms), then MERGE list (15 forms) after confirming new forms capture everything <em style="color: var(--text-muted);">(3-4 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-29"> <strong>Add product images to existing 80+ products</strong> that you're keeping &mdash; required for any product to appear as a visual card <em style="color: var(--text-muted);">(20-30 hrs)</em></li>
+      </ul>
+    </section>
+
+    <!-- SECTION 7: TOKEN REFERENCE -->
+    <section id="tokens">
+      <div class="section-header">
+        <div class="section-number">Section 07</div>
+        <h2>Token Reference</h2>
+        <p>The most useful VSCO Workspace tokens for OMG Booth's questionnaires, emails, and automations.</p>
+      </div>
+
+      <div class="table-wrap token-table">
+        <table>
+          <thead>
+            <tr><th>Token</th><th>What It Does</th><th>Where to Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>{{job.type}}</code></td><td>The job type (e.g., Corporate, Wedding). On public forms, a dropdown linked to this token auto-sets the lead's job type.</td><td>Form 1 (Lead Intake) dropdown</td></tr>
+            <tr><td><code>{{job.name}}</code></td><td>Full name of the job (auto-generated or manually set).</td><td>Email subjects, Form 6 pre-fill</td></tr>
+            <tr><td><code>{{primary_contact.name}}</code></td><td>The primary contact's full name on the job.</td><td>Email greetings, Form 6 pre-fill</td></tr>
+            <tr><td><code>{{primary_contact.email}}</code></td><td>Primary contact's email address.</td><td>Email templates, automations</td></tr>
+            <tr><td><code>{{primary_contact.phone}}</code></td><td>Primary contact's phone number.</td><td>Logistics pre-fill, internal reports</td></tr>
+            <tr><td><code>{{job.custom.*}}</code></td><td>Any custom field you create. Replace <code>*</code> with the field's token name (e.g., <code>venue-name</code>).</td><td>Pre-filling venue data across forms</td></tr>
+            <tr><td><code>{{item.name_link}}</code></td><td>Clickable link to the specific questionnaire, invoice, or contract being sent.</td><td>Every Questionnaire Invitation email</td></tr>
+            <tr><td><code>{{item.link_url}}</code></td><td>Raw URL (no link text) to the item. Useful for custom button styling.</td><td>Email templates with styled buttons</td></tr>
+            <tr><td><code>{{brand.email_signature}}</code></td><td>Your brand's email signature. Auto-populates the correct one for multi-brand accounts.</td><td>Bottom of every email template</td></tr>
+            <tr><td><code>{{recipient.portal_linked}}</code></td><td>Link to the client's portal where they can view all their documents.</td><td>Post-booking emails, follow-ups</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Creating custom field tokens:</strong> Go to <span class="auto-path">Settings &rsaquo; Custom Fields &rsaquo; New Custom Field</span>. Give it a name (e.g., "Venue Name") and Workspace auto-generates the token. You'll find it at <code>{{job.custom.venue-name}}</code>. Link questionnaire fields to these tokens so data flows between forms automatically.
+      </div>
+
+      <div class="bp-note">
+        <strong>Full token list:</strong> For every available token in VSCO Workspace, see <a href="https://help.workspace.vsco.co/en/articles/442362-complete-list-of-tokens" style="color: var(--accent-warm);">Complete List of Tokens</a> in the help center.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// BLUEPRINT TOGGLE
+function toggleBlueprint(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+}
+
+// CHECKLIST PERSISTENCE
+const checklist = document.getElementById('checklist');
+const checkboxes = checklist.querySelectorAll('input[type="checkbox"]');
+
+function updateProgress() {
+  const total = checkboxes.length;
+  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const pct = Math.round((checked / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = checked + ' / ' + total;
+}
+
+checkboxes.forEach(cb => {
+  const key = cb.dataset.key;
+  if (localStorage.getItem(key) === 'true') {
+    cb.checked = true;
+    cb.closest('li').classList.add('checked');
+  }
+  cb.addEventListener('change', () => {
+    localStorage.setItem(key, cb.checked);
+    cb.closest('li').classList.toggle('checked', cb.checked);
+    updateProgress();
+  });
+});
+
+updateProgress();
+
+// SIDEBAR ACTIVE STATE
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const active = document.querySelector('.sidebar nav a[href="#' + entry.target.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// MOBILE NAV
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggleBtn = document.getElementById('mobileNavToggle');
+
+toggleBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+});
+
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+});
+
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+});
+</script>
+
+</body>
+</html>
