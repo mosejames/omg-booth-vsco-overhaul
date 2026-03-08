@@ -1155,6 +1155,10 @@ code {
         </table>
       </div>
 
+      <div class="callout">
+        <strong>Minimum booking: $1,200.</strong> All packages and custom quotes start at a $1,200 floor. This applies across all event types and service configurations. If a lead's budget falls below this threshold, they should be redirected to a lighter service option or declined.
+      </div>
+
       <div class="bp-note">
         <strong>Image tip:</strong> Upload a high-quality product image for each package. Go to <span class="auto-path">Products &rsaquo; [Product] &rsaquo; Images</span>. When a product has an image, VSCO Workspace automatically renders it as a visual card in "Upgradable" quotes. No image = plain text row. The image is the difference between a boring line item and a premium product card.
       </div>
@@ -1288,13 +1292,13 @@ code {
               <li><strong>Email</strong> &mdash; Text (required)</li>
               <li><strong>Phone</strong> &mdash; Text (required)</li>
               <li><strong>Organization / Company</strong> &mdash; Text</li>
-              <li><strong>Event Type</strong> &mdash; Dropdown: Corporate, Social, School/University, Wedding, Nonprofit, Other &mdash; linked to <code>{{job.type}}</code></li>
+              <li><strong>Event Type</strong> &mdash; Dropdown: Corporate, Social, School/University, Wedding, Nonprofit, Expo / Trade Show, Multi-City Tour, School / Education, Virtual Experience, Other &mdash; linked to <code>{{job.type}}</code></li>
               <li><strong>Event Date</strong> &mdash; Date (approximate)</li>
               <li><strong>Estimated Guest Count</strong> &mdash; Dropdown: Under 50, 50-150, 150-300, 300-500, 500+</li>
               <li><strong>How Did You Hear About Us?</strong> &mdash; Dropdown: Referral, Saw Us at an Event, Instagram, Google, Event Planner, Other &mdash; with "Other" text field. <em style="color: #4ecdc4;">AI uses this for personalized openers</em></li>
               <li><strong>What should guests walk away remembering?</strong> &mdash; Textarea. <em style="color: #4ecdc4;">AI uses this as the emotional hook for personalized emails</em></li>
               <li><strong>Preferred Contact Method</strong> &mdash; Dropdown: Email, Text, Both &mdash; linked to <code>{{job.custom.contact-preference}}</code>. <em style="color: var(--accent-warm);">Controls which channels fire: SMS automations check this field before sending</em></li>
-              <li><strong>Budget Range</strong> &mdash; Dropdown: Under $1,500, $1,500-$2,500, $2,500-$4,000, $4,000-$6,000, $6,000+</li>
+              <li><strong>Budget Range</strong> &mdash; Dropdown: $1,200-$2,500, $2,500-$4,000, $4,000-$7,000, $7,000-$15,000, $15,000+, Not sure yet</li>
             </ul>
           </div>
 
@@ -1476,7 +1480,7 @@ code {
           <div class="bp-section">
             <div class="bp-section-title">Virtual Booth Section</div>
             <ul class="field-list">
-              <li><em>Headline layout field:</em> <strong>"VIRTUAL BOOTH CLIENTS ONLY &mdash; skip if in-person"</strong></li>
+              <li><em>Headline layout field:</em> <strong>"VIRTUAL BOOTH CLIENTS ONLY. Skip if in-person."</strong></li>
               <li><strong>Virtual Booth URL Preferences</strong> &mdash; Text</li>
               <li><strong>Delivery Method</strong> &mdash; Dropdown</li>
               <li><strong>Custom Landing Page Needs</strong> &mdash; Textarea</li>
@@ -1892,7 +1896,7 @@ code {
         </div>
         <div class="auto-row">
           <span class="auto-label">Template</span>
-          <span class="auto-value">"Hey {{primary_contact.first_name}}, we'd love to put together your custom proposal! We just sent a quick questionnaire to your email &mdash; takes about 5 min. {{item.link_url}}"</span>
+          <span class="auto-value">"Hey {{primary_contact.first_name}}, we'd love to put together your custom proposal! We just sent a quick questionnaire to your email. Takes about 5 min. {{item.link_url}}"</span>
         </div>
         <div class="auto-row">
           <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
@@ -1908,11 +1912,11 @@ code {
         </div>
         <div class="auto-row">
           <span class="auto-label">Template</span>
-          <span class="auto-value">"Your custom OMG Booth proposal is ready! Browse packages, pick upgrades, and book &mdash; all in one link: {{item.link_url}}"</span>
+          <span class="auto-value">"Your custom OMG Booth proposal is ready! Browse packages, pick upgrades, and book, all in one link: {{item.link_url}}"</span>
         </div>
         <div class="auto-row">
           <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
-          <span class="auto-value">AI references their recommended package. Example: <em>"Your proposal is ready &mdash; we think the Premium Experience is perfect for your gala. Browse options: [link]"</em></span>
+          <span class="auto-value">AI references their recommended package. Example: <em>"Your proposal is ready. We think the Premium Experience is perfect for your gala. Browse options: [link]"</em></span>
         </div>
       </div>
 
@@ -1972,7 +1976,7 @@ code {
         </div>
         <div class="auto-row">
           <span class="auto-label">Message</span>
-          <span class="auto-value">"Friendly reminder &mdash; we still need your design assets for {{job.name}} in 2 weeks. Without them we'll use a default overlay. Submit here: {{item.link_url}}"</span>
+          <span class="auto-value">"Friendly reminder, we still need your design assets for {{job.name}} in 2 weeks. Without them we'll use a default overlay. Submit here: {{item.link_url}}"</span>
         </div>
       </div>
 
@@ -2028,7 +2032,7 @@ code {
         </div>
         <div class="auto-row">
           <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
-          <span class="auto-value">AI references the event. Example: <em>"The TechCo Gala was incredible &mdash; your guests loved the 360 booth! Photos and content will be in your inbox within 48 hours."</em></span>
+          <span class="auto-value">AI references the event. Example: <em>"The TechCo Gala was incredible. Your guests loved the 360 booth! Photos and content will be in your inbox within 48 hours."</em></span>
         </div>
       </div>
 

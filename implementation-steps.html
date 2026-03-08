@@ -792,10 +792,10 @@ code {
           <div class="step-detail">Create a new questionnaire. Set visibility to <strong>Public</strong>. Enable <strong>auto-create lead</strong>. Set a redirect URL to your thank-you page.
           <ul class="step-substeps">
             <li>First Name, Last Name, Email, Phone (required)</li>
-            <li>Event Type &mdash; dropdown linked to <code>{{job.type}}</code> (Corporate, Wedding, Birthday, etc.)</li>
+            <li>Event Type &mdash; dropdown linked to <code>{{job.type}}</code> (Corporate, Wedding, Birthday, Expo / Trade Show, Multi-City Tour, School / Education, Virtual Experience, etc.)</li>
             <li>Event Date &mdash; date picker</li>
             <li>Estimated Guest Count &mdash; dropdown ranges (Under 50, 50-100, 100-200, 200-500, 500+)</li>
-            <li>Budget Range &mdash; dropdown ($1,000-$2,000, $2,000-$4,000, $4,000-$7,000, $7,000+, Not sure)</li>
+            <li>Budget Range &mdash; dropdown ($1,200-$2,500, $2,500-$4,000, $4,000-$7,000, $7,000-$15,000, $15,000+, Not sure yet)</li>
             <li>How did you hear about us? &mdash; dropdown (Referral, Saw us at an event, Instagram, Google, Event planner, Other)</li>
             <li>What should guests walk away remembering? &mdash; open text</li>
             <li>Preferred Contact Method &mdash; dropdown linked to <code>{{job.custom.contact-preference}}</code> (Email, Text, Both)</li>
@@ -954,7 +954,7 @@ code {
         <div class="step-content">
           <div class="step-number">Step 20</div>
           <div class="step-title">Create email template for Form 6 (Post-Event Report)</div>
-          <div class="step-detail">Internal email. "Event complete &mdash; fill out your post-event report for {{job.name}}." Include <code>{{item.name_link}}</code>.</div>
+          <div class="step-detail">Internal email. "Event complete. Fill out your post-event report for {{job.name}}." Include <code>{{item.name_link}}</code>.</div>
           <div class="step-where">Settings &rsaquo; Email Templates &rsaquo; New Template</div>
         </div>
         <div class="step-time">30 min</div>
@@ -1054,10 +1054,10 @@ code {
           <div class="step-title">Build 5 core SMS automations</div>
           <div class="step-detail">Create these SMS automations in VSCO. All conditioned on <code>{{job.custom.contact-preference}}</code> = "Text" or "Both":
           <ul class="step-substeps">
-            <li><strong>SMS 2 &mdash; Qualified Nudge:</strong> Trigger = Lead status &rarr; Qualified. "Hey {{name}}, just sent over some info about your event &mdash; check your inbox!"</li>
-            <li><strong>SMS 4 &mdash; Proposal Ready:</strong> Trigger = Quote sent. "Your custom proposal is in your inbox &mdash; take a look when you're ready!"</li>
+            <li><strong>SMS 2 &mdash; Qualified Nudge:</strong> Trigger = Lead status &rarr; Qualified. "Hey {{name}}, just sent over some info about your event. Check your inbox!"</li>
+            <li><strong>SMS 4 &mdash; Proposal Ready:</strong> Trigger = Quote sent. "Your custom proposal is in your inbox. Take a look when you're ready!"</li>
             <li><strong>SMS 5 &mdash; Booking Confirmation:</strong> Trigger = Payment received. "You're officially booked! Check your email for all the details."</li>
-            <li><strong>SMS 6 &mdash; Design Brief Reminder:</strong> Trigger = 14 days before event. "Hey {{name}}, don't forget to send your logos &mdash; check your email for the design brief!"</li>
+            <li><strong>SMS 6 &mdash; Design Brief Reminder:</strong> Trigger = 14 days before event. "Hey {{name}}, don't forget to send your logos. Check your email for the design brief!"</li>
             <li><strong>SMS 8 &mdash; Day-Of Arrival:</strong> Trigger = Day of event, 8am. "Today's the day! Our team is heading your way. See you soon!"</li>
           </ul></div>
           <div class="step-where">Settings &rsaquo; Automations &rsaquo; New Automation (x5)</div>
@@ -1072,7 +1072,7 @@ code {
           <div class="step-title">Build 4 additional SMS automations</div>
           <div class="step-detail">
           <ul class="step-substeps">
-            <li><strong>SMS 3 &mdash; Form 2 Follow-up:</strong> Trigger = Event Details form submitted. "Got your event details &mdash; working on your proposal now!"</li>
+            <li><strong>SMS 3 &mdash; Form 2 Follow-up:</strong> Trigger = Event Details form submitted. "Got your event details! Working on your proposal now."</li>
             <li><strong>SMS 7 &mdash; 7-Day Check-in:</strong> Trigger = 7 days before event. "One week out! Getting everything prepped for {{event}}."</li>
             <li><strong>SMS 9 &mdash; Day-Before Hype:</strong> Trigger = 1 day before event. "Tomorrow is going to be amazing. Your booth is ready to go!"</li>
             <li><strong>SMS 10 &mdash; Post-Event Thanks:</strong> Trigger = 1 day after event. "Thanks for having us! Your gallery will be ready soon."</li>
