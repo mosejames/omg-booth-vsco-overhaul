@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — Products, Services & Packages</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #131316;
+  --bg-card: #1a1a1f;
+  --bg-card-hover: #22222a;
+  --border: #2a2a33;
+  --border-light: #3a3a44;
+  --text-primary: #f0ece4;
+  --text-secondary: #a09a8e;
+  --text-muted: #6b655a;
+  --accent-warm: #e8a849;
+  --accent-coral: #e06c5d;
+  --accent-green: #5bb67a;
+  --accent-red: #d45b5b;
+  --accent-blue: #5b8fd4;
+  --accent-purple: #a58cff;
+  --accent-cyan: #4ecdc4;
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+}
+.sidebar-logo h2 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
+.sidebar-logo h2 span { color: var(--accent-warm); }
+.sidebar-logo p { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+.sidebar nav { padding: 0.5rem 0; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.55rem 1.5rem; font-size: 0.82rem; color: var(--text-secondary);
+  text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent;
+}
+.sidebar nav a:hover { color: var(--text-primary); background: rgba(255,255,255,0.02); }
+.sidebar nav a.active { color: var(--accent-warm); border-left-color: var(--accent-warm); background: rgba(232,168,73,0.04); }
+.sidebar nav .nav-number {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);
+  min-width: 20px;
+}
+
+.mobile-nav-toggle {
+  display: none;
+  position: fixed; top: 1rem; left: 1rem; z-index: 200;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-warm); border: none; cursor: pointer;
+}
+.mobile-nav-toggle svg { fill: var(--bg-primary); }
+
+.main { flex: 1; padding: 3rem 4rem 6rem; max-width: 960px; }
+
+/* HEADER */
+.page-header { margin-bottom: 3rem; }
+.page-header h1 {
+  font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em;
+  line-height: 1.2; margin-bottom: 0.6rem;
+}
+.page-header h1 span { color: var(--accent-warm); }
+.page-header .subtitle {
+  font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7;
+  max-width: 680px;
+}
+
+/* SECTION HEADERS */
+section { margin-bottom: 3.5rem; }
+.section-label {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.8rem; padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-number {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--accent-warm); background: rgba(232,168,73,0.08);
+  padding: 0.25rem 0.7rem; border-radius: 4px; letter-spacing: 0.05em;
+}
+.section-label h2 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; }
+
+/* PRICING FLOOR BANNER */
+.floor-banner {
+  background: linear-gradient(135deg, rgba(232,168,73,0.1), rgba(232,168,73,0.04));
+  border: 1px solid rgba(232,168,73,0.2);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.floor-badge {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  white-space: nowrap;
+}
+.floor-text { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+.floor-text strong { color: var(--text-primary); }
+
+/* PACKAGE CARDS */
+.package-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.package-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.3s;
+  position: relative;
+}
+.package-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.package-card.featured {
+  border-color: var(--accent-warm);
+  box-shadow: 0 0 0 1px var(--accent-warm), 0 4px 20px rgba(232,168,73,0.15);
+}
+
+.package-img {
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.package-img .tier-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.25);
+}
+
+.img-essential { background: linear-gradient(135deg, #1a2e1a, #2a4a2a); }
+.img-premium { background: linear-gradient(135deg, #2e1a0a, #4a3020); }
+.img-activation { background: linear-gradient(135deg, #1a1a2e, #2a2a4a); }
+
+.package-badge {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+}
+.badge-popular { background: var(--accent-warm); }
+.badge-premium { background: var(--accent-coral); }
+.badge-top { background: var(--accent-purple); }
+
+.package-body { padding: 1.4rem; }
+.package-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.01em;
+}
+.package-price {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  margin-bottom: 0.8rem;
+}
+.package-price .starting { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
+
+.package-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.package-includes {
+  list-style: none;
+  padding: 0;
+}
+.package-includes li {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  padding: 0.3rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.package-includes li::before {
+  content: '\2713';
+  color: var(--accent-green);
+  font-weight: 700;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.package-data {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* PRODUCT CARDS (Upgrades) */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.product-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.product-img-bar {
+  height: 6px;
+  width: 100%;
+}
+.bar-coral { background: linear-gradient(90deg, var(--accent-coral), #e8a849); }
+.bar-blue { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+.bar-purple { background: linear-gradient(90deg, var(--accent-purple), var(--accent-coral)); }
+.bar-green { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+.bar-warm { background: linear-gradient(90deg, var(--accent-warm), var(--accent-coral)); }
+
+.product-body { padding: 1.2rem 1.4rem; }
+.product-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.product-price {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-warm);
+  margin-bottom: 0.6rem;
+}
+.product-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.product-tag {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(232,168,73,0.08);
+  color: var(--accent-warm);
+}
+.product-tag.tag-trending { background: rgba(224,108,93,0.1); color: var(--accent-coral); }
+.product-tag.tag-new { background: rgba(91,182,122,0.1); color: var(--accent-green); }
+
+/* ADD-ON ROWS */
+.addon-list { margin-bottom: 1.5rem; }
+.addon-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.4rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+  transition: all 0.2s;
+}
+.addon-row:hover { border-color: var(--border-light); background: var(--bg-card-hover); }
+
+.addon-info { flex: 1; }
+.addon-name { font-size: 0.92rem; font-weight: 600; }
+.addon-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+.addon-price {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--accent-warm);
+  white-space: nowrap;
+  margin-left: 1.5rem;
+}
+
+/* VIRTUAL SECTION */
+.virtual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.virtual-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.8rem;
+  transition: all 0.3s;
+}
+.virtual-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+.virtual-card .v-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.virtual-card .v-name { font-size: 1.05rem; font-weight: 700; }
+.virtual-card .v-tier {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.7rem;
+  border-radius: 5px;
+}
+.tier-pro { background: rgba(91,143,212,0.12); color: var(--accent-blue); }
+.tier-enterprise { background: rgba(165,140,255,0.12); color: var(--accent-purple); }
+
+.virtual-card .v-price {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  margin-bottom: 0.8rem;
+}
+.virtual-card .v-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.virtual-card .v-features {
+  list-style: none; padding: 0;
+}
+.virtual-card .v-features li {
+  font-size: 0.78rem; color: var(--text-secondary);
+  padding: 0.25rem 0; display: flex; align-items: center; gap: 0.5rem;
+}
+.virtual-card .v-features li::before {
+  content: '\2713'; color: var(--accent-cyan); font-weight: 700; font-size: 0.7rem;
+}
+
+/* EVENT TYPE TABLE */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.event-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+.event-chip:hover { border-color: var(--border-light); background: var(--bg-card-hover); }
+.event-chip .e-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
+.event-chip .e-range {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-warm);
+}
+.event-chip .e-note { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+/* DATA CALLOUT */
+.data-callout {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+}
+.data-callout .dc-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
+}
+.data-row {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.data-item .d-value {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.data-item .d-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+/* NOTE */
+.note {
+  background: rgba(232,168,73,0.04);
+  border-left: 3px solid var(--accent-warm);
+  padding: 1rem 1.4rem;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 1.2rem;
+}
+.note strong { color: var(--accent-warm); }
+
+.note-green {
+  background: rgba(91,182,122,0.04);
+  border-left-color: var(--accent-green);
+}
+.note-green strong { color: var(--accent-green); }
+
+/* COMPARISON TABLE */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.82rem;
+}
+.compare-table thead th {
+  text-align: left;
+  padding: 0.8rem 1rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.compare-table thead th:not(:first-child) { text-align: center; }
+.compare-table tbody td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(42,42,51,0.5);
+  color: var(--text-secondary);
+}
+.compare-table tbody td:not(:first-child) { text-align: center; }
+.compare-table tbody td .check { color: var(--accent-green); font-weight: 700; }
+.compare-table tbody td .dash { color: var(--text-muted); }
+.compare-table tbody tr:hover { background: rgba(255,255,255,0.01); }
+
+.th-essential { color: var(--accent-green) !important; }
+.th-premium { color: var(--accent-warm) !important; }
+.th-activation { color: var(--accent-purple) !important; }
+
+/* BACK LINK */
+.back-link {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: all 0.2s;
+}
+.back-link:hover { color: var(--accent-warm); border-color: var(--accent-warm); }
+
+/* SIDEBAR OVERLAY */
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 149;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .package-grid, .product-grid { grid-template-columns: 1fr 1fr; }
+  .virtual-grid { grid-template-columns: 1fr; }
+  .event-grid { grid-template-columns: repeat(2, 1fr); }
+  .main { padding: 2rem 2rem 5rem; }
+}
+
+@media (max-width: 768px) {
+  .sidebar, .mobile-nav-toggle { display: none !important; }
+  .main { padding: 2rem 1.2rem 5rem; max-width: 100%; }
+}
+
+@media (max-width: 640px) {
+  .package-grid, .product-grid { grid-template-columns: 1fr; }
+  .event-grid { grid-template-columns: 1fr 1fr; }
+  .floor-banner { flex-direction: column; text-align: center; }
+  .data-row { gap: 1.5rem; }
+  .compare-table { font-size: 0.75rem; }
+  .compare-table thead th, .compare-table tbody td { padding: 0.5rem 0.6rem; }
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+  .sidebar { width: 220px; min-width: 220px; }
+  .sidebar nav a { font-size: 0.78rem; padding: 0.5rem 1.2rem; }
+}
+
+@media (min-width: 769px) {
+  .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>OMG <span>Booth</span></h2>
+      <p>Products, Services & Packages</p>
+    </div>
+    <nav>
+      <a href="#packages"><span class="nav-number">01</span> Packages</a>
+      <a href="#comparison"><span class="nav-number">02</span> Comparison</a>
+      <a href="#upgrades"><span class="nav-number">03</span> Upgrade Products</a>
+      <a href="#addons"><span class="nav-number">04</span> Add-Ons</a>
+      <a href="#virtual"><span class="nav-number">05</span> Virtual Booths</a>
+      <a href="#event-types"><span class="nav-number">06</span> Event Types & Pricing</a>
+      <div style="height:1px;background:var(--border);margin:0.8rem 1.5rem;"></div>
+      <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Overhaul Guide &rarr;</a>
+      <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map &rarr;</a>
+      <a href="ai-integration.html" style="color: var(--accent-warm);">AI Integration Plan &rarr;</a>
+      <a href="implementation-steps.html" style="color: var(--accent-green);">Implementation Playbook &rarr;</a>
+      <a href="style-preview.html" style="color: var(--accent-warm);">Style Preview &rarr;</a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- MOBILE NAV -->
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <main class="main">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h1>Products, Services <span>&</span> Packages</h1>
+      <p class="subtitle">Everything OMG Booth offers, organized by tier. Packages are built from actual order history across 929 deals and $2.36M in lifetime revenue. Every price listed here is backed by data, not guesswork.</p>
+    </div>
+
+    <!-- PRICING FLOOR -->
+    <div class="floor-banner">
+      <div class="floor-badge">$1,200</div>
+      <div class="floor-text">
+        <strong>Minimum booking.</strong> All packages, custom quotes, and service configurations start at a $1,200 floor. This applies across every event type. If a lead's budget falls below this threshold, they should be redirected to a lighter option or declined.
+      </div>
+    </div>
+
+    <!-- SECTION 1: PACKAGES -->
+    <section id="packages">
+      <div class="section-label">
+        <div class="section-number">01</div>
+        <h2>Packages</h2>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Three tiers built around proven best sellers. Each package maps to a real product line with hundreds of orders behind it. Clients pick one package as the base, then add upgrades and enhancements.</p>
+
+      <div class="package-grid">
+        <!-- Essential -->
+        <div class="package-card">
+          <div class="package-img img-essential">
+            <span class="tier-label">Essential</span>
+          </div>
+          <div class="package-body">
+            <div class="package-name">Essential Experience</div>
+            <div class="package-price">$1,800</div>
+            <div class="package-desc">Clean, efficient photo booth experience for social events, parties, and smaller corporate gatherings. Everything you need, nothing you don't.</div>
+            <ul class="package-includes">
+              <li>3 hours of booth time</li>
+              <li>Custom branded digital overlay</li>
+              <li>Photos with instant digital delivery</li>
+              <li>Text and email sharing</li>
+              <li>Curated prop collection</li>
+              <li>1 on-site attendant</li>
+              <li>Post-event online gallery</li>
+            </ul>
+            <div class="package-data">Based on OMG Social Kiosk | $1,967 avg | 153 orders</div>
+          </div>
+        </div>
+
+        <!-- Premium -->
+        <div class="package-card featured">
+          <div class="package-img img-premium">
+            <span class="package-badge badge-popular">Most Popular</span>
+            <span class="tier-label">Premium</span>
+          </div>
+          <div class="package-body">
+            <div class="package-name">Premium Experience</div>
+            <div class="package-price">$2,800</div>
+            <div class="package-desc">The full photo booth experience for corporate events, galas, and brand activations. Multi-format content capture with on-site printing and a social sharing wall.</div>
+            <ul class="package-includes">
+              <li>4 hours of booth time</li>
+              <li>Photos, GIFs, and video capture</li>
+              <li>Custom branded overlay</li>
+              <li>Custom backdrop</li>
+              <li>On-site 4x6 prints</li>
+              <li>Social sharing wall</li>
+              <li>Curated prop collection</li>
+              <li>2 on-site attendants</li>
+              <li>Post-event online gallery</li>
+            </ul>
+            <div class="package-data">Based on OMG Booth Kiosk | $2,135 avg | 623 orders</div>
+          </div>
+        </div>
+
+        <!-- Full Activation -->
+        <div class="package-card">
+          <div class="package-img img-activation">
+            <span class="package-badge badge-top">Top Tier</span>
+            <span class="tier-label">Full Activation</span>
+          </div>
+          <div class="package-body">
+            <div class="package-name">Full Activation</div>
+            <div class="package-price">$4,200</div>
+            <div class="package-desc">Large-scale experiential production for brand activations, expos, and high-profile events. Multiple stations, full branding, data capture, and dedicated management.</div>
+            <ul class="package-includes">
+              <li>5 hours of booth time</li>
+              <li>360&deg; video booth + standard booth</li>
+              <li>Slo-mo video capture</li>
+              <li>Full custom branding package</li>
+              <li>Step-and-repeat backdrop</li>
+              <li>Lead capture module</li>
+              <li>On-site prints</li>
+              <li>Experience manager + 2 staff</li>
+              <li>Post-event analytics report</li>
+              <li>Post-event online gallery</li>
+            </ul>
+            <div class="package-data">Based on OMG Array | $4,478 avg | 9 orders</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>How clients see this:</strong> In VSCO Workspace, each package appears as a visual product card with an image, description, and price. The client selects one package, adds upgrades, fills out event logistics, signs the contract, and pays. One link, one flow.
+      </div>
+    </section>
+
+    <!-- SECTION 2: COMPARISON TABLE -->
+    <section id="comparison">
+      <div class="section-label">
+        <div class="section-number">02</div>
+        <h2>Package Comparison</h2>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="th-essential">Essential<br><span style="font-family:var(--font-mono);font-size:0.75rem;">$1,800</span></th>
+            <th class="th-premium">Premium<br><span style="font-family:var(--font-mono);font-size:0.75rem;">$2,800</span></th>
+            <th class="th-activation">Full Activation<br><span style="font-family:var(--font-mono);font-size:0.75rem;">$4,200</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Booth Hours</td><td>3</td><td>4</td><td>5</td></tr>
+          <tr><td>Photos</td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>GIFs</td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Video Capture</td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>360&deg; Video Booth</td><td><span class="dash">&mdash;</span></td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Slo-Mo Video</td><td><span class="dash">&mdash;</span></td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Digital Overlay</td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Custom Backdrop</td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Step-and-Repeat</td><td><span class="dash">&mdash;</span></td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>On-Site Prints</td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Social Sharing Wall</td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Props Collection</td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Lead Capture</td><td><span class="dash">&mdash;</span></td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Full Custom Branding</td><td><span class="dash">&mdash;</span></td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Analytics Report</td><td><span class="dash">&mdash;</span></td><td><span class="dash">&mdash;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>Online Gallery</td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+          <tr><td>On-Site Staff</td><td>1 attendant</td><td>2 attendants</td><td>Manager + 2 staff</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note-green note">
+        <strong>Upsell path:</strong> Essential clients see what Premium includes. Premium clients see what Full Activation includes. The comparison naturally guides them up. Mark Premium as "Most Popular" in VSCO Workspace to anchor mid-tier.
+      </div>
+    </section>
+
+    <!-- SECTION 3: UPGRADE PRODUCTS -->
+    <section id="upgrades">
+      <div class="section-label">
+        <div class="section-number">03</div>
+        <h2>Upgrade Products</h2>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Standalone products clients can add to any package. Each one appears as a visual product card in the upsell quote. These are the high-margin items that move average order value up.</p>
+
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-bar bar-coral"></div>
+          <div class="product-body">
+            <div class="product-name">360&deg; Video Booth</div>
+            <div class="product-price">$800</div>
+            <div class="product-desc">Cinematic 360-degree slow-motion video platform. Guests step on, the camera orbits, and they get a shareable clip instantly. The single most requested upgrade.</div>
+            <span class="product-tag">Most Popular Upgrade</span>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-bar bar-purple"></div>
+          <div class="product-body">
+            <div class="product-name">Slo-Mo Video Station</div>
+            <div class="product-price">$600</div>
+            <div class="product-desc">Dramatic slow-motion video clips with confetti, props, and wind effects. Designed for social content that people actually share.</div>
+            <span class="product-tag tag-trending">Trending</span>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-bar bar-green"></div>
+          <div class="product-body">
+            <div class="product-name">On-Site Print Station</div>
+            <div class="product-price">$350</div>
+            <div class="product-desc">Instant 4x6 branded prints guests take home. Physical keepsakes still outperform digital-only at every event type.</div>
+            <span class="product-tag tag-new">Guest Favorite</span>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-bar bar-blue"></div>
+          <div class="product-body">
+            <div class="product-name">Custom AR Filter</div>
+            <div class="product-price">$800</div>
+            <div class="product-desc">Branded augmented reality filter built for the event. Logo reveals, animated overlays, and interactive elements guests activate at the booth.</div>
+            <span class="product-tag tag-new">New</span>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-bar bar-warm"></div>
+          <div class="product-body">
+            <div class="product-name">LED Enclosure Upgrade</div>
+            <div class="product-price">$500</div>
+            <div class="product-desc">Illuminated booth enclosure with programmable color lighting. Matches brand colors, creates atmosphere, and draws foot traffic.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Revenue data:</strong> OMG 360&deg; Video Booth generated $16,300 across 7 standalone orders ($2,329 avg). As an $800 add-on, it converts at much higher volume. The OMG Video Kiosk line ($70,798 from 24 orders) validates demand for video content at the booth.
+      </div>
+    </section>
+
+    <!-- SECTION 4: ADD-ONS -->
+    <section id="addons">
+      <div class="section-label">
+        <div class="section-number">04</div>
+        <h2>Add-Ons</h2>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Smaller line items that round out a booking. These appear in the add-ons section of the upsell quote with quantity selectors. Low friction, high margin.</p>
+
+      <div class="addon-list">
+        <div class="addon-row">
+          <div class="addon-info">
+            <div class="addon-name">Additional Hour</div>
+            <div class="addon-desc">Extend booth operating time beyond the package base. Most common add-on for corporate events and galas that run late.</div>
+          </div>
+          <div class="addon-price">$350/hr</div>
+        </div>
+
+        <div class="addon-row">
+          <div class="addon-info">
+            <div class="addon-name">Standby Hour</div>
+            <div class="addon-desc">Booth is on-site but inactive. Covers setup buffer, dinner service, speeches, or ceremony breaks where the booth pauses.</div>
+          </div>
+          <div class="addon-price">$150/hr</div>
+        </div>
+
+        <div class="addon-row">
+          <div class="addon-info">
+            <div class="addon-name">Step-and-Repeat Backdrop</div>
+            <div class="addon-desc">Custom branded backdrop with logos and event design. Available as a standalone add-on for Essential and Premium packages.</div>
+          </div>
+          <div class="addon-price">$500</div>
+        </div>
+
+        <div class="addon-row">
+          <div class="addon-info">
+            <div class="addon-name">Lead Capture Module</div>
+            <div class="addon-desc">Data collection at the booth: name, email, phone, and custom fields. Exportable lead list delivered post-event. Standard in Full Activation.</div>
+          </div>
+          <div class="addon-price">$300</div>
+        </div>
+
+        <div class="addon-row">
+          <div class="addon-info">
+            <div class="addon-name">Same-Day Content Package</div>
+            <div class="addon-desc">Edited highlight reel of booth content delivered the same day as the event. Perfect for social media teams that need content fast.</div>
+          </div>
+          <div class="addon-price">$500</div>
+        </div>
+
+        <div class="addon-row">
+          <div class="addon-info">
+            <div class="addon-name">Post-Event Analytics Report</div>
+            <div class="addon-desc">Engagement metrics, content performance stats, and lead data export. Branded PDF delivered within 48 hours. Standard in Full Activation.</div>
+          </div>
+          <div class="addon-price">$350</div>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Quote flow:</strong> In the upsell quote, packages appear as selectable product cards. Upgrade products appear below with "Add to My Booking" buttons. Add-ons appear in a separate section with quantity selectors. The client builds their own booking.
+      </div>
+    </section>
+
+    <!-- SECTION 5: VIRTUAL BOOTHS -->
+    <section id="virtual">
+      <div class="section-label">
+        <div class="section-number">05</div>
+        <h2>Virtual Booth Services</h2>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Remote and hybrid event solutions. These are standalone service lines, not add-ons to in-person packages. Proven revenue: $307,846 combined across 96 orders.</p>
+
+      <div class="virtual-grid">
+        <div class="virtual-card">
+          <div class="v-header">
+            <div class="v-name">Virtual Booth Pro</div>
+            <span class="v-tier tier-pro">Pro</span>
+          </div>
+          <div class="v-price">$2,245 <span class="starting">avg</span></div>
+          <div class="v-desc">Full-featured virtual photo booth for remote events, hybrid conferences, and distributed teams. Custom-branded landing page with real-time photo capture and sharing.</div>
+          <ul class="v-features">
+            <li>Custom branded virtual booth page</li>
+            <li>Real-time photo capture via webcam</li>
+            <li>Custom digital overlays and frames</li>
+            <li>Instant social sharing (text, email, download)</li>
+            <li>Online gallery with all submissions</li>
+            <li>Basic analytics dashboard</li>
+          </ul>
+          <div class="package-data" style="margin-top:1rem;">42 orders | $94,297 lifetime revenue</div>
+        </div>
+
+        <div class="virtual-card">
+          <div class="v-header">
+            <div class="v-name">Virtual Booth Enterprise</div>
+            <span class="v-tier tier-enterprise">Enterprise</span>
+          </div>
+          <div class="v-price">$3,955 <span class="starting">avg</span></div>
+          <div class="v-desc">Enterprise-grade virtual activation for large organizations, multi-day conferences, and campaigns requiring custom integrations, data capture, and dedicated support.</div>
+          <ul class="v-features">
+            <li>Everything in Pro</li>
+            <li>Custom domain and full white-label branding</li>
+            <li>Lead capture with custom fields</li>
+            <li>API integrations (CRM, marketing platforms)</li>
+            <li>Multi-day / multi-event support</li>
+            <li>Dedicated account manager</li>
+            <li>Advanced analytics and data export</li>
+          </ul>
+          <div class="package-data" style="margin-top:1rem;">54 orders | $213,549 lifetime revenue</div>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Market position:</strong> Virtual booths generated $307K with zero equipment logistics. Enterprise at $3,955 avg order value outperforms the in-person Essential package. This is a high-margin line worth promoting for hybrid and remote event leads.
+      </div>
+    </section>
+
+    <!-- SECTION 6: EVENT TYPES -->
+    <section id="event-types">
+      <div class="section-label">
+        <div class="section-number">06</div>
+        <h2>Event Types & Typical Pricing</h2>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Pricing ranges by event type, based on actual order history. These ranges inform how the AI personalizes quotes and which package tier to recommend first.</p>
+
+      <div class="event-grid">
+        <div class="event-chip">
+          <div class="e-name">Corporate Event</div>
+          <div class="e-range">$1,750 median</div>
+          <div class="e-note">Galas, holiday parties, team events</div>
+        </div>
+        <div class="event-chip">
+          <div class="e-name">Wedding</div>
+          <div class="e-range">$1,200 &ndash; $2,500</div>
+          <div class="e-note">Receptions, rehearsal dinners</div>
+        </div>
+        <div class="event-chip">
+          <div class="e-name">Social / Birthday</div>
+          <div class="e-range">$1,200 &ndash; $2,000</div>
+          <div class="e-note">Private parties, milestones</div>
+        </div>
+        <div class="event-chip">
+          <div class="e-name">Brand Activation</div>
+          <div class="e-range">$2,500 &ndash; $7,000</div>
+          <div class="e-note">Product launches, experiential</div>
+        </div>
+        <div class="event-chip">
+          <div class="e-name">Expo / Trade Show</div>
+          <div class="e-range">$6,876 avg</div>
+          <div class="e-note">Multi-day booth presence</div>
+        </div>
+        <div class="event-chip">
+          <div class="e-name">Multi-City Tour</div>
+          <div class="e-range">$14,642 avg</div>
+          <div class="e-note">Highest-value segment</div>
+        </div>
+        <div class="event-chip">
+          <div class="e-name">School / Education</div>
+          <div class="e-range">$1,200 &ndash; $2,000</div>
+          <div class="e-note">School events, fundraisers, proms</div>
+        </div>
+        <div class="event-chip">
+          <div class="e-name">Virtual / Hybrid</div>
+          <div class="e-range">$2,245 &ndash; $3,955</div>
+          <div class="e-note">Remote events, conferences</div>
+        </div>
+      </div>
+
+      <div class="data-callout">
+        <div class="dc-title">Revenue Intelligence (929 deals, 14 years)</div>
+        <div class="data-row">
+          <div class="data-item">
+            <div class="d-value">$2,543</div>
+            <div class="d-label">Average deal</div>
+          </div>
+          <div class="data-item">
+            <div class="d-value">$1,600</div>
+            <div class="d-label">Median deal</div>
+          </div>
+          <div class="data-item">
+            <div class="d-value">$2.36M</div>
+            <div class="d-label">Lifetime revenue</div>
+          </div>
+          <div class="data-item">
+            <div class="d-value">60.6%</div>
+            <div class="d-label">Orders under $2K</div>
+          </div>
+          <div class="data-item">
+            <div class="d-value">$14,642</div>
+            <div class="d-label">Multi-City Tour avg</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:1.5rem;">
+        <strong>Strategy:</strong> The median hasn't moved in 12 years despite inflation. Expo/Trade Show and Multi-City Tour are the highest-value segments with almost no recent volume. The $1,200 floor, combined with the upsell quote flow, is designed to push that median upward. The AI system prompt references these event types and recommends tiers accordingly.
+      </div>
+    </section>
+
+  </main>
+  </div>
+
+  <a href="omg-booth-vsco-overhaul.html" class="back-link">&larr; Back to Overhaul Guide</a>
+
+<script>
+// Sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggle = document.getElementById('mobileNavToggle');
+if (toggle) {
+  toggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none'; });
+}
+if (overlay) {
+  overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; });
+}
+
+// Active nav on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
