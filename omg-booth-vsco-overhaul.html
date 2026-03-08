@@ -1874,8 +1874,8 @@ code {
         </div>
       </div>
 
-      <div class="auto-card">
-        <h4>SMS 2: Qualified &mdash; Form Link Nudge</h4>
+      <div class="auto-card" style="border-color: rgba(78,205,196,0.2);">
+        <h4>SMS 2: Qualified &mdash; Form Link Nudge <span style="font-size: 0.65rem; background: rgba(78,205,196,0.12); color: #4ecdc4; padding: 0.1rem 0.5rem; border-radius: 99px; margin-left: 0.5rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle;">AI</span></h4>
         <div class="auto-row">
           <span class="auto-label">Observable</span>
           <span class="auto-value"><strong>Lead &rsaquo; Lead Status Changed</strong></span>
@@ -1889,25 +1889,33 @@ code {
           <span class="auto-value">Immediately (fires alongside the email automation)</span>
         </div>
         <div class="auto-row">
-          <span class="auto-label">Message</span>
+          <span class="auto-label">Template</span>
           <span class="auto-value">"Hey {{primary_contact.first_name}}, we'd love to put together your custom proposal! We just sent a quick questionnaire to your email &mdash; takes about 5 min. {{item.link_url}}"</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
+          <span class="auto-value">AI generates a personalized version referencing their event type and guest count. Example: <em>"Hey Jordan, a 250-guest corporate gala sounds amazing. Quick form to nail down the details: [link]"</em></span>
         </div>
       </div>
 
-      <div class="auto-card">
-        <h4>SMS 3: Proposal Ready</h4>
+      <div class="auto-card" style="border-color: rgba(78,205,196,0.2);">
+        <h4>SMS 3: Proposal Ready <span style="font-size: 0.65rem; background: rgba(78,205,196,0.12); color: #4ecdc4; padding: 0.1rem 0.5rem; border-radius: 99px; margin-left: 0.5rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle;">AI</span></h4>
         <div class="auto-row">
           <span class="auto-label">Trigger</span>
           <span class="auto-value"><strong>Manual</strong> &mdash; send via "Send Text" in VSCO when you send the quote. Or set up automation on Quote Created.</span>
         </div>
         <div class="auto-row">
-          <span class="auto-label">Message</span>
+          <span class="auto-label">Template</span>
           <span class="auto-value">"Your custom OMG Booth proposal is ready! Browse packages, pick upgrades, and book &mdash; all in one link: {{item.link_url}}"</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
+          <span class="auto-value">AI references their recommended package. Example: <em>"Your proposal is ready &mdash; we think the Premium Experience is perfect for your gala. Browse options: [link]"</em></span>
         </div>
       </div>
 
-      <div class="auto-card">
-        <h4>SMS 4: Booking Confirmation</h4>
+      <div class="auto-card" style="border-color: rgba(78,205,196,0.2);">
+        <h4>SMS 4: Booking Confirmation <span style="font-size: 0.65rem; background: rgba(78,205,196,0.12); color: #4ecdc4; padding: 0.1rem 0.5rem; border-radius: 99px; margin-left: 0.5rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle;">AI</span></h4>
         <div class="auto-row">
           <span class="auto-label">Observable</span>
           <span class="auto-value"><strong>Calendar &rsaquo; Session</strong> (or Job Stage &rarr; Booked)</span>
@@ -1917,8 +1925,12 @@ code {
           <span class="auto-value">Contact preference = Text or Both</span>
         </div>
         <div class="auto-row">
-          <span class="auto-label">Message</span>
+          <span class="auto-label">Template</span>
           <span class="auto-value">"You're officially booked, {{primary_contact.first_name}}! Your date is locked in. Full details and your client portal link are in your email. Can't wait for your event!"</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
+          <span class="auto-value">AI recaps what they booked. Example: <em>"You're booked! Premium Experience + 360 booth for the TechCo Gala on April 15. Details in your email. Let's go!"</em></span>
         </div>
       </div>
 
@@ -1962,8 +1974,8 @@ code {
         </div>
       </div>
 
-      <div class="auto-card">
-        <h4>SMS 7: One Week Out</h4>
+      <div class="auto-card" style="border-color: rgba(78,205,196,0.2);">
+        <h4>SMS 7: One Week Out <span style="font-size: 0.65rem; background: rgba(78,205,196,0.12); color: #4ecdc4; padding: 0.1rem 0.5rem; border-radius: 99px; margin-left: 0.5rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle;">AI</span></h4>
         <div class="auto-row">
           <span class="auto-label">Observable</span>
           <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
@@ -1973,8 +1985,12 @@ code {
           <span class="auto-value"><strong>7 days before</strong></span>
         </div>
         <div class="auto-row">
-          <span class="auto-label">Message</span>
+          <span class="auto-label">Template</span>
           <span class="auto-value">"One week until {{job.name}}! We're finalizing everything on our end. Any last-minute changes? Reply here or call (404) 555-0100."</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
+          <span class="auto-value">AI references their package and venue. Example: <em>"One week until the TechCo Gala! Your Premium booth + 360 upgrade are locked in for The Biltmore. Any changes? Reply here."</em></span>
         </div>
       </div>
 
@@ -1994,8 +2010,8 @@ code {
         </div>
       </div>
 
-      <div class="auto-card">
-        <h4>SMS 9: Post-Event Thank You</h4>
+      <div class="auto-card" style="border-color: rgba(78,205,196,0.2);">
+        <h4>SMS 9: Post-Event Thank You <span style="font-size: 0.65rem; background: rgba(78,205,196,0.12); color: #4ecdc4; padding: 0.1rem 0.5rem; border-radius: 99px; margin-left: 0.5rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle;">AI</span></h4>
         <div class="auto-row">
           <span class="auto-label">Observable</span>
           <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
@@ -2005,8 +2021,12 @@ code {
           <span class="auto-value"><strong>1 day after</strong></span>
         </div>
         <div class="auto-row">
-          <span class="auto-label">Message</span>
+          <span class="auto-label">Template</span>
           <span class="auto-value">"Thanks for an amazing event, {{primary_contact.first_name}}! Your photos and content will be delivered within 48 hours. It was a blast working with you!"</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label" style="color: #4ecdc4;">Phase 2</span>
+          <span class="auto-value">AI references the event. Example: <em>"The TechCo Gala was incredible &mdash; your guests loved the 360 booth! Photos and content will be in your inbox within 48 hours."</em></span>
         </div>
       </div>
 
