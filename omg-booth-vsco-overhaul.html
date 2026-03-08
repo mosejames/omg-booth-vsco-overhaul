@@ -1089,6 +1089,33 @@ code {
         <strong>No conditional logic:</strong> VSCO Workspace doesn't support show/hide fields based on previous answers. The new forms use clear <strong>Headline</strong> and <strong>Paragraph</strong> layout fields to create labeled sections with instructions like "Skip to the next section if not applicable." This is clean, simple, and works.
       </div>
 
+      <h3>Communication Channels</h3>
+      <p>Email is the document layer &mdash; forms, contracts, invoices, detailed information. SMS is the notification layer &mdash; fast nudges, milestone alerts, and quick check-ins. Clients choose their preference on Form 1. Both channels run in parallel via Quo integration.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Step</th><th>Email</th><th>SMS (Quo)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Lead Intake</td><td>Auto-response with next steps</td><td>"Got your inquiry, we'll be in touch" (already live)</td></tr>
+            <tr><td>Qualified</td><td>Event Details form link</td><td>"We just sent you a quick questionnaire" + link</td></tr>
+            <tr><td>Proposal</td><td>Full proposal email</td><td>"Your custom proposal is ready" + link</td></tr>
+            <tr><td>Booked</td><td>Confirmation + portal link</td><td>"You're booked!" celebration text</td></tr>
+            <tr><td>21 days before</td><td>Design Brief form</td><td>Design brief reminder + link</td></tr>
+            <tr><td>14 days before</td><td>&mdash;</td><td>Follow-up if brief not submitted</td></tr>
+            <tr><td>7 days before</td><td>&mdash;</td><td>"One week out" check-in</td></tr>
+            <tr><td>Day of event</td><td>&mdash;</td><td>"We're on our way" + arrival time</td></tr>
+            <tr><td>1 day after</td><td>&mdash;</td><td>Thank you + content delivery timeline</td></tr>
+            <tr><td>Invoice due</td><td>Invoice reminder</td><td>Payment nudge + link</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bp-note">
+        <strong>Opt-in required:</strong> Only send texts to clients who chose SMS or Both on Form 1. Add a <strong>Job Type Condition</strong> or custom field condition to every SMS automation checking <code>{{job.custom.contact-preference}}</code>. Never text someone who didn't opt in.
+      </div>
+
       <div class="bp-note" style="border-left-color: rgba(78,205,196,0.4); background: rgba(78,205,196,0.04);">
         <strong style="color: #4ecdc4;">Phase 2 &mdash; AI Layer:</strong> After the core system is live, AI-personalized emails can be added between steps. When you mark a lead as "Qualified," a second automation action sends form data to Make.com &rarr; Claude API, which generates a personalized email you approve from your phone before it sends. Same flow, smarter communication. See the <a href="ai-integration.html" style="color: #4ecdc4;">AI Integration Plan</a> for full details.
       </div>
@@ -1264,6 +1291,7 @@ code {
               <li><strong>Estimated Guest Count</strong> &mdash; Dropdown: Under 50, 50-150, 150-300, 300-500, 500+</li>
               <li><strong>How Did You Hear About Us?</strong> &mdash; Dropdown: Referral, Saw Us at an Event, Instagram, Google, Event Planner, Other &mdash; with "Other" text field. <em style="color: #4ecdc4;">AI uses this for personalized openers</em></li>
               <li><strong>What should guests walk away remembering?</strong> &mdash; Textarea. <em style="color: #4ecdc4;">AI uses this as the emotional hook for personalized emails</em></li>
+              <li><strong>Preferred Contact Method</strong> &mdash; Dropdown: Email, Text, Both &mdash; linked to <code>{{job.custom.contact-preference}}</code>. <em style="color: var(--accent-warm);">Controls which channels fire: SMS automations check this field before sending</em></li>
               <li><strong>Budget Range</strong> &mdash; Dropdown: Under $1,500, $1,500-$2,500, $2,500-$4,000, $4,000-$6,000, $6,000+</li>
             </ul>
           </div>
@@ -1822,6 +1850,185 @@ code {
       <div class="bp-note">
         <strong>Email template tip:</strong> Create a <strong>Questionnaire Invitation</strong> email template for each form. Use the <code>{{item.name_link}}</code> token to auto-insert the questionnaire link. Pre-fill the subject line with something like "Action Needed: Event Details for {{job.name}}". The token ensures each client gets their own unique questionnaire URL.
       </div>
+
+      <h3>SMS Automations (Quo Integration)</h3>
+      <p>Your Quo integration is already connected &mdash; "Send SMS to New Lead" has 85 runs. These automations add SMS touchpoints across the full journey. Every SMS automation must include a condition checking <code>{{job.custom.contact-preference}}</code> = "Text" or "Both" &mdash; only text clients who opted in.</p>
+
+      <div class="bp-note">
+        <strong>SMS rules:</strong> Keep texts under 160 characters (1 segment = $0.01). Lead with the action, include the link, skip the fluff. Texts are nudges, not newsletters. The email has the full details &mdash; the text just makes sure they see it.
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 1: New Lead Text (Already Active)</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Lead &rsaquo; Created</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Status</span>
+          <span class="auto-value"><span class="badge badge-keep">Keep</span> &mdash; 85 runs, working. Review the message copy to match your updated brand voice.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Hey {{primary_contact.first_name}}! Thanks for reaching out to OMG Booth. We got your inquiry and will follow up shortly. Reply here anytime with questions."</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 2: Qualified &mdash; Form Link Nudge</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Lead &rsaquo; Lead Status Changed</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value">Lead Status = "Qualified" AND contact preference = Text or Both</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value">Immediately (fires alongside the email automation)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Hey {{primary_contact.first_name}}, we'd love to put together your custom proposal! We just sent a quick questionnaire to your email &mdash; takes about 5 min. {{item.link_url}}"</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 3: Proposal Ready</h4>
+        <div class="auto-row">
+          <span class="auto-label">Trigger</span>
+          <span class="auto-value"><strong>Manual</strong> &mdash; send via "Send Text" in VSCO when you send the quote. Or set up automation on Quote Created.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Your custom OMG Booth proposal is ready! Browse packages, pick upgrades, and book &mdash; all in one link: {{item.link_url}}"</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 4: Booking Confirmation</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong> (or Job Stage &rarr; Booked)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value">Contact preference = Text or Both</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"You're officially booked, {{primary_contact.first_name}}! Your date is locked in. Full details and your client portal link are in your email. Can't wait for your event!"</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 5: Design Brief Reminder</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>21 days before</strong> (fires same day as email Form 4 automation)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value">Contact preference = Text or Both</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Hey {{primary_contact.first_name}}, your event is coming up! We need your logos and brand details to build your custom booth experience. Quick form: {{item.link_url}}"</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 6: Design Brief Follow-Up</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>14 days before</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value">Contact preference = Text or Both. Ideally also check if Design Brief is still empty (use a task or custom field flag).</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Friendly reminder &mdash; we still need your design assets for {{job.name}} in 2 weeks. Without them we'll use a default overlay. Submit here: {{item.link_url}}"</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 7: One Week Out</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>7 days before</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"One week until {{job.name}}! We're finalizing everything on our end. Any last-minute changes? Reply here or call (404) 555-0100."</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 8: Day-Of Arrival</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>Day of event</strong> (at 8am studio time)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Today's the day! Our team is heading to your venue for setup. Your on-site lead will text you when we arrive. See you soon, {{primary_contact.first_name}}!"</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 9: Post-Event Thank You</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value"><strong>Calendar &rsaquo; Session</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Execute</span>
+          <span class="auto-value"><strong>1 day after</strong></span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Thanks for an amazing event, {{primary_contact.first_name}}! Your photos and content will be delivered within 48 hours. It was a blast working with you!"</span>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <h4>SMS 10: Payment Reminder</h4>
+        <div class="auto-row">
+          <span class="auto-label">Observable</span>
+          <span class="auto-value">Pair with existing invoice reminder automations (re-enable first &mdash; see above)</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Condition</span>
+          <span class="auto-value">Contact preference = Text or Both</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Message</span>
+          <span class="auto-value">"Hey {{primary_contact.first_name}}, friendly reminder: your invoice for {{job.name}} is due soon. View and pay here: {{item.link_url}}"</span>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Cost estimate:</strong> At ~30 clients/month with ~5 texts per client = 150 texts/month = <strong>$1.50/month</strong> via Quo. With milestone texts for active jobs it might hit 300 texts = $3/month. Combined with AI ($2/month), your total enhancement cost is under $5/month for personalized AI emails + full SMS journey coverage.
+      </div>
     </section>
 
     <!-- SECTION 5: CHECKLIST -->
@@ -1834,7 +2041,7 @@ code {
 
       <div class="checklist-progress">
         <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
-        <div class="progress-text" id="progressText">0 / 38</div>
+        <div class="progress-text" id="progressText">0 / 42</div>
       </div>
 
       <h3 style="color: var(--accent-coral); margin-bottom: 1rem;">Critical Blockers &mdash; Do These First</h3>
@@ -1865,6 +2072,10 @@ code {
         <li><input type="checkbox" data-key="chk-19"> Set up automation: <strong>2 days before event</strong> &rarr; send Pre-Event Report (internal) <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
         <li><input type="checkbox" data-key="chk-20"> Set up automation: <strong>1 day after event</strong> &rarr; send Post-Event Report (internal) <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
         <li><input type="checkbox" data-key="chk-21"> <strong>Archive 8+ date-specific quote templates</strong> (2020, 2021, 2022, 2023 versions) <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-38"> Create <strong>"contact-preference" custom field</strong> in <span class="auto-path">Settings &rsaquo; Custom Fields</span> (values: Email, Text, Both) <em style="color: var(--text-muted);">(30 min)</em></li>
+        <li><input type="checkbox" data-key="chk-39"> Add <strong>"Preferred Contact Method"</strong> field to Form 1, linked to <code>{{job.custom.contact-preference}}</code> <em style="color: var(--text-muted);">(30 min)</em></li>
+        <li><input type="checkbox" data-key="chk-40"> Review and update <strong>"Send SMS to New Lead"</strong> automation copy to match new brand voice <em style="color: var(--text-muted);">(30 min)</em></li>
+        <li><input type="checkbox" data-key="chk-41"> Set up <strong>9 new SMS automations</strong> (Qualified nudge, Proposal ready, Booking confirmation, Design Brief reminder + follow-up, 7-day check-in, Day-of arrival, Post-event thanks, Payment reminder) &mdash; all conditioned on contact preference <em style="color: var(--text-muted);">(6-8 hrs)</em></li>
       </ul>
 
       <h3 style="color: var(--accent-green); margin: 2rem 0 1rem;">Launch &amp; Cleanup</h3>
