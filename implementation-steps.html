@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — Implementation Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #131316;
+  --bg-card: #1a1a1f;
+  --bg-card-hover: #22222a;
+  --border: #2a2a33;
+  --border-light: #3a3a44;
+  --text-primary: #f0ece4;
+  --text-secondary: #a09a8e;
+  --text-muted: #6b655a;
+  --accent-warm: #e8a849;
+  --accent-coral: #e06c5d;
+  --accent-green: #5bb67a;
+  --accent-red: #d45b5b;
+  --accent-blue: #5b8fd4;
+  --accent-purple: #a58cff;
+  --accent-cyan: #4ecdc4;
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.sidebar-logo h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  letter-spacing: -0.02em;
+}
+.sidebar-logo p {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+.sidebar nav { padding: 0.5rem 0; }
+.sidebar nav a {
+  display: block;
+  padding: 0.55rem 1.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 400;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+.sidebar nav a:hover {
+  color: var(--text-primary);
+  background: rgba(232, 168, 73, 0.05);
+}
+.sidebar nav a.active {
+  color: var(--accent-warm);
+  border-left-color: var(--accent-warm);
+  background: rgba(232, 168, 73, 0.05);
+  font-weight: 600;
+}
+.nav-number {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-right: 0.5rem;
+  font-weight: 500;
+}
+.nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.8rem 1.5rem;
+}
+
+/* MOBILE NAV */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-warm);
+  border: none;
+  cursor: pointer;
+  z-index: 200;
+  box-shadow: 0 4px 20px rgba(232, 168, 73, 0.4);
+}
+.mobile-nav-toggle svg { fill: var(--bg-primary); }
+
+/* MAIN */
+.main {
+  flex: 1;
+  max-width: 820px;
+  padding: 3rem 3rem 6rem;
+}
+
+/* HERO */
+.hero {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+.hero .eyebrow {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-warm);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.hero h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.8rem;
+}
+.hero h1 span { color: var(--accent-warm); }
+.hero .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+}
+.back-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent-warm); }
+
+/* SECTIONS */
+section {
+  margin-bottom: 3.5rem;
+  scroll-margin-top: 2rem;
+}
+.section-header {
+  margin-bottom: 1.5rem;
+}
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+.section-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+.section-header p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+/* PROGRESS */
+.master-progress {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10,10,11,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 0;
+  margin: 0 -3rem 2rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+.master-progress-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-warm), var(--accent-green));
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px rgba(232, 168, 73, 0.3);
+}
+.progress-text {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  min-width: 70px;
+  text-align: right;
+}
+.progress-phase {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  min-width: 80px;
+}
+
+/* PHASE HEADERS */
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3rem 0 1.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.phase-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+.phase-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex: 1;
+}
+.phase-header .phase-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+.phase-header .phase-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.phase-1 .phase-header::before { background: var(--accent-coral); }
+.phase-1 .phase-header h3 { color: var(--accent-coral); }
+.phase-1 .phase-header .phase-count { color: var(--accent-coral); }
+.phase-2 .phase-header::before { background: var(--accent-warm); }
+.phase-2 .phase-header h3 { color: var(--accent-warm); }
+.phase-2 .phase-header .phase-count { color: var(--accent-warm); }
+.phase-3 .phase-header::before { background: var(--accent-blue); }
+.phase-3 .phase-header h3 { color: var(--accent-blue); }
+.phase-3 .phase-header .phase-count { color: var(--accent-blue); }
+.phase-4 .phase-header::before { background: var(--accent-purple); }
+.phase-4 .phase-header h3 { color: var(--accent-purple); }
+.phase-4 .phase-header .phase-count { color: var(--accent-purple); }
+.phase-5 .phase-header::before { background: var(--accent-green); }
+.phase-5 .phase-header h3 { color: var(--accent-green); }
+.phase-5 .phase-header .phase-count { color: var(--accent-green); }
+.phase-6 .phase-header::before { background: var(--accent-cyan); }
+.phase-6 .phase-header h3 { color: var(--accent-cyan); }
+.phase-6 .phase-header .phase-count { color: var(--accent-cyan); }
+
+/* STEP CARDS */
+.step {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+.step:hover {
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+}
+.step.checked {
+  opacity: 0.35;
+  background: rgba(91,182,122,0.03);
+  border-color: rgba(91,182,122,0.15);
+}
+.step.checked .step-title { text-decoration: line-through; }
+
+.step input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border: 2px solid var(--border-light);
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0.15rem;
+  position: relative;
+  transition: all 0.2s;
+}
+.step input[type="checkbox"]:checked {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+.step input[type="checkbox"]:checked::after {
+  content: '\2713';
+  position: absolute;
+  top: -1px;
+  left: 3px;
+  font-size: 0.78rem;
+  color: white;
+  font-weight: 700;
+}
+
+.step-content { flex: 1; }
+.step-number {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+.step-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+  line-height: 1.4;
+}
+.step-detail {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.step-detail strong { color: var(--text-primary); font-weight: 500; }
+.step-time {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  min-width: 50px;
+  text-align: right;
+  margin-top: 0.2rem;
+}
+
+.step-where {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-warm);
+  background: rgba(232,168,73,0.08);
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+  margin-top: 0.3rem;
+}
+
+.step-substeps {
+  margin-top: 0.5rem;
+  padding-left: 0.2rem;
+}
+.step-substeps li {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding: 0.15rem 0;
+  list-style: none;
+  position: relative;
+  padding-left: 1rem;
+}
+.step-substeps li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 4px;
+  height: 4px;
+  background: var(--border-light);
+  border-radius: 50%;
+}
+
+.step-warning {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--accent-coral);
+  padding: 0.4rem 0.6rem;
+  background: rgba(224,108,93,0.06);
+  border-radius: 6px;
+  border: 1px solid rgba(224,108,93,0.12);
+}
+
+.step-tip {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--accent-cyan);
+  padding: 0.4rem 0.6rem;
+  background: rgba(78,205,196,0.06);
+  border-radius: 6px;
+  border: 1px solid rgba(78,205,196,0.12);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: rgba(78,205,196,0.08);
+  color: var(--accent-cyan);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+/* CALLOUT */
+.callout {
+  background: rgba(232,168,73,0.06);
+  border: 1px solid rgba(232,168,73,0.15);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-size: 0.88rem;
+  margin: 1.5rem 0;
+  color: var(--text-secondary);
+}
+.callout strong { color: var(--accent-warm); }
+
+/* STATS */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 12px 12px 0 0;
+}
+.stat-card .stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+.stat-card .stat-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+.stat-warm .stat-value { color: var(--accent-warm); }
+.stat-warm { border-color: rgba(232,168,73,0.2); }
+.stat-warm::before { background: var(--accent-warm); }
+.stat-green .stat-value { color: var(--accent-green); }
+.stat-green { border-color: rgba(91,182,122,0.2); }
+.stat-green::before { background: var(--accent-green); }
+.stat-coral .stat-value { color: var(--accent-coral); }
+.stat-coral { border-color: rgba(224,108,93,0.2); }
+.stat-coral::before { background: var(--accent-coral); }
+.stat-cyan .stat-value { color: var(--accent-cyan); }
+.stat-cyan { border-color: rgba(78,205,196,0.2); }
+.stat-cyan::before { background: var(--accent-cyan); }
+
+/* PRINT */
+@media print {
+  .sidebar, .mobile-nav-toggle, .master-progress { display: none !important; }
+  .main { max-width: 100%; padding: 1rem; }
+  body { background: white; color: #222; font-size: 11px; }
+  .step { border-color: #ccc; background: white; }
+  .phase-header { background: white; border-color: #ccc; }
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    left: -300px;
+    top: 0;
+    width: 300px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 300;
+    background: rgba(19,19,22,0.98);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+  }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 250;
+  }
+  .sidebar-overlay.show { display: block; }
+  .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+  .main { padding: 2rem 1rem 5rem; }
+  .master-progress { margin: 0 -1rem 2rem; padding-left: 1rem; padding-right: 1rem; }
+  .hero h1 { font-size: 1.8rem; }
+  .section-header h2 { font-size: 1.4rem; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .step { flex-wrap: wrap; }
+  .step-time { width: 100%; text-align: left; margin-top: 0.3rem; }
+}
+@media (max-width: 400px) {
+  .main { padding: 1.5rem 0.8rem 5rem; }
+  .hero h1 { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>OMG Booth</h2>
+      <p>Implementation Playbook</p>
+    </div>
+    <nav>
+      <a href="#phase-1"><span class="nav-number">01</span> Backup & Prep</a>
+      <a href="#phase-2"><span class="nav-number">02</span> Products & Quote</a>
+      <a href="#phase-3"><span class="nav-number">03</span> Build the Forms</a>
+      <a href="#phase-4"><span class="nav-number">04</span> Automations & Email</a>
+      <a href="#phase-5"><span class="nav-number">05</span> Launch & Cleanup</a>
+      <a href="#phase-6"><span class="nav-number">06</span> AI + SMS Layer</a>
+      <div class="nav-divider"></div>
+      <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Overhaul Guide</a>
+      <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map</a>
+      <a href="ai-integration.html" style="color: var(--accent-warm);">AI Integration Plan</a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- HERO -->
+    <header class="hero">
+      <div class="eyebrow">Step by Step</div>
+      <h1>Implementation <span>Playbook</span></h1>
+      <p class="subtitle">Every change you need to make, in the exact order you need to make it. No strategy, no architecture, no "why" &mdash; just what to do, where to do it, and when to move on.</p>
+      <a href="omg-booth-vsco-overhaul.html" class="back-link">&larr; Back to Overhaul Guide</a>
+    </header>
+
+    <!-- STICKY PROGRESS -->
+    <div class="master-progress">
+      <div class="master-progress-inner">
+        <div class="progress-phase" id="currentPhase">Phase 1</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+        <div class="progress-text" id="progressText">0 / 46</div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+      <div class="stat-card stat-warm">
+        <div class="stat-value">46</div>
+        <div class="stat-label">Total Steps</div>
+      </div>
+      <div class="stat-card stat-coral">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Phases</div>
+      </div>
+      <div class="stat-card stat-green">
+        <div class="stat-value" id="hoursLeft">~120</div>
+        <div class="stat-label">Est. Hours</div>
+      </div>
+      <div class="stat-card stat-cyan">
+        <div class="stat-value" id="pctDone">0%</div>
+        <div class="stat-label">Complete</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>How to use this page.</strong> Work top to bottom. Each phase depends on the one before it. Check off steps as you finish them &mdash; progress saves in your browser. If you need the "why" behind any step, check the <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Overhaul Guide</a>. If you need to see what the client experiences, check the <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map</a>.
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PHASE 1: BACKUP & PREP -->
+    <!-- ============================================ -->
+    <section id="phase-1" class="phase-1">
+      <div class="phase-header">
+        <h3>Phase 1: Backup & Prep</h3>
+        <div class="phase-meta">
+          <div class="phase-count">4 steps</div>
+          <div>~5 hrs</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-1">
+        <div class="step-content">
+          <div class="step-number">Step 1</div>
+          <div class="step-title">Screenshot every existing questionnaire</div>
+          <div class="step-detail">Open each of the 28 questionnaires. Screenshot the full field list for each one. Save to a folder called "VSCO Backup." This is your safety net &mdash; if anything goes wrong, you can rebuild from these.</div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; [each form]</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-2">
+        <div class="step-content">
+          <div class="step-number">Step 2</div>
+          <div class="step-title">Create the "Qualified" lead status</div>
+          <div class="step-detail">Add a new lead status called <strong>"Qualified"</strong>. This is the trigger for the entire automation chain &mdash; when you mark a lead as Qualified, it kicks off the Event Details form, SMS, and (later) AI emails.</div>
+          <div class="step-where">Settings &rsaquo; Lead Sources &rsaquo; Lead Statuses</div>
+        </div>
+        <div class="step-time">15 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-3">
+        <div class="step-content">
+          <div class="step-number">Step 3</div>
+          <div class="step-title">Create the "contact-preference" custom field</div>
+          <div class="step-detail">Create a new custom field. Name: <strong>Contact Preference</strong>. Type: Dropdown. Values: <strong>Email, Text, Both</strong>. Token will be <code>{{job.custom.contact-preference}}</code>. This controls whether a client gets email, SMS, or both.</div>
+          <div class="step-where">Settings &rsaquo; Custom Fields &rsaquo; New Custom Field</div>
+        </div>
+        <div class="step-time">15 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-4">
+        <div class="step-content">
+          <div class="step-number">Step 4</div>
+          <div class="step-title">Audit and create other custom fields</div>
+          <div class="step-detail">Review the 99 existing custom fields. Delete any that are clearly unused. Create new ones you'll need for the forms: <strong>venue-name</strong>, <strong>venue-address</strong>, <strong>guest-count</strong>, <strong>event-vibe</strong>, <strong>guest-type</strong>, <strong>priorities</strong>. Each will have a token like <code>{{job.custom.venue-name}}</code>.</div>
+          <div class="step-where">Settings &rsaquo; Custom Fields</div>
+          <div class="step-warning">Don't delete a custom field if you're not 100% sure it's unused &mdash; deleting removes it from all historical jobs too.</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- PHASE 2: PRODUCTS & QUOTE -->
+    <!-- ============================================ -->
+    <section id="phase-2" class="phase-2">
+      <div class="phase-header">
+        <h3>Phase 2: Products & Quote Template</h3>
+        <div class="phase-meta">
+          <div class="phase-count">5 steps</div>
+          <div>~35 hrs</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-5">
+        <div class="step-content">
+          <div class="step-number">Step 5</div>
+          <div class="step-title">Create the 3 base package products</div>
+          <div class="step-detail">Create three new products. Each one needs a <strong>name, price, description, and product image</strong> (required for Upgradable quote cards).
+          <ul class="step-substeps">
+            <li><strong>Essential Experience</strong> &mdash; $1,800. 3hr booth, basic overlay, digital delivery, 1 attendant.</li>
+            <li><strong>Premium Experience</strong> &mdash; $2,800. 4hr, photos+GIFs+video, backdrop, prints, social wall, 2 attendants.</li>
+            <li><strong>Full Activation</strong> &mdash; $4,200. 5hr, 360+standard booth, slo-mo, full branding, lead capture, 3 staff.</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Products &rsaquo; New Product</div>
+          <div class="step-tip">Product images should be 800x600px minimum. Use mockups or styled photos of your actual booth setups.</div>
+        </div>
+        <div class="step-time">10-15 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-6">
+        <div class="step-content">
+          <div class="step-number">Step 6</div>
+          <div class="step-title">Create upsell products with images</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li><strong>360 Booth Upgrade</strong> &mdash; price TBD</li>
+            <li><strong>Slo-Mo Station</strong> &mdash; price TBD</li>
+            <li><strong>Print Station</strong> &mdash; price TBD</li>
+            <li><strong>AR Filter Package</strong> &mdash; price TBD</li>
+            <li><strong>LED Enclosure</strong> &mdash; price TBD</li>
+          </ul>
+          Each needs a product image.</div>
+          <div class="step-where">Settings &rsaquo; Products &rsaquo; New Product</div>
+        </div>
+        <div class="step-time">6-8 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-7">
+        <div class="step-content">
+          <div class="step-number">Step 7</div>
+          <div class="step-title">Create add-on products</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li>Additional Hour, Standby Hour, Step-and-Repeat Backdrop</li>
+            <li>Lead Capture Integration, Same-Day Content Delivery, Analytics Report</li>
+          </ul>
+          These don't need images (they're line-item add-ons, not visual cards).</div>
+          <div class="step-where">Settings &rsaquo; Products &rsaquo; New Product</div>
+        </div>
+        <div class="step-time">3-4 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-8">
+        <div class="step-content">
+          <div class="step-number">Step 8</div>
+          <div class="step-title">Build the Upgradable Quote Template</div>
+          <div class="step-detail">Create a new quote template. Set it to <strong>Upgradable</strong> type. Add all base packages, upsells, and add-ons. Embed <strong>Form 3 (Event Logistics)</strong>, <strong>General Service Contract</strong>, and <strong>Square payment</strong> directly into the quote page. This is the single page where clients pick their package, fill out logistics, sign, and pay.</div>
+          <div class="step-where">Settings &rsaquo; Quote Templates &rsaquo; New Template</div>
+          <div class="step-warning">This is the most complex single step. Budget a full day. Test thoroughly before moving on.</div>
+        </div>
+        <div class="step-time">15-20 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-9">
+        <div class="step-content">
+          <div class="step-number">Step 9</div>
+          <div class="step-title">Mark "Premium Experience" as Most Popular</div>
+          <div class="step-detail">In the quote template settings, flag the Premium Experience package as <strong>"Most Popular"</strong>. This adds a visual badge on the client-facing quote page that anchors their choice. Most clients will pick this tier.</div>
+          <div class="step-where">Quote Template &rsaquo; Product Settings</div>
+        </div>
+        <div class="step-time">5 min</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- PHASE 3: BUILD THE FORMS -->
+    <!-- ============================================ -->
+    <section id="phase-3" class="phase-3">
+      <div class="phase-header">
+        <h3>Phase 3: Build the Forms</h3>
+        <div class="phase-meta">
+          <div class="phase-count">6 steps</div>
+          <div>~45 hrs</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-10">
+        <div class="step-content">
+          <div class="step-number">Step 10</div>
+          <div class="step-title">Build Form 1 &mdash; New Lead Intake</div>
+          <div class="step-detail">Create a new questionnaire. Set visibility to <strong>Public</strong>. Enable <strong>auto-create lead</strong>. Set a redirect URL to your thank-you page.
+          <ul class="step-substeps">
+            <li>First Name, Last Name, Email, Phone (required)</li>
+            <li>Event Type &mdash; dropdown linked to <code>{{job.type}}</code> (Corporate, Wedding, Birthday, etc.)</li>
+            <li>Event Date &mdash; date picker</li>
+            <li>Estimated Guest Count &mdash; dropdown ranges (Under 50, 50-100, 100-200, 200-500, 500+)</li>
+            <li>Budget Range &mdash; dropdown ($1,000-$2,000, $2,000-$4,000, $4,000-$7,000, $7,000+, Not sure)</li>
+            <li>How did you hear about us? &mdash; dropdown (Referral, Saw us at an event, Instagram, Google, Event planner, Other)</li>
+            <li>What should guests walk away remembering? &mdash; open text</li>
+            <li>Preferred Contact Method &mdash; dropdown linked to <code>{{job.custom.contact-preference}}</code> (Email, Text, Both)</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; New Questionnaire</div>
+          <div class="step-tip">This form will be embedded on your website. Keep it under 90 seconds to complete. See <a href="client-journey.html" style="color: var(--accent-cyan);">Client Journey Step 1</a> for the suggested copy and layout.</div>
+        </div>
+        <div class="step-time">4-6 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-11">
+        <div class="step-content">
+          <div class="step-number">Step 11</div>
+          <div class="step-title">Build Form 2 &mdash; Event Details</div>
+          <div class="step-detail">Consolidates 11 "Event Customization" variants and "Step 2 of 2" into one form. Set visibility to <strong>Private</strong> (sent via automation after qualifying).
+          <ul class="step-substeps">
+            <li>Event Name, Venue Name, Venue Address, Start/End Time</li>
+            <li>Color palette, theme/style, dress code</li>
+            <li>Who are your guests? &mdash; dropdown (Employees, Clients/Customers, Friends & Family, VIPs, General Public, Mixed)</li>
+            <li>What matters most? (pick 2) &mdash; multi-select (Guest Experience, Social Media Content, Custom Branding, Print Keepsakes, Data & Analytics, Wow Factor)</li>
+            <li>What's the vibe? &mdash; dropdown + open text (Elegant/Formal, Fun/Playful, Modern/Minimalist, Bold/Energetic, Glamorous, Casual)</li>
+            <li>Any inspiration? &mdash; optional open text</li>
+            <li>Special requests or must-haves &mdash; open text</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; New Questionnaire</div>
+        </div>
+        <div class="step-time">12-18 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-12">
+        <div class="step-content">
+          <div class="step-number">Step 12</div>
+          <div class="step-title">Build Form 3 &mdash; Event Logistics</div>
+          <div class="step-detail">Use the existing "Event Logistics" form (402 responses) as a base. Merge in the 4 type-specific variants and 2 virtual booth forms. Set visibility to <strong>Private</strong>. This form gets <strong>embedded in the Upgradable Quote</strong>, not sent separately.
+          <ul class="step-substeps">
+            <li>Load-in time, setup location, power access, WiFi details</li>
+            <li>Venue contact name and number</li>
+            <li>Parking/loading dock instructions</li>
+            <li>Any venue restrictions (noise, flash, props)</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; Edit existing "Event Logistics"</div>
+        </div>
+        <div class="step-time">10-14 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-13">
+        <div class="step-content">
+          <div class="step-number">Step 13</div>
+          <div class="step-title">Build Form 4 &mdash; Design & Branding Brief</div>
+          <div class="step-detail">New form. Absorbs "Design Assets Review" (1 response). Set to <strong>Private</strong>. Sent 21 days before event via automation.
+          <ul class="step-substeps">
+            <li>Upload logo(s) &mdash; file upload field</li>
+            <li>Upload brand guidelines &mdash; file upload (optional)</li>
+            <li>Brand colors (hex codes or description)</li>
+            <li>Overlay/template preferences</li>
+            <li>Social handles to display</li>
+            <li>Any specific text for prints</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; New Questionnaire</div>
+        </div>
+        <div class="step-time">6-8 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-14">
+        <div class="step-content">
+          <div class="step-number">Step 14</div>
+          <div class="step-title">Update Form 5 &mdash; Pre-Event Report</div>
+          <div class="step-detail">This form is battle-tested (101 responses). Clean up field names for consistency, set visibility to <strong>Private</strong>. This is an <strong>internal form</strong> &mdash; your team fills it out 2 days before the event.</div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; Edit existing form</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-15">
+        <div class="step-content">
+          <div class="step-number">Step 15</div>
+          <div class="step-title">Build Form 6 &mdash; Post-Event Report</div>
+          <div class="step-detail">Merge the EM version (139 responses) and Smile Squad version (65 responses) into a single form with a <strong>role selector</strong> at the top (Event Manager / Smile Squad). Set to <strong>Private</strong>. Sent 1 day after event via automation.
+          <ul class="step-substeps">
+            <li>Role selector (determines which fields show)</li>
+            <li>Event summary, guest engagement notes, equipment issues</li>
+            <li>Photo/video count, social media metrics</li>
+            <li>Client feedback received, suggestions for improvement</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; New Questionnaire</div>
+        </div>
+        <div class="step-time">6-10 hrs</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- PHASE 4: AUTOMATIONS & EMAIL -->
+    <!-- ============================================ -->
+    <section id="phase-4" class="phase-4">
+      <div class="phase-header">
+        <h3>Phase 4: Automations, Email & SMS</h3>
+        <div class="phase-meta">
+          <div class="phase-count">14 steps</div>
+          <div>~30 hrs</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-16">
+        <div class="step-content">
+          <div class="step-number">Step 16</div>
+          <div class="step-title">Delete 15+ stale automations</div>
+          <div class="step-detail">Delete every automation that references a form you're replacing or merging. These will break once you archive the old forms. Check the <a href="omg-booth-vsco-overhaul.html#automations" style="color: var(--accent-purple);">Overhaul Guide Section 05</a> for the full delete list.</div>
+          <div class="step-where">Settings &rsaquo; Automations</div>
+          <div class="step-warning">Screenshot each automation before deleting, just in case you need to reference the old configuration.</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-17">
+        <div class="step-content">
+          <div class="step-number">Step 17</div>
+          <div class="step-title">Create email template for Form 2 (Event Details)</div>
+          <div class="step-detail">Write the email that goes out when a lead is qualified. Include <code>{{primary_contact.first_name}}</code> greeting, brief intro, and <code>{{item.name_link}}</code> to the questionnaire. This email is the first real communication &mdash; tone matters.</div>
+          <div class="step-where">Settings &rsaquo; Email Templates &rsaquo; New Template</div>
+          <div class="step-tip">See <a href="client-journey.html" style="color: var(--accent-cyan);">Client Journey Step 3</a> for suggested copy.</div>
+        </div>
+        <div class="step-time">1-2 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-18">
+        <div class="step-content">
+          <div class="step-number">Step 18</div>
+          <div class="step-title">Create email template for Form 4 (Design Brief)</div>
+          <div class="step-detail">The "it's time to send your logos" email. Sent 21 days before the event. Include <code>{{job.name}}</code> reference and <code>{{item.name_link}}</code>.</div>
+          <div class="step-where">Settings &rsaquo; Email Templates &rsaquo; New Template</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-19">
+        <div class="step-content">
+          <div class="step-number">Step 19</div>
+          <div class="step-title">Create email template for Form 5 (Pre-Event Report)</div>
+          <div class="step-detail">Internal email to your team. "Fill out the pre-event checklist for {{job.name}}." Include event date and <code>{{item.name_link}}</code>.</div>
+          <div class="step-where">Settings &rsaquo; Email Templates &rsaquo; New Template</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-20">
+        <div class="step-content">
+          <div class="step-number">Step 20</div>
+          <div class="step-title">Create email template for Form 6 (Post-Event Report)</div>
+          <div class="step-detail">Internal email. "Event complete &mdash; fill out your post-event report for {{job.name}}." Include <code>{{item.name_link}}</code>.</div>
+          <div class="step-where">Settings &rsaquo; Email Templates &rsaquo; New Template</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-21">
+        <div class="step-content">
+          <div class="step-number">Step 21</div>
+          <div class="step-title">Set up automation: Qualified &rarr; Send Form 2</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li><strong>Observable:</strong> Lead &rsaquo; Lead Status Changed</li>
+            <li><strong>Execute:</strong> Immediately</li>
+            <li><strong>Condition:</strong> Lead status equals "Qualified"</li>
+            <li><strong>Action:</strong> Send Questionnaire &rarr; Event Details (Form 2) using the email template from Step 17</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; New Automation</div>
+        </div>
+        <div class="step-time">1-2 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-22">
+        <div class="step-content">
+          <div class="step-number">Step 22</div>
+          <div class="step-title">Set up automation: 21 days before &rarr; Send Form 4</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li><strong>Observable:</strong> Job &rsaquo; Before Job Date</li>
+            <li><strong>Execute:</strong> 21 days before</li>
+            <li><strong>Action:</strong> Send Questionnaire &rarr; Design & Branding Brief (Form 4) using the email template from Step 18</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; New Automation</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-23">
+        <div class="step-content">
+          <div class="step-number">Step 23</div>
+          <div class="step-title">Set up automation: 2 days before &rarr; Send Form 5</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li><strong>Observable:</strong> Job &rsaquo; Before Job Date</li>
+            <li><strong>Execute:</strong> 2 days before</li>
+            <li><strong>Action:</strong> Send Questionnaire &rarr; Pre-Event Report (Form 5) to internal team using email template from Step 19</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; New Automation</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-24">
+        <div class="step-content">
+          <div class="step-number">Step 24</div>
+          <div class="step-title">Set up automation: 1 day after &rarr; Send Form 6</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li><strong>Observable:</strong> Job &rsaquo; After Job Date</li>
+            <li><strong>Execute:</strong> 1 day after</li>
+            <li><strong>Action:</strong> Send Questionnaire &rarr; Post-Event Report (Form 6) to internal team using email template from Step 20</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; New Automation</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-25">
+        <div class="step-content">
+          <div class="step-number">Step 25</div>
+          <div class="step-title">Re-enable invoice automations</div>
+          <div class="step-detail">Turn these back on: <strong>Invoice Due Soon</strong> (3 days before), <strong>Invoice Due Today</strong>, and <strong>Invoice Past Due</strong> (3 days after). There are 36 past due invoices that need attention.</div>
+          <div class="step-where">Settings &rsaquo; Automations</div>
+        </div>
+        <div class="step-time">1-2 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-26">
+        <div class="step-content">
+          <div class="step-number">Step 26</div>
+          <div class="step-title">Update the existing "New Lead" SMS automation</div>
+          <div class="step-detail">Find the existing "Send SMS to New Lead" automation. Update the copy to match your new brand voice. Add a condition: only fire if contact preference = "Text" or "Both".</div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; [find existing SMS automation]</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-27">
+        <div class="step-content">
+          <div class="step-number">Step 27</div>
+          <div class="step-title">Build 5 core SMS automations</div>
+          <div class="step-detail">Create these SMS automations in VSCO. All conditioned on <code>{{job.custom.contact-preference}}</code> = "Text" or "Both":
+          <ul class="step-substeps">
+            <li><strong>SMS 2 &mdash; Qualified Nudge:</strong> Trigger = Lead status &rarr; Qualified. "Hey {{name}}, just sent over some info about your event &mdash; check your inbox!"</li>
+            <li><strong>SMS 4 &mdash; Proposal Ready:</strong> Trigger = Quote sent. "Your custom proposal is in your inbox &mdash; take a look when you're ready!"</li>
+            <li><strong>SMS 5 &mdash; Booking Confirmation:</strong> Trigger = Payment received. "You're officially booked! Check your email for all the details."</li>
+            <li><strong>SMS 6 &mdash; Design Brief Reminder:</strong> Trigger = 14 days before event. "Hey {{name}}, don't forget to send your logos &mdash; check your email for the design brief!"</li>
+            <li><strong>SMS 8 &mdash; Day-Of Arrival:</strong> Trigger = Day of event, 8am. "Today's the day! Our team is heading your way. See you soon!"</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; New Automation (x5)</div>
+        </div>
+        <div class="step-time">3-4 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-28">
+        <div class="step-content">
+          <div class="step-number">Step 28</div>
+          <div class="step-title">Build 4 additional SMS automations</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li><strong>SMS 3 &mdash; Form 2 Follow-up:</strong> Trigger = Event Details form submitted. "Got your event details &mdash; working on your proposal now!"</li>
+            <li><strong>SMS 7 &mdash; 7-Day Check-in:</strong> Trigger = 7 days before event. "One week out! Getting everything prepped for {{event}}."</li>
+            <li><strong>SMS 9 &mdash; Day-Before Hype:</strong> Trigger = 1 day before event. "Tomorrow is going to be amazing. Your booth is ready to go!"</li>
+            <li><strong>SMS 10 &mdash; Post-Event Thanks:</strong> Trigger = 1 day after event. "Thanks for having us! Your gallery will be ready soon."</li>
+          </ul>
+          All conditioned on contact preference = "Text" or "Both".</div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; New Automation (x4)</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-29">
+        <div class="step-content">
+          <div class="step-number">Step 29</div>
+          <div class="step-title">Archive old quote templates</div>
+          <div class="step-detail">Archive the 8+ date-specific quote templates (2020, 2021, 2022, 2023 versions). You only need the one Upgradable quote template going forward.</div>
+          <div class="step-where">Settings &rsaquo; Quote Templates</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- PHASE 5: LAUNCH & CLEANUP -->
+    <!-- ============================================ -->
+    <section id="phase-5" class="phase-5">
+      <div class="phase-header">
+        <h3>Phase 5: Launch & Cleanup</h3>
+        <div class="phase-meta">
+          <div class="phase-count">8 steps</div>
+          <div>~45 hrs</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-30">
+        <div class="step-content">
+          <div class="step-number">Step 30</div>
+          <div class="step-title">Apply custom CSS to quote pages</div>
+          <div class="step-detail">Paste your custom CSS into the quote page styling. This controls how the Upgradable quote looks to clients &mdash; fonts, colors, card layout, button styling.</div>
+          <div class="step-where">Settings &rsaquo; Branding &rsaquo; Advanced Design &rsaquo; Page CSS</div>
+          <div class="step-tip">See the <a href="quote-styles/index.html" style="color: var(--accent-cyan);">Style Gallery</a> for pre-built options.</div>
+        </div>
+        <div class="step-time">4-6 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-31">
+        <div class="step-content">
+          <div class="step-number">Step 31</div>
+          <div class="step-title">Test the full flow with a dummy lead</div>
+          <div class="step-detail">Create a test lead and run through every step:
+          <ul class="step-substeps">
+            <li>Submit Form 1 (Lead Intake) from your website</li>
+            <li>Verify lead is created in VSCO with correct job type</li>
+            <li>Mark lead as "Qualified" &mdash; verify Form 2 email sends</li>
+            <li>Verify SMS fires (if contact pref = Text or Both)</li>
+            <li>Fill out Form 2 &mdash; verify data populates custom fields</li>
+            <li>Send Upgradable Quote &mdash; verify email + SMS fire</li>
+            <li>Open quote as client &mdash; select package, fill Form 3, sign contract, pay</li>
+            <li>Verify booking confirmation email + SMS fire</li>
+            <li>Verify 21-day, 7-day, 2-day, 1-day, day-of automations are queued</li>
+          </ul></div>
+          <div class="step-where">Full system test</div>
+          <div class="step-warning">Do not go live until this test passes completely. Fix any broken links, missing tokens, or misfiring automations.</div>
+        </div>
+        <div class="step-time">4-6 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-32">
+        <div class="step-content">
+          <div class="step-number">Step 32</div>
+          <div class="step-title">Embed Form 1 on OMG Booth website</div>
+          <div class="step-detail">Take the public Form 1 URL and embed it on your website's inquiry/contact page. Replace any old inquiry form. The embed code is available in the questionnaire settings.</div>
+          <div class="step-where">Your website CMS + VSCO Questionnaire settings</div>
+        </div>
+        <div class="step-time">1-2 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-33">
+        <div class="step-content">
+          <div class="step-number">Step 33</div>
+          <div class="step-title">Consolidate email templates</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li>Merge 5+ "Follow Up" variants into 2 (initial + final)</li>
+            <li>Merge 5+ "Send Quote" variants into 1 universal template</li>
+            <li>Streamline Booked/Contract email variants</li>
+            <li>Delete any template that references a deleted form</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Email Templates</div>
+        </div>
+        <div class="step-time">6-10 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-34">
+        <div class="step-content">
+          <div class="step-number">Step 34</div>
+          <div class="step-title">Archive dead products</div>
+          <div class="step-detail">Archive products with 0 orders: Boomerang Feature, Karaoke/Dub Smash, Light Painting, Relocation Fee, and any others that are no longer offered.</div>
+          <div class="step-where">Settings &rsaquo; Products</div>
+        </div>
+        <div class="step-time">1-2 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-35">
+        <div class="step-content">
+          <div class="step-number">Step 35</div>
+          <div class="step-title">Review 5 contact forms for redundancy</div>
+          <div class="step-detail">Check whether "VB Subscription" and "Virtual Booth Inquiry" are duplicates. Archive any that are redundant now that you have Form 1.</div>
+          <div class="step-where">Settings &rsaquo; Questionnaires (filter: Contact forms)</div>
+        </div>
+        <div class="step-time">1-2 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-36">
+        <div class="step-content">
+          <div class="step-number">Step 36</div>
+          <div class="step-title">Archive / delete old questionnaires</div>
+          <div class="step-detail">Two-pass cleanup:
+          <ul class="step-substeps">
+            <li><strong>Pass 1:</strong> DELETE the 8 forms with 0 responses (dead weight, safe to remove)</li>
+            <li><strong>Pass 2:</strong> ARCHIVE the 15 forms that were merged into the new 6-form system. Don't delete these yet &mdash; they have historical response data</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires</div>
+          <div class="step-warning">Only archive merged forms AFTER confirming the new forms capture every field. Compare against your Step 1 screenshots.</div>
+        </div>
+        <div class="step-time">3-4 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-37">
+        <div class="step-content">
+          <div class="step-number">Step 37</div>
+          <div class="step-title">Add product images to existing 80+ products</div>
+          <div class="step-detail">Every product that will appear on any quote needs an image. This is the biggest single time investment. Work through them in batches &mdash; base packages first, then upsells, then add-ons.</div>
+          <div class="step-where">Settings &rsaquo; Products &rsaquo; [each product]</div>
+          <div class="step-tip">Use 800x600px minimum. Consistent style (all mockups, or all real photos). This can be done over multiple sessions.</div>
+        </div>
+        <div class="step-time">20-30 hrs</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- PHASE 6: AI + SMS LAYER -->
+    <!-- ============================================ -->
+    <section id="phase-6" class="phase-6">
+      <div class="phase-header">
+        <h3>Phase 6: AI-Personalized Communication</h3>
+        <div class="phase-meta">
+          <div class="phase-count">9 steps</div>
+          <div>~15 hrs</div>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top: 0;">
+        <strong>Do this after everything else is live.</strong> Phases 1-5 are the foundation. AI is the enhancement layer. If you rush this before the core system works, you'll be debugging two things at once. See the <a href="ai-integration.html" style="color: var(--accent-warm);">AI Integration Plan</a> for full architecture details.
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-38">
+        <div class="step-content">
+          <div class="step-number">Step 38</div>
+          <div class="step-title">Add 2 AI-focused fields to Form 1</div>
+          <div class="step-detail">If you haven't already added these in Step 10:
+          <ul class="step-substeps">
+            <li>"How did you hear about us?" &mdash; dropdown with specific options (Referral, Saw us at an event, Instagram, Google, Event planner, Other)</li>
+            <li>"What should guests walk away remembering?" &mdash; open text (replaces generic "Tell us about your event")</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; Form 1</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-39">
+        <div class="step-content">
+          <div class="step-number">Step 39</div>
+          <div class="step-title">Add 4 AI-focused fields to Form 2</div>
+          <div class="step-detail">If you haven't already added these in Step 11:
+          <ul class="step-substeps">
+            <li>"Who are your guests?" &mdash; dropdown</li>
+            <li>"What matters most?" (pick 2) &mdash; multi-select</li>
+            <li>"What's the vibe?" &mdash; dropdown + open text</li>
+            <li>"Any inspiration?" &mdash; optional open text</li>
+          </ul></div>
+          <div class="step-where">Settings &rsaquo; Questionnaires &rsaquo; Form 2</div>
+        </div>
+        <div class="step-time">1 hr</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-40">
+        <div class="step-content">
+          <div class="step-number">Step 40</div>
+          <div class="step-title">Sign up for Make.com and Claude API</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li>Go to <strong>make.com</strong> &rarr; sign up for free tier (1,000 ops/month, 2 scenarios)</li>
+            <li>Go to <strong>console.anthropic.com</strong> &rarr; create account &rarr; generate API key &rarr; add $10 prepaid credit</li>
+          </ul></div>
+          <div class="step-where">make.com + console.anthropic.com</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-41">
+        <div class="step-content">
+          <div class="step-number">Step 41</div>
+          <div class="step-title">Create the Google Sheet draft dashboard</div>
+          <div class="step-detail">Create a Google Sheet with these columns: <strong>Client Name, Event Type, Event Date, Contact Preference, Email Subject, Email Body, SMS Draft, Status, Timestamp, Approve URL</strong>. Share it with your Make.com service account.</div>
+          <div class="step-where">Google Sheets</div>
+        </div>
+        <div class="step-time">30 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-42">
+        <div class="step-content">
+          <div class="step-number">Step 42</div>
+          <div class="step-title">Build Make.com Scenario 1: Draft Generation</div>
+          <div class="step-detail">The AI pipeline. Create a new scenario in Make.com:
+          <ul class="step-substeps">
+            <li><strong>Module 1:</strong> Webhook (custom) &mdash; copy the URL for later</li>
+            <li><strong>Module 2:</strong> HTTP Request &rarr; POST to <code>https://api.anthropic.com/v1/messages</code> with your system prompt + lead data. Model: <code>claude-haiku-4-5-20251001</code></li>
+            <li><strong>Module 3:</strong> Google Sheets &rarr; Add Row (log email draft, SMS draft, client info, status = "Pending")</li>
+            <li><strong>Module 4:</strong> Gmail &rarr; Send email to yourself with both drafts + Approve/Edit buttons</li>
+          </ul></div>
+          <div class="step-where">make.com &rsaquo; Scenarios &rsaquo; New Scenario</div>
+          <div class="step-tip">Paste the system prompt from the <a href="ai-integration.html#what-ai-writes" style="color: var(--accent-cyan);">AI Integration Plan Section 05</a>.</div>
+        </div>
+        <div class="step-time">3-4 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-43">
+        <div class="step-content">
+          <div class="step-number">Step 43</div>
+          <div class="step-title">Build Make.com Scenario 2: Approval + Send</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li><strong>Module 1:</strong> Webhook (triggered by your Approve button click)</li>
+            <li><strong>Module 2:</strong> Google Sheets &rarr; Read the draft row</li>
+            <li><strong>Module 3:</strong> Gmail &rarr; Send the approved email to the client</li>
+            <li><strong>Module 4:</strong> Router &rarr; If contact preference = "Text" or "Both"...</li>
+            <li><strong>Module 4a:</strong> HTTP Request &rarr; POST to Quo API to send SMS</li>
+            <li><strong>Module 5:</strong> Google Sheets &rarr; Update status to "Sent"</li>
+          </ul></div>
+          <div class="step-where">make.com &rsaquo; Scenarios &rsaquo; New Scenario</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-44">
+        <div class="step-content">
+          <div class="step-number">Step 44</div>
+          <div class="step-title">Add Post Web Request to "Qualified" automation</div>
+          <div class="step-detail">Go to the automation you built in Step 21. Add a second action: <strong>Post Web Request</strong>. Paste your Make.com Scenario 1 webhook URL. Now when you qualify a lead, VSCO sends the template email (Form 2) AND triggers the AI pipeline simultaneously.</div>
+          <div class="step-where">Settings &rsaquo; Automations &rsaquo; [Qualified automation]</div>
+        </div>
+        <div class="step-time">15 min</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-45">
+        <div class="step-content">
+          <div class="step-number">Step 45</div>
+          <div class="step-title">Test the full AI + SMS flow</div>
+          <div class="step-detail">
+          <ul class="step-substeps">
+            <li>Create a test lead with contact preference = "Both"</li>
+            <li>Fill out Forms 1 and 2 with realistic data</li>
+            <li>Mark lead as "Qualified"</li>
+            <li>Check: Did Make.com receive the webhook? (Execution history)</li>
+            <li>Check: Did Claude generate a good email draft AND SMS draft? (Google Sheet)</li>
+            <li>Check: Did you receive the notification email on your phone?</li>
+            <li>Tap "Approve" &mdash; did the client receive the email?</li>
+            <li>Did the SMS send via Quo?</li>
+            <li>Is the Google Sheet status updated to "Sent"?</li>
+          </ul></div>
+          <div class="step-where">Full AI pipeline test</div>
+          <div class="step-warning">If drafts don't sound right, adjust the system prompt in Make.com Scenario 1 Module 2. Most tuning happens here.</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+
+      <div class="step">
+        <input type="checkbox" data-key="impl-46">
+        <div class="step-content">
+          <div class="step-number">Step 46</div>
+          <div class="step-title">Iterate on the system prompt</div>
+          <div class="step-detail">Run 5-10 real leads through the AI pipeline. Review every draft. Adjust the system prompt until you're approving 90%+ without edits. Common tweaks: tone too formal, too casual, too long, not referencing enough details, recommending wrong package tier.</div>
+          <div class="step-where">make.com &rsaquo; Scenario 1 &rsaquo; Module 2 (system prompt field)</div>
+          <div class="step-tip">Keep a note of which drafts you edited and why. Patterns in your edits tell you what to fix in the prompt.</div>
+        </div>
+        <div class="step-time">2-3 hrs</div>
+      </div>
+    </section>
+
+    <!-- DONE -->
+    <div style="margin-top: 2rem; padding: 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-align: center;">
+      <h3 style="margin-bottom: 0.8rem; color: var(--accent-green);">That's everything.</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 1.2rem; max-width: 500px; margin-left: auto; margin-right: auto;">When all 46 steps are checked, you have a fully operational VSCO Workspace with streamlined forms, automated email + SMS, upgradable quotes, and AI-personalized client communication.</p>
+      <div style="display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
+        <a href="omg-booth-vsco-overhaul.html" style="display: inline-block; padding: 0.7rem 1.5rem; background: var(--accent-warm); color: var(--bg-primary); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Overhaul Guide</a>
+        <a href="client-journey.html" style="display: inline-block; padding: 0.7rem 1.5rem; background: rgba(255,255,255,0.08); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Client Journey</a>
+        <a href="ai-integration.html" style="display: inline-block; padding: 0.7rem 1.5rem; background: rgba(255,255,255,0.08); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">AI Plan</a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// CHECKLIST PERSISTENCE
+const allSteps = document.querySelectorAll('.step input[type="checkbox"]');
+
+function updateProgress() {
+  const total = allSteps.length;
+  const checked = Array.from(allSteps).filter(cb => cb.checked).length;
+  const pct = Math.round((checked / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = checked + ' / ' + total;
+  document.getElementById('pctDone').textContent = pct + '%';
+
+  // Update hours estimate (rough: subtract proportionally from 120)
+  const remaining = Math.round(120 * (1 - checked / total));
+  document.getElementById('hoursLeft').textContent = remaining === 0 ? 'Done' : '~' + remaining;
+
+  // Update current phase label
+  const phases = document.querySelectorAll('section[id^="phase-"]');
+  let currentPhase = 'Phase 1';
+  phases.forEach(phase => {
+    const checks = phase.querySelectorAll('input[type="checkbox"]');
+    const phaseChecked = Array.from(checks).filter(c => c.checked).length;
+    if (phaseChecked < checks.length) {
+      const num = phase.id.replace('phase-', '');
+      const names = { '1': 'Backup & Prep', '2': 'Products & Quote', '3': 'Build Forms', '4': 'Automations', '5': 'Launch & Cleanup', '6': 'AI + SMS' };
+      currentPhase = 'Phase ' + num + ': ' + (names[num] || '');
+      return;
+    }
+  });
+  document.getElementById('currentPhase').textContent = currentPhase;
+}
+
+allSteps.forEach(cb => {
+  const key = cb.dataset.key;
+  if (localStorage.getItem(key) === 'true') {
+    cb.checked = true;
+    cb.closest('.step').classList.add('checked');
+  }
+  cb.addEventListener('change', () => {
+    localStorage.setItem(key, cb.checked);
+    cb.closest('.step').classList.toggle('checked', cb.checked);
+    updateProgress();
+  });
+});
+
+updateProgress();
+
+// SIDEBAR ACTIVE STATE
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const active = document.querySelector('.sidebar nav a[href="#' + entry.target.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// MOBILE NAV
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const toggleBtn = document.getElementById('mobileNavToggle');
+
+toggleBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('show');
+});
+
+sidebarOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('show');
+});
+
+document.querySelectorAll('.sidebar nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('show');
+  });
+});
+</script>
+
+</body>
+</html>
