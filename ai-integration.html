@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — AI Integration Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #131316;
+  --bg-card: #1a1a1f;
+  --bg-card-hover: #22222a;
+  --border: #2a2a33;
+  --border-light: #3a3a44;
+  --text-primary: #f0ece4;
+  --text-secondary: #a09a8e;
+  --text-muted: #6b655a;
+  --accent-warm: #e8a849;
+  --accent-warm-dim: #c48a30;
+  --accent-coral: #e06c5d;
+  --accent-green: #5bb67a;
+  --accent-amber: #d4a84b;
+  --accent-red: #d45b5b;
+  --accent-blue: #5b8fd4;
+  --accent-purple: #a58cff;
+  --accent-cyan: #4ecdc4;
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.sidebar-logo h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  letter-spacing: -0.02em;
+}
+.sidebar-logo p {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+.sidebar nav { padding: 0.5rem 0; }
+.sidebar nav a {
+  display: block;
+  padding: 0.55rem 1.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 400;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+.sidebar nav a:hover {
+  color: var(--text-primary);
+  background: rgba(232, 168, 73, 0.05);
+}
+.sidebar nav a.active {
+  color: var(--accent-warm);
+  border-left-color: var(--accent-warm);
+  background: rgba(232, 168, 73, 0.08);
+  font-weight: 500;
+}
+.sidebar nav .nav-number {
+  display: inline-block;
+  width: 1.4rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+}
+.sidebar nav .nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.8rem 1.5rem;
+}
+
+/* MOBILE NAV */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-warm);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(232, 168, 73, 0.4);
+}
+.mobile-nav-toggle svg { fill: var(--bg-primary); }
+
+.main {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 3rem 6rem;
+}
+
+/* HERO */
+.hero {
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -3rem;
+  left: -3rem;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(78,205,196,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero .eyebrow {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-cyan);
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  display: inline-block;
+  padding: 0.25rem 0.8rem;
+  background: rgba(78,205,196,0.08);
+  border: 1px solid rgba(78,205,196,0.15);
+  border-radius: 99px;
+}
+.hero h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 1.2rem;
+}
+.hero h1 span {
+  background: linear-gradient(135deg, #4ecdc4, #7dd99b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  line-height: 1.7;
+}
+.hero .back-link {
+  display: inline-block;
+  margin-top: 1.2rem;
+  color: var(--accent-warm);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+.hero .back-link:hover { opacity: 0.8; }
+
+/* SECTIONS */
+section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
+}
+.section-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent-cyan);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  background: rgba(78,205,196,0.06);
+  border-radius: 4px;
+}
+.section-header h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.section-header p {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+}
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 2rem 0 0.8rem;
+  letter-spacing: -0.01em;
+}
+h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--accent-cyan);
+}
+p { margin-bottom: 0.8rem; }
+
+/* TABLES */
+.table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+  background: var(--bg-card);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+thead th {
+  background: rgba(255,255,255,0.03);
+  padding: 0.8rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(78,205,196,0.03); }
+tbody tr:nth-child(even) { background: rgba(255,255,255,0.01); }
+
+/* FLOW DIAGRAM */
+.arch-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 2rem 0;
+  position: relative;
+}
+.arch-step {
+  display: flex;
+  align-items: stretch;
+  gap: 1.2rem;
+}
+.arch-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+.arch-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-cyan);
+  background: var(--bg-primary);
+  flex-shrink: 0;
+  z-index: 2;
+  margin-top: 0.6rem;
+}
+.arch-dot.dot-vsco { border-color: var(--accent-warm); }
+.arch-dot.dot-make { border-color: var(--accent-purple); }
+.arch-dot.dot-ai { border-color: var(--accent-cyan); }
+.arch-dot.dot-review { border-color: var(--accent-green); }
+.arch-dot.dot-send { border-color: var(--accent-coral); }
+.arch-connector {
+  width: 2px;
+  flex: 1;
+  background: var(--border-light);
+  opacity: 0.4;
+}
+.arch-content {
+  flex: 1;
+  padding-bottom: 1.5rem;
+}
+.arch-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 99px;
+  display: inline-block;
+}
+.label-vsco { background: rgba(232,168,73,0.12); color: var(--accent-warm); }
+.label-make { background: rgba(165,140,255,0.12); color: var(--accent-purple); }
+.label-ai { background: rgba(78,205,196,0.12); color: var(--accent-cyan); }
+.label-review { background: rgba(91,182,122,0.12); color: var(--accent-green); }
+.label-send { background: rgba(224,108,93,0.12); color: var(--accent-coral); }
+.arch-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.arch-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* CARD BLOCKS */
+.info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  transition: border-color 0.2s;
+}
+.info-card:hover { border-color: var(--border-light); }
+.info-card h4 { margin-top: 0; }
+.info-card p { margin-bottom: 0.5rem; }
+.info-card ul {
+  list-style: none;
+  margin: 0.5rem 0;
+}
+.info-card ul li {
+  padding: 0.3rem 0 0.3rem 1.2rem;
+  position: relative;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+.info-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-light);
+}
+
+/* CALLOUT */
+.callout {
+  background: linear-gradient(135deg, rgba(78,205,196,0.06) 0%, var(--bg-card) 100%);
+  border-left: 3px solid var(--accent-cyan);
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 10px 10px 0;
+  font-size: 0.9rem;
+}
+.callout strong { color: var(--accent-cyan); }
+.callout.callout-warm {
+  background: linear-gradient(135deg, rgba(232,168,73,0.06) 0%, var(--bg-card) 100%);
+  border-left-color: var(--accent-warm);
+}
+.callout.callout-warm strong { color: var(--accent-warm); }
+
+.bp-note {
+  background: linear-gradient(135deg, rgba(232,168,73,0.06) 0%, rgba(232,168,73,0.02) 100%);
+  border: 1px solid rgba(232,168,73,0.12);
+  border-left: 3px solid rgba(232,168,73,0.4);
+  border-radius: 0 10px 10px 0;
+  padding: 1rem 1.2rem;
+  font-size: 0.85rem;
+  margin: 1.2rem 0;
+  color: var(--text-secondary);
+}
+.bp-note strong { color: var(--accent-warm); }
+
+/* COMPARISON */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+.compare-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.compare-card-header {
+  padding: 0.8rem 1.2rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+.compare-before .compare-card-header {
+  background: rgba(212,91,91,0.08);
+  color: var(--accent-red);
+}
+.compare-after .compare-card-header {
+  background: rgba(78,205,196,0.08);
+  color: var(--accent-cyan);
+}
+.compare-card-body {
+  padding: 1.2rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.compare-card-body p { margin-bottom: 0.6rem; }
+.compare-card-body p:last-child { margin-bottom: 0; }
+
+/* PHONE MOCKUP */
+.phone-mock {
+  max-width: 340px;
+  margin: 1.5rem auto;
+  background: #111;
+  border: 2px solid #333;
+  border-radius: 32px;
+  padding: 1rem 0.8rem;
+  position: relative;
+}
+.phone-notch {
+  width: 100px;
+  height: 20px;
+  background: #111;
+  border-radius: 0 0 14px 14px;
+  margin: -1rem auto 0.8rem;
+  position: relative;
+  z-index: 2;
+  border: 2px solid #333;
+  border-top: none;
+}
+.phone-screen {
+  background: var(--bg-card);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.phone-status-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 1rem;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.phone-email-header {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.phone-email-header .from {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+.phone-email-header .subject {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.phone-email-header .preview {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+.phone-email-body {
+  padding: 1rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.phone-email-body p { margin-bottom: 0.6rem; }
+.phone-email-body .draft-preview {
+  background: rgba(78,205,196,0.06);
+  border: 1px solid rgba(78,205,196,0.15);
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin: 0.6rem 0;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+.phone-email-body .draft-preview em {
+  color: var(--accent-cyan);
+  font-style: normal;
+  font-weight: 500;
+}
+.phone-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+.phone-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-main);
+  border: none;
+  cursor: pointer;
+}
+.phone-btn-approve {
+  background: var(--accent-green);
+  color: var(--bg-primary);
+}
+.phone-btn-edit {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.phone-home {
+  width: 80px;
+  height: 4px;
+  background: #444;
+  border-radius: 99px;
+  margin: 0.6rem auto 0;
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 12px 12px 0 0;
+}
+.stat-card .stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+.stat-card .stat-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+.stat-cyan .stat-value { color: var(--accent-cyan); }
+.stat-cyan { border-color: rgba(78,205,196,0.2); }
+.stat-cyan::before { background: var(--accent-cyan); }
+.stat-green .stat-value { color: var(--accent-green); }
+.stat-green { border-color: rgba(91,182,122,0.2); }
+.stat-green::before { background: var(--accent-green); }
+.stat-warm .stat-value { color: var(--accent-warm); }
+.stat-warm { border-color: rgba(232,168,73,0.2); }
+.stat-warm::before { background: var(--accent-warm); }
+
+/* STEP NUMBERS */
+.setup-step {
+  counter-increment: setup;
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 2rem 0;
+}
+.setup-step::before {
+  content: counter(setup);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.8rem;
+  height: 1.8rem;
+  background: rgba(78,205,196,0.1);
+  border: 1px solid rgba(78,205,196,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+.setup-steps { counter-reset: setup; }
+
+.auto-path {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-warm);
+  background: rgba(232,168,73,0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: rgba(78,205,196,0.08);
+  color: var(--accent-cyan);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+/* CHECKLIST */
+.checklist { list-style: none; margin: 1rem 0 2rem; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  font-size: 0.88rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.checklist li:hover {
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+}
+.checklist li.checked {
+  opacity: 0.4;
+  text-decoration: line-through;
+  background: rgba(91,182,122,0.03);
+  border-color: rgba(91,182,122,0.15);
+}
+.checklist li input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border: 2px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.1rem;
+  position: relative;
+  transition: all 0.2s;
+}
+.checklist li input[type="checkbox"]:checked {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+.checklist li input[type="checkbox"]:checked::after {
+  content: '\2713';
+  position: absolute;
+  top: -1px;
+  left: 2px;
+  font-size: 0.75rem;
+  color: white;
+  font-weight: 700;
+}
+
+.checklist-progress {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px rgba(78,205,196,0.3);
+}
+.progress-text {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  min-width: 60px;
+  text-align: right;
+}
+
+/* PRINT */
+@media print {
+  .sidebar, .mobile-nav-toggle { display: none !important; }
+  .main { max-width: 100%; padding: 1rem; }
+  body { background: white; color: #222; font-size: 11px; }
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    left: -300px;
+    top: 0;
+    width: 300px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 300;
+    background: rgba(19,19,22,0.98);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+  }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 250;
+  }
+  .sidebar-overlay.show { display: block; }
+  .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+  .main { padding: 2rem 1rem 5rem; }
+  .hero h1 { font-size: 1.8rem; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .phone-mock { max-width: 300px; }
+  .section-header h2 { font-size: 1.4rem; }
+  .table-wrap {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+@media (max-width: 400px) {
+  .main { padding: 1.5rem 0.8rem 5rem; }
+  .hero h1 { font-size: 1.5rem; }
+  .phone-mock { max-width: 280px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>OMG Booth</h2>
+      <p>AI Integration Plan</p>
+    </div>
+    <nav>
+      <a href="#overview"><span class="nav-number">01</span> The Opportunity</a>
+      <a href="#form-changes"><span class="nav-number">02</span> Form Changes</a>
+      <a href="#architecture"><span class="nav-number">03</span> How It Works</a>
+      <a href="#review-flow"><span class="nav-number">04</span> Review Workflow</a>
+      <a href="#what-ai-writes"><span class="nav-number">05</span> What AI Writes</a>
+      <a href="#setup"><span class="nav-number">06</span> Setup Guide</a>
+      <a href="#cost"><span class="nav-number">07</span> Cost Breakdown</a>
+      <a href="#action-list"><span class="nav-number">08</span> Action List</a>
+      <div class="nav-divider"></div>
+      <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Overhaul Guide</a>
+      <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map</a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- HERO -->
+    <header class="hero">
+      <div class="eyebrow">AI Layer</div>
+      <h1>AI-Personalized <span>Client Communication</span></h1>
+      <p class="subtitle">Every lead gets a response that references their specific event, recommends the right package, and sounds like you wrote it personally. Under $5/month. No coding. Review and approve from your phone.</p>
+      <a href="omg-booth-vsco-overhaul.html" class="back-link">&larr; Back to Overhaul Guide</a>
+    </header>
+
+    <!-- SECTION 1: THE OPPORTUNITY -->
+    <section id="overview">
+      <div class="section-header">
+        <div class="section-number">Section 01</div>
+        <h2>The Opportunity</h2>
+        <p>What changes when AI writes your client emails instead of templates.</p>
+      </div>
+
+      <p>Right now, every lead gets the same template email with their name swapped in. A corporate client planning a 500-person brand activation gets the same language as someone booking a birthday party photo booth. The VSCO token system (<code>{{primary_contact.first_name}}</code>) handles mail-merge personalization, but it doesn't understand context.</p>
+
+      <p>AI reads the actual form answers &mdash; event type, guest count, vibe, what they care about &mdash; and writes a response that references their specific event. Same brand voice every time, but every email feels like you sat down and wrote it yourself.</p>
+
+      <div class="compare-grid">
+        <div class="compare-card compare-before">
+          <div class="compare-card-header">Without AI &mdash; Template</div>
+          <div class="compare-card-body">
+            <p>"Hey Jordan, thanks for reaching out! We'd love to learn more about your event. Here's a quick questionnaire to help us build your custom proposal."</p>
+            <p style="color: var(--text-muted); font-size: 0.78rem; font-style: italic;">Same copy for every single lead.</p>
+          </div>
+        </div>
+        <div class="compare-card compare-after">
+          <div class="compare-card-header">With AI &mdash; Personalized</div>
+          <div class="compare-card-body">
+            <p>"Hey Jordan, a 250-person corporate gala with a black-tie dress code and gold/black color scheme? That's right in our lane. We've done similar setups for companies like yours &mdash; elegant booth design, branded overlays, and instant social sharing so your guests are posting before dessert. Let's nail down the details."</p>
+            <p style="color: var(--accent-cyan); font-size: 0.78rem; font-style: italic;">References their event type, guest count, vibe, and features.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card stat-cyan">
+          <div class="stat-value">3</div>
+          <div class="stat-label">AI Touchpoints</div>
+        </div>
+        <div class="stat-card stat-green">
+          <div class="stat-value">&lt;$5</div>
+          <div class="stat-label">Monthly Cost</div>
+        </div>
+        <div class="stat-card stat-warm">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Code Required</div>
+        </div>
+      </div>
+
+      <h3>Where AI Fits (3 Touchpoints)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Touchpoint</th><th>When</th><th>What AI Does</th><th>Impact</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Qualified Response</strong></td>
+              <td>Lead marked "Qualified"</td>
+              <td>Writes a personalized follow-up email referencing their event, sent with the Event Details questionnaire</td>
+              <td>Higher form completion rate &mdash; client feels seen</td>
+            </tr>
+            <tr>
+              <td><strong>Proposal Email</strong></td>
+              <td>You send the quote</td>
+              <td>Writes the proposal intro paragraph + recommends a package tier based on Form 2 answers</td>
+              <td>Higher quote-open rate, clients select the right tier faster</td>
+            </tr>
+            <tr>
+              <td><strong>Booking Confirmation</strong></td>
+              <td>Client books &amp; pays</td>
+              <td>Writes a celebration email that recaps what they booked and previews next steps</td>
+              <td>Reduces post-booking anxiety, fewer "what happens now?" emails</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Start with one.</strong> You don't need all three on day one. The Qualified Response email is the highest-leverage touchpoint &mdash; it's the first real communication after someone inquires. Get that working, see the results, then expand.
+      </div>
+    </section>
+
+    <!-- SECTION 2: FORM CHANGES -->
+    <section id="form-changes">
+      <div class="section-header">
+        <div class="section-number">Section 02</div>
+        <h2>Form Changes</h2>
+        <p>The AI is only as good as the data it gets. These additions give it the context to write emails that feel personal, not generated.</p>
+      </div>
+
+      <p>Every field below serves double duty: it helps <em>you</em> build better proposals AND gives AI the context to write better emails. Nothing here is added "just for AI."</p>
+
+      <h3>Form 1: Lead Intake &mdash; Add 2 Fields</h3>
+      <p>Keep the form under 90 seconds. These two additions are high-signal, low-friction.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Add This Field</th><th>Type</th><th>Options</th><th>What AI Does With It</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>How did you hear about us?</strong></td>
+              <td>Dropdown + "Other" text</td>
+              <td>Referral, Saw us at an event, Instagram, Google, Event planner, Other</td>
+              <td>"Since you saw our setup at the Delta event..." or "Your planner has great taste sending you our way" &mdash; instant rapport in the first line</td>
+            </tr>
+            <tr>
+              <td><strong>What should guests walk away remembering?</strong></td>
+              <td>Open text</td>
+              <td>&mdash;</td>
+              <td>This is the emotional hook. "I want everyone laughing and posting" gives AI completely different material than "sophisticated brand impression." Replaces the generic "Tell us about your event"</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bp-note">
+        <strong>Why replace "Tell us about your event":</strong> That question gets logistical answers &mdash; "it's a company party on April 15th." You already collect date and type via other fields. The new question gets emotional, aspirational answers that AI turns into compelling copy.
+      </div>
+
+      <h3>Form 2: Event Details &mdash; Add 4 Fields</h3>
+      <p>This is where AI gets the creative fuel. Structured data (dropdowns) for reliability, plus open text for personality.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Add This Field</th><th>Type</th><th>Options</th><th>What AI Does With It</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Who are your guests?</strong></td>
+              <td>Dropdown</td>
+              <td>Employees, Clients/Customers, Friends &amp; Family, VIPs/Executives, General Public, Mixed</td>
+              <td>Adjusts tone: "your team will love" vs "your VIP clients will be impressed" vs "your friends won't stop talking about." One word changes the entire email.</td>
+            </tr>
+            <tr>
+              <td><strong>What matters most? (pick 2)</strong></td>
+              <td>Multi-select</td>
+              <td>Guest Experience, Social Media Content, Custom Branding, Print Keepsakes, Data &amp; Analytics, Wow Factor</td>
+              <td>AI leads with what they care about. "Social Media + Branding" = proposal focuses on shareability. "Guest Experience + Wow Factor" = proposal leads with 360 booth and LED enclosure.</td>
+            </tr>
+            <tr>
+              <td><strong>What's the vibe?</strong></td>
+              <td>Dropdown + open text</td>
+              <td>Elegant/Formal, Fun/Playful, Modern/Minimalist, Bold/Energetic, Glamorous, Casual/Relaxed<br><br>+ "Anything else about the feel?"</td>
+              <td>Dropdown = reliable baseline tone for every email. Open text = creative color. "Modern/Minimalist" + "think Apple Store meets cocktail party" = gold.</td>
+            </tr>
+            <tr>
+              <td><strong>Any inspiration?</strong></td>
+              <td>Open text (optional)</td>
+              <td>&mdash;</td>
+              <td>"We loved what Nike did at Art Basel" gives AI an ambition reference point. Even vague answers like "something cool and techy" help calibrate the language.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>What These 6 Fields Change</h3>
+      <div class="compare-grid">
+        <div class="compare-card compare-before">
+          <div class="compare-card-header">AI Input Without Changes</div>
+          <div class="compare-card-body">
+            <p>Corporate event. 250 guests. $2,000-$4,000 budget. Wants custom branding.</p>
+            <p style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.5rem;">AI output: Generic corporate event language. Mentions the packages. Functional but forgettable.</p>
+          </div>
+        </div>
+        <div class="compare-card compare-after">
+          <div class="compare-card-header">AI Input With Changes</div>
+          <div class="compare-card-body">
+            <p>Corporate event. 250 guests. $2,000-$4,000. Custom branding. <em style="color: var(--accent-cyan);">Referred by Sarah at Coca-Cola event. Guests: VIP clients + employees. Priorities: Social Media Content + Custom Branding. Vibe: Modern/Minimalist &mdash; "Apple Store meets cocktail party." Guests should walk away remembering "they're at a tech company, not a trade show."</em></p>
+            <p style="color: var(--accent-cyan); font-size: 0.78rem; margin-top: 0.5rem;">AI output: References the Coca-Cola connection, speaks to VIP client experience, leads with social sharing and branding, matches the modern/minimal tone. Feels handwritten.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warm">
+        <strong>These are better form questions regardless of AI.</strong> "Who are your guests?" changes how you staff the event. "What matters most?" changes how you pitch the proposal. Even without AI, these fields make your intake smarter.
+      </div>
+    </section>
+
+    <!-- SECTION 3: ARCHITECTURE -->
+    <section id="architecture">
+      <div class="section-header">
+        <div class="section-number">Section 03</div>
+        <h2>How It Works</h2>
+        <p>The technical architecture. VSCO Workspace's built-in "Post Web Request" automation action sends data directly to Make.com &mdash; no Zapier subscription needed.</p>
+      </div>
+
+      <div class="arch-flow">
+        <div class="arch-step">
+          <div class="arch-line">
+            <div class="arch-dot dot-vsco"></div>
+            <div class="arch-connector"></div>
+          </div>
+          <div class="arch-content">
+            <span class="arch-label label-vsco">VSCO Workspace</span>
+            <div class="arch-title">Lead status changes to "Qualified"</div>
+            <div class="arch-desc">You review the lead and mark them as qualified. This triggers a VSCO automation with a <strong>Post Web Request</strong> action &mdash; a built-in webhook that sends the lead data (name, event type, guest count, form answers) to an external URL.</div>
+          </div>
+        </div>
+
+        <div class="arch-step">
+          <div class="arch-line">
+            <div class="arch-dot dot-make"></div>
+            <div class="arch-connector"></div>
+          </div>
+          <div class="arch-content">
+            <span class="arch-label label-make">Make.com (Free Tier)</span>
+            <div class="arch-title">Receives the webhook, prepares the AI prompt</div>
+            <div class="arch-desc">Make.com catches the incoming data and structures it into a prompt for Claude. The prompt includes your brand voice instructions, package details, and the client's specific form answers. This is a visual workflow &mdash; drag-and-drop, no code.</div>
+          </div>
+        </div>
+
+        <div class="arch-step">
+          <div class="arch-line">
+            <div class="arch-dot dot-ai"></div>
+            <div class="arch-connector"></div>
+          </div>
+          <div class="arch-content">
+            <span class="arch-label label-ai">Claude API</span>
+            <div class="arch-title">Generates personalized email draft</div>
+            <div class="arch-desc">Claude reads the client's event details and writes a personalized email in your brand voice. Returns the subject line and body. Cost: ~$0.03-0.10 per lead.</div>
+          </div>
+        </div>
+
+        <div class="arch-step">
+          <div class="arch-line">
+            <div class="arch-dot dot-review"></div>
+            <div class="arch-connector"></div>
+          </div>
+          <div class="arch-content">
+            <span class="arch-label label-review">Your Phone</span>
+            <div class="arch-title">You review the draft via email notification</div>
+            <div class="arch-desc">Make.com sends you an email with the AI-generated draft and two links: <strong>"Approve &amp; Send"</strong> and <strong>"Edit First."</strong> You read the draft on your phone, tap approve, and it's done. Full details in the Review Workflow section.</div>
+          </div>
+        </div>
+
+        <div class="arch-step">
+          <div class="arch-line">
+            <div class="arch-dot dot-send"></div>
+            <div class="arch-connector" style="opacity: 0;"></div>
+          </div>
+          <div class="arch-content">
+            <span class="arch-label label-send">Send</span>
+            <div class="arch-title">Client receives the personalized email</div>
+            <div class="arch-desc">Make.com sends the approved email via Gmail (or writes the draft back to VSCO via the API for sending through Workspace). The client gets a response that references their specific event within minutes of your approval.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Why Make.com (Not Zapier)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Zapier</th><th>Make.com</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Free tier</strong></td><td>100 tasks/month (too few)</td><td>1,000 operations/month (plenty)</td></tr>
+            <tr><td><strong>At 30 leads/month</strong></td><td>~120 tasks &mdash; over free limit, forced to pay $20+/mo</td><td>~180 operations &mdash; well within free tier</td></tr>
+            <tr><td><strong>Webhook support</strong></td><td>Yes (paid plans)</td><td>Yes (free plan)</td></tr>
+            <tr><td><strong>HTTP/API calls</strong></td><td>Yes</td><td>Yes &mdash; built-in HTTP module for Claude API</td></tr>
+            <tr><td><strong>Visual builder</strong></td><td>Yes</td><td>Yes &mdash; more flexible (branching, routers, error handling)</td></tr>
+            <tr><td><strong>Bottom line</strong></td><td style="color: var(--accent-red);">$20-50/month</td><td style="color: var(--accent-green);">$0/month at your volume</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Why not pure Google Apps Script?</strong> It would work and it's free, but Make.com gives you a visual workflow you can modify without touching code. If Claude's prompt needs tweaking, you edit a text field in Make.com's UI &mdash; no deployment, no debugging. For a photo booth operator, that maintainability matters.
+      </div>
+    </section>
+
+    <!-- SECTION 4: REVIEW WORKFLOW -->
+    <section id="review-flow">
+      <div class="section-header">
+        <div class="section-number">Section 04</div>
+        <h2>Review Workflow</h2>
+        <p>How you review AI drafts from your phone without logging into anything. One email notification, one tap.</p>
+      </div>
+
+      <p>You don't want to open a dashboard, log into a tool, or navigate a spreadsheet every time a lead comes in. The review process should be as fast as checking a text message.</p>
+
+      <h3>How It Works</h3>
+      <p>When the AI generates a draft, Make.com sends you an email. The email contains:</p>
+
+      <div class="info-card">
+        <h4>What's in the Notification Email</h4>
+        <ul>
+          <li><strong>Client name and event type</strong> at the top &mdash; you know who it's for instantly</li>
+          <li><strong>Key details</strong> &mdash; date, guest count, budget range (so you can sanity-check without opening VSCO)</li>
+          <li><strong>The full AI-generated draft</strong> &mdash; formatted exactly as the client would receive it</li>
+          <li><strong>"Approve &amp; Send" button</strong> &mdash; a link to a Make.com webhook that triggers the send</li>
+          <li><strong>"Edit First" button</strong> &mdash; opens a Google Sheet row where you can modify the text, then approve</li>
+        </ul>
+      </div>
+
+      <div class="phone-mock">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-status-bar">
+            <span>9:41 AM</span>
+            <span>OMG Mail</span>
+          </div>
+          <div class="phone-email-header">
+            <div class="from">AI Draft Ready</div>
+            <div class="subject">New: Jordan Mitchell &mdash; Corporate Gala (250 guests)</div>
+            <div class="preview">Review and approve the personalized response...</div>
+          </div>
+          <div class="phone-email-body">
+            <p style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem;">Client Details</p>
+            <p><strong>Jordan Mitchell</strong> &mdash; Corporate Event<br>
+            April 15, 2026 &bull; 250 guests &bull; $2K-$4K budget<br>
+            Referred by Sarah (Coca-Cola event)</p>
+
+            <p style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; margin-top: 1rem;">AI Draft &mdash; Qualified Response Email</p>
+            <div class="draft-preview">
+              <p>Hey Jordan,</p>
+              <p>A 250-guest corporate gala with a <em>modern-minimalist</em> vibe and gold/black palette? That's exactly the kind of event we build for. Sarah sent you to the right place &mdash; we had a blast at the Coca-Cola activation last year.</p>
+              <p>Since social content and custom branding are your top priorities, we'll design everything around shareability &mdash; branded overlays, instant posting, and a setup that looks like it belongs at an Apple keynote, not a convention hall.</p>
+              <p>To build your custom proposal, I need a few more details about the event (takes about 5 minutes):</p>
+              <p><em>[Event Details Form Link]</em></p>
+              <p>Once you fill that out, your proposal will be ready within 24 hours.</p>
+            </div>
+            <div class="phone-buttons">
+              <button class="phone-btn phone-btn-approve">Approve &amp; Send</button>
+              <button class="phone-btn phone-btn-edit">Edit First</button>
+            </div>
+          </div>
+          <div class="phone-home"></div>
+        </div>
+      </div>
+
+      <h3>The Three Paths</h3>
+
+      <div class="info-card">
+        <h4 style="color: var(--accent-green);">Path 1: Approve (90% of the time)</h4>
+        <p>Draft looks good. Tap <strong>"Approve &amp; Send."</strong> Make.com receives the webhook, sends the email to the client via Gmail. Done. Total time: 15 seconds.</p>
+      </div>
+
+      <div class="info-card">
+        <h4 style="color: var(--accent-warm);">Path 2: Quick Edit (9% of the time)</h4>
+        <p>Draft is close but needs a tweak. Tap <strong>"Edit First"</strong> &mdash; opens a Google Sheet on your phone with the draft text in an editable cell. Fix the line, tap a checkbox to approve. Make.com watches the sheet and sends the edited version. Total time: 1-2 minutes.</p>
+      </div>
+
+      <div class="info-card">
+        <h4 style="color: var(--accent-red);">Path 3: Skip (1% of the time)</h4>
+        <p>Something's off &mdash; wrong tone, bad data, whatever. Ignore the email. Nothing gets sent. Go into VSCO and handle it manually. The system only sends when you explicitly approve.</p>
+      </div>
+
+      <div class="callout">
+        <strong>Nothing sends without your approval.</strong> AI generates drafts, not live emails. You are always the last step. This is not an auto-pilot &mdash; it's a co-pilot that does the writing and waits for you to say "send."
+      </div>
+
+      <h3>The Google Sheet &mdash; Your Drafts Dashboard</h3>
+      <p>Every AI draft gets logged to a Google Sheet automatically. This serves three purposes:</p>
+
+      <div class="info-card">
+        <ul>
+          <li><strong>Review queue:</strong> See all pending drafts in one place. Each row has: client name, event type, draft text, status (Pending / Approved / Edited / Skipped), timestamp.</li>
+          <li><strong>Edit surface:</strong> When you tap "Edit First," it opens straight to the right row. Edit the text, check the "Approved" box, done.</li>
+          <li><strong>History log:</strong> Every AI-generated email is recorded. See what was sent, when, and whether you edited it. Over time, this tells you how good the AI drafts are &mdash; if you're editing 50% of them, the prompt needs work. If you're approving 95% untouched, it's dialed in.</li>
+        </ul>
+      </div>
+
+      <div class="bp-note">
+        <strong>Why not SMS for review?</strong> Your instinct was right &mdash; phone-based review is the way. But SMS has character limits (160 chars), can't show formatted email previews, and requires Twilio ($). Email notification gives you the full draft preview, works on your phone, and costs nothing. Same speed, better experience.
+      </div>
+    </section>
+
+    <!-- SECTION 5: WHAT AI WRITES -->
+    <section id="what-ai-writes">
+      <div class="section-header">
+        <div class="section-number">Section 05</div>
+        <h2>What AI Writes</h2>
+        <p>The system prompt that controls Claude's voice, the three email types it generates, and example outputs for different client types.</p>
+      </div>
+
+      <h3>The System Prompt (Your Brand Voice)</h3>
+      <p>This lives in Make.com as a text field. It tells Claude who OMG Booth is and how to write. You edit this to dial in the tone.</p>
+
+      <div class="info-card" style="border-color: rgba(78,205,196,0.2);">
+        <h4>System Prompt</h4>
+        <p style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-secondary); line-height: 1.8; white-space: pre-line;">You are writing emails on behalf of OMG Booth, Atlanta's premier photo booth and experiential media company.
+
+Voice guidelines:
+- Warm, confident, and professional. Not corporate. Not overly casual.
+- Use "we" not "I." You're representing the team.
+- Reference the client's specific event details naturally &mdash; don't force it.
+- Keep emails concise: 3-5 short paragraphs max.
+- Lead with what makes their event exciting, not with your company bio.
+- End with a clear next step (fill out the form, review the proposal, etc.).
+- Never use exclamation marks more than once per email.
+- Never say "I'm an AI" or "as an AI." You are OMG Booth.
+
+Package knowledge:
+- Essential Experience: $1,800 &mdash; 3hr booth, overlay, digital delivery, 1 attendant
+- Premium Experience: $2,800 &mdash; 4hr, photos+GIFs+video, backdrop, prints, social wall, 2 attendants
+- Full Activation: $4,200 &mdash; 5hr, 360+standard booth, slo-mo, full branding, lead capture, 3 staff
+
+When recommending a package, match to their guest count, budget, and priorities. Don't push the most expensive option &mdash; recommend what fits.</p>
+      </div>
+
+      <h3>Touchpoint 1: Qualified Response Email</h3>
+      <p>Sent with the Event Details questionnaire (Form 2). This is the first real communication after intake.</p>
+
+      <h4 style="color: var(--text-primary);">Corporate Client Example</h4>
+      <div class="info-card">
+        <p style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Input: Corporate gala, 250 guests, $2K-$4K, VIP clients + employees, Modern/Minimalist vibe, Social Media + Branding priorities, referred by Sarah</p>
+        <p style="line-height: 1.8;"><strong>Subject:</strong> Your TechCo Gala Booth Experience</p>
+        <p style="line-height: 1.8;">Hey Jordan,</p>
+        <p style="line-height: 1.8;">A 250-guest gala with a modern-minimalist vibe and custom branding? That's exactly what we build for. Sarah sent you to the right place.</p>
+        <p style="line-height: 1.8;">Since social content and branding are your top priorities, we'll design the booth experience around shareability &mdash; clean branded overlays in your gold and black palette, instant social sharing, and a setup your VIP clients will actually want to use. Not a prop table with wigs. A premium experience that matches the rest of your event.</p>
+        <p style="line-height: 1.8;">To put together your custom proposal, I need a few more details about the event:</p>
+        <p style="line-height: 1.8;"><span style="color: var(--accent-cyan);">[Event Details Form Link]</span></p>
+        <p style="line-height: 1.8;">Takes about 5 minutes. Your proposal will be ready within 24 hours.</p>
+      </div>
+
+      <h4 style="color: var(--text-primary);">Wedding Client Example</h4>
+      <div class="info-card">
+        <p style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Input: Wedding reception, 120 guests, $1,500-$2,500, friends &amp; family, Glamorous vibe, Guest Experience + Print Keepsakes priorities, found on Instagram</p>
+        <p style="line-height: 1.8;"><strong>Subject:</strong> Your Wedding Photo Booth &mdash; Let's Make It Perfect</p>
+        <p style="line-height: 1.8;">Hey Aisha,</p>
+        <p style="line-height: 1.8;">Congratulations! A glamorous reception with 120 of your favorite people sounds like exactly the kind of night where a photo booth goes off. We've done quite a few weddings where the booth ends up being the most talked-about part of the reception (besides the couple, obviously).</p>
+        <p style="line-height: 1.8;">Since printed keepsakes and guest experience are what matter most to you, we'd focus on beautiful on-site prints your guests take home as favors, plus a seamless booth experience that keeps the energy up all night.</p>
+        <p style="line-height: 1.8;">Let me get a few more details so we can build your perfect setup:</p>
+        <p style="line-height: 1.8;"><span style="color: var(--accent-cyan);">[Event Details Form Link]</span></p>
+        <p style="line-height: 1.8;">This takes about 5 minutes, and your proposal will be ready by tomorrow.</p>
+      </div>
+
+      <h3>Touchpoint 2: Proposal Email</h3>
+      <p>Sent when you send the Upgradable Quote. AI writes a custom intro + package recommendation.</p>
+
+      <div class="info-card">
+        <p style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">AI also returns (for your eyes only)</p>
+        <p><strong style="color: var(--accent-cyan);">Recommended package:</strong> Premium Experience ($2,800) &mdash; matches their 250 guest count, branding needs, and $2K-$4K budget. Consider suggesting the Print Station add-on ($400) since they mentioned on-site prints.</p>
+        <p><strong style="color: var(--accent-cyan);">Total estimate:</strong> $3,200 (within budget)</p>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem;">This recommendation shows up in your review email &mdash; it's a suggestion, not an auto-selection. You still build the quote manually in VSCO.</p>
+      </div>
+
+      <h3>Touchpoint 3: Booking Confirmation</h3>
+      <p>Sent after payment. AI writes a celebration email that recaps their specific package and previews next steps.</p>
+
+      <div class="info-card">
+        <p style="line-height: 1.8;"><strong>Subject:</strong> You're Booked &mdash; TechCo Gala Photo Booth is Locked In</p>
+        <p style="line-height: 1.8;">Jordan, it's official &mdash; your Premium Experience booth is confirmed for April 15th at The Biltmore. Here's what we've got locked in: 4 hours of photo + GIF + video capture, custom branded overlays in your gold and black palette, instant social sharing wall, and on-site prints. Plus the 360&deg; Booth Upgrade you added &mdash; your guests are going to lose it.</p>
+        <p style="line-height: 1.8;">Your portal has everything: contract, invoice, and event details. About 3 weeks before the gala, we'll send a quick design brief to collect your logos and finalize the overlay design.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 6: SETUP GUIDE -->
+    <section id="setup">
+      <div class="section-header">
+        <div class="section-number">Section 06</div>
+        <h2>Setup Guide</h2>
+        <p>Step-by-step. Complete the overhaul plan's form changes first, then layer in AI.</p>
+      </div>
+
+      <div class="callout callout-warm">
+        <strong>Prerequisite:</strong> The AI layer sits on top of the overhaul plan &mdash; it doesn't replace it. Complete the core system first (Forms 1-3, Upgradable Quote, "Qualified" lead status, automations). Then add AI as an enhancement. Think of it as version 2.0.
+      </div>
+
+      <div class="setup-steps">
+
+      <div class="setup-step">
+        <h3 style="margin-top: 0;">Add the New Form Fields</h3>
+        <p>Update Form 1 and Form 2 in VSCO Workspace with the 6 new fields from Section 02. These fields feed the AI but also improve your manual workflow.</p>
+        <div class="info-card">
+          <ul>
+            <li><strong>Form 1:</strong> Add "How did you hear about us?" (dropdown) and replace "Tell us about your event" with "What should guests walk away remembering?" (open text)</li>
+            <li><strong>Form 2:</strong> Add "Who are your guests?" (dropdown), "What matters most?" (multi-select), "What's the vibe?" (dropdown + text), "Any inspiration?" (optional text)</li>
+            <li>Create matching custom fields in <span class="auto-path">Settings &rsaquo; Custom Fields</span> for any new fields that should map to tokens</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <h3 style="margin-top: 0;">Create a Make.com Account</h3>
+        <p>Sign up at <strong>make.com</strong> (free tier). Create a new scenario called "OMG Booth AI Emails."</p>
+        <div class="info-card">
+          <ul>
+            <li>Make.com free tier: 1,000 operations/month, 2 active scenarios</li>
+            <li>At ~30 leads/month, you'll use ~180 operations. Well within limits.</li>
+            <li>The scenario will have 5 modules: Webhook &rarr; Claude API &rarr; Google Sheet &rarr; Email notification &rarr; (wait for approval) &rarr; Send</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <h3 style="margin-top: 0;">Get a Claude API Key</h3>
+        <p>Sign up at <strong>console.anthropic.com</strong>. Create an API key. Add a small prepaid credit ($10 will last months).</p>
+        <div class="info-card">
+          <ul>
+            <li>Use <strong>Claude Haiku</strong> for fastest/cheapest: ~$0.01-0.03 per lead</li>
+            <li>Use <strong>Claude Sonnet</strong> for better quality: ~$0.03-0.10 per lead</li>
+            <li>$10 prepaid credit = ~100-300 leads depending on model. At 30 leads/month, that's 3-10 months.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <h3 style="margin-top: 0;">Build the Make.com Scenario</h3>
+        <p>The visual workflow. Each box is a "module" in Make.com's interface.</p>
+        <div class="info-card">
+          <h4>Module 1: Webhook (Trigger)</h4>
+          <p>Create a custom webhook in Make.com. Copy the webhook URL. This is the URL you'll paste into VSCO Workspace.</p>
+        </div>
+        <div class="info-card">
+          <h4>Module 2: HTTP Request to Claude API</h4>
+          <ul>
+            <li><strong>URL:</strong> https://api.anthropic.com/v1/messages</li>
+            <li><strong>Method:</strong> POST</li>
+            <li><strong>Headers:</strong> x-api-key: [your key], anthropic-version: 2023-06-01, content-type: application/json</li>
+            <li><strong>Body:</strong> Your system prompt (brand voice) + the lead data from Module 1 as the user message</li>
+            <li><strong>Model:</strong> claude-haiku-4-5-20251001 (fast/cheap) or claude-sonnet-4-6 (best quality)</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h4>Module 3: Google Sheets &mdash; Add Row</h4>
+          <p>Log the draft to a Google Sheet: client name, event type, date, AI-generated subject, AI-generated body, status = "Pending", timestamp, approve webhook URL.</p>
+        </div>
+        <div class="info-card">
+          <h4>Module 4: Gmail &mdash; Send Notification</h4>
+          <p>Send yourself an email with the client details, full AI draft, and two buttons: Approve (link to a second Make.com webhook with the row ID) and Edit (link to the Google Sheet row).</p>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <h3 style="margin-top: 0;">Build the Approval Scenario</h3>
+        <p>A second Make.com scenario that handles what happens when you tap "Approve."</p>
+        <div class="info-card">
+          <ul>
+            <li><strong>Module 1:</strong> Webhook (triggered by your Approve button click)</li>
+            <li><strong>Module 2:</strong> Google Sheets &mdash; read the draft row, get the email text</li>
+            <li><strong>Module 3:</strong> Gmail &mdash; send the approved email to the client</li>
+            <li><strong>Module 4:</strong> Google Sheets &mdash; update status to "Sent"</li>
+          </ul>
+          <p style="margin-top: 0.8rem;">This uses your second free scenario slot on Make.com's free tier.</p>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <h3 style="margin-top: 0;">Wire Up the VSCO Automation</h3>
+        <p>Create the automation in VSCO Workspace that triggers everything.</p>
+        <div class="info-card">
+          <ul>
+            <li><strong>Observable:</strong> Lead &rsaquo; Lead Status Changed</li>
+            <li><strong>Execute:</strong> Immediately</li>
+            <li><strong>Condition:</strong> Lead status = "Qualified"</li>
+            <li><strong>Action:</strong> Post Web Request &rarr; paste your Make.com webhook URL</li>
+          </ul>
+          <p style="margin-top: 0.8rem;">The web request sends lead and contact data to Make.com. Make.com handles everything from there.</p>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <h3 style="margin-top: 0;">Test with a Dummy Lead</h3>
+        <p>Create a test lead in VSCO, fill out Forms 1 and 2 with realistic data, change status to "Qualified," and watch the pipeline:</p>
+        <div class="info-card">
+          <ul>
+            <li>Did Make.com receive the webhook? (Check execution history)</li>
+            <li>Did Claude generate a good draft? (Check the Google Sheet)</li>
+            <li>Did you receive the notification email?</li>
+            <li>Does "Approve" send the email to the test contact?</li>
+            <li>Is the status updated to "Sent" in the sheet?</li>
+          </ul>
+          <p style="margin-top: 0.8rem;">Iterate on the system prompt until the drafts consistently sound right. Most of the tuning happens here.</p>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 7: COST BREAKDOWN -->
+    <section id="cost">
+      <div class="section-header">
+        <div class="section-number">Section 07</div>
+        <h2>Cost Breakdown</h2>
+        <p>Monthly cost at your current lead volume (~30 leads/month).</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Component</th><th>Service</th><th>Monthly Cost</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Automation Hub</strong></td><td>Make.com (free tier)</td><td style="color: var(--accent-green); font-weight: 600;">$0</td><td>1,000 ops/month. You'll use ~180.</td></tr>
+            <tr><td><strong>AI Model</strong></td><td>Claude API (Haiku)</td><td style="color: var(--accent-green); font-weight: 600;">~$0.50</td><td>~$0.01-0.03 per lead. $10 prepaid lasts months.</td></tr>
+            <tr><td><strong>AI Model (upgrade)</strong></td><td>Claude API (Sonnet)</td><td style="color: var(--accent-green); font-weight: 600;">~$2-3</td><td>Better quality. Worth it once you validate the flow.</td></tr>
+            <tr><td><strong>Draft Storage</strong></td><td>Google Sheets</td><td style="color: var(--accent-green); font-weight: 600;">$0</td><td>Already have a Google account.</td></tr>
+            <tr><td><strong>Email Sending</strong></td><td>Gmail</td><td style="color: var(--accent-green); font-weight: 600;">$0</td><td>Already have Gmail. 500 sends/day free limit.</td></tr>
+            <tr><td><strong>VSCO Webhook</strong></td><td>Post Web Request (built-in)</td><td style="color: var(--accent-green); font-weight: 600;">$0</td><td>Native VSCO automation action.</td></tr>
+            <tr style="background: rgba(78,205,196,0.06);"><td><strong>Total</strong></td><td></td><td style="color: var(--accent-cyan); font-weight: 700; font-size: 1.1rem;">$0.50 - $3</td><td>Per month. Seriously.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-card compare-before">
+          <div class="compare-card-header">If You Used Zapier Instead</div>
+          <div class="compare-card-body">
+            <p><strong>Zapier Starter:</strong> $20/month<br>
+            <strong>Claude API:</strong> $2/month<br>
+            <strong>Total: $22/month</strong></p>
+            <p style="color: var(--text-muted); font-size: 0.78rem;">Same functionality. Just paying for Zapier's brand.</p>
+          </div>
+        </div>
+        <div class="compare-card compare-after">
+          <div class="compare-card-header">With Make.com (Your Setup)</div>
+          <div class="compare-card-body">
+            <p><strong>Make.com:</strong> $0/month<br>
+            <strong>Claude API:</strong> $2/month<br>
+            <strong>Total: $2/month</strong></p>
+            <p style="color: var(--accent-cyan); font-size: 0.78rem;">$240/year saved vs Zapier. Same result.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Scaling</h3>
+      <p>If your lead volume increases past 50/month, here's when you'd need to upgrade:</p>
+      <div class="info-card">
+        <ul>
+          <li><strong>50-80 leads/month:</strong> Still within Make.com free tier (~400-640 operations). Claude API: ~$4-8/month.</li>
+          <li><strong>80-120 leads/month:</strong> Approaching Make.com free limit. Consider their $9/month plan (10,000 ops). Claude: ~$8-12/month. Total: ~$20/month.</li>
+          <li><strong>120+ leads/month:</strong> You have a scaling problem most photo booth companies would love to have. Make.com $9/month + Claude $15-20/month. Still under $30/month for fully personalized AI communication.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTION 8: ACTION LIST -->
+    <section id="action-list">
+      <div class="section-header">
+        <div class="section-number">Section 08</div>
+        <h2>Action List</h2>
+        <p>Everything you need to do, in order. Complete the overhaul plan's critical blockers first, then layer in AI.</p>
+      </div>
+
+      <div class="checklist-progress">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+        <div class="progress-text" id="progressText">0 / 12</div>
+      </div>
+
+      <h3 style="color: var(--accent-warm);">Prerequisites (from Overhaul Plan)</h3>
+      <ul class="checklist" id="checklist">
+        <li><input type="checkbox" data-key="ai-chk-0"> Complete Form 1 (Lead Intake) and Form 2 (Event Details) builds <em style="color: var(--text-muted);">&mdash; see Overhaul Guide Section 04</em></li>
+        <li><input type="checkbox" data-key="ai-chk-1"> Create "Qualified" lead status in VSCO <em style="color: var(--text-muted);">&mdash; see Overhaul Guide Section 06</em></li>
+        <li><input type="checkbox" data-key="ai-chk-2"> Set up the Lead Status Changed &rarr; Qualified automation in VSCO <em style="color: var(--text-muted);">&mdash; see Overhaul Guide Section 05</em></li>
+      </ul>
+
+      <h3 style="color: var(--accent-cyan);">AI Integration</h3>
+      <ul class="checklist">
+        <li><input type="checkbox" data-key="ai-chk-3"> Add 2 new fields to Form 1: "How did you hear about us?" + "What should guests walk away remembering?"</li>
+        <li><input type="checkbox" data-key="ai-chk-4"> Add 4 new fields to Form 2: Guest type, priorities, vibe, inspiration</li>
+        <li><input type="checkbox" data-key="ai-chk-5"> Sign up for Make.com (free tier) and create "OMG Booth AI Emails" scenario</li>
+        <li><input type="checkbox" data-key="ai-chk-6"> Get Claude API key from console.anthropic.com, add $10 prepaid credit</li>
+        <li><input type="checkbox" data-key="ai-chk-7"> Build Make.com Scenario 1: Webhook &rarr; Claude API &rarr; Google Sheet &rarr; Email notification</li>
+        <li><input type="checkbox" data-key="ai-chk-8"> Build Make.com Scenario 2: Approve webhook &rarr; Read sheet &rarr; Send email &rarr; Update status</li>
+        <li><input type="checkbox" data-key="ai-chk-9"> Create the Google Sheet (columns: client name, event type, date, draft subject, draft body, status, timestamp)</li>
+        <li><input type="checkbox" data-key="ai-chk-10"> Add Post Web Request action to VSCO "Qualified" automation pointing to Make.com webhook URL</li>
+        <li><input type="checkbox" data-key="ai-chk-11"> Test full flow with a dummy lead &mdash; intake &rarr; qualify &rarr; AI draft &rarr; review &rarr; approve &rarr; client receives email</li>
+      </ul>
+    </section>
+
+    <div style="margin-top: 1rem; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-align: center;">
+      <p style="color: var(--text-secondary); margin-bottom: 0.8rem;">Build the foundation first, then add AI.</p>
+      <a href="omg-booth-vsco-overhaul.html" style="display: inline-block; padding: 0.7rem 2rem; background: var(--accent-warm); color: var(--bg-primary); border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Open the Overhaul Guide &rarr;</a>
+      <p style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.8rem;">Complete the core system, then come back here to add the AI layer.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// CHECKLIST PERSISTENCE
+const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+
+function updateProgress() {
+  const total = checkboxes.length;
+  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const pct = Math.round((checked / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = checked + ' / ' + total;
+}
+
+checkboxes.forEach(cb => {
+  const key = cb.dataset.key;
+  if (localStorage.getItem(key) === 'true') {
+    cb.checked = true;
+    cb.closest('li').classList.add('checked');
+  }
+  cb.addEventListener('change', () => {
+    localStorage.setItem(key, cb.checked);
+    cb.closest('li').classList.toggle('checked', cb.checked);
+    updateProgress();
+  });
+});
+
+updateProgress();
+
+// SIDEBAR ACTIVE STATE
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const active = document.querySelector('.sidebar nav a[href="#' + entry.target.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// MOBILE NAV
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const toggleBtn = document.getElementById('mobileNavToggle');
+
+toggleBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('show');
+});
+
+sidebarOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('show');
+});
+
+document.querySelectorAll('.sidebar nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('show');
+  });
+});
+</script>
+
+</body>
+</html>
