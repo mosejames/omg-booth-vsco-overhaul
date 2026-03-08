@@ -904,7 +904,7 @@ code {
     <header class="hero">
       <div class="eyebrow">Operations Manual</div>
       <h1>Questionnaire System <span>Overhaul</span></h1>
-      <p class="subtitle">Consolidating 26 questionnaires down to 6, built around an upsell quote flow. A complete walkthrough for rebuilding OMG Booth's VSCO Workspace intake, product catalog, quote experience, and reporting system.</p>
+      <p class="subtitle">Consolidating 26 questionnaires down to 6, built around an upsell quote flow with AI-personalized client communication. A complete walkthrough for rebuilding OMG Booth's VSCO Workspace intake, product catalog, quote experience, and reporting system.</p>
     </header>
 
     <!-- SECTION 1: THE PROBLEM -->
@@ -1088,6 +1088,10 @@ code {
       <div class="bp-note">
         <strong>No conditional logic:</strong> VSCO Workspace doesn't support show/hide fields based on previous answers. The new forms use clear <strong>Headline</strong> and <strong>Paragraph</strong> layout fields to create labeled sections with instructions like "Skip to the next section if not applicable." This is clean, simple, and works.
       </div>
+
+      <div class="bp-note" style="border-left-color: rgba(78,205,196,0.4); background: rgba(78,205,196,0.04);">
+        <strong style="color: #4ecdc4;">Phase 2 &mdash; AI Layer:</strong> After the core system is live, AI-personalized emails can be added between steps. When you mark a lead as "Qualified," a second automation action sends form data to Make.com &rarr; Claude API, which generates a personalized email you approve from your phone before it sends. Same flow, smarter communication. See the <a href="ai-integration.html" style="color: #4ecdc4;">AI Integration Plan</a> for full details.
+      </div>
     </section>
 
     <!-- SECTION 3: PRODUCT & QUOTE SETUP -->
@@ -1257,11 +1261,10 @@ code {
               <li><strong>Organization / Company</strong> &mdash; Text</li>
               <li><strong>Event Type</strong> &mdash; Dropdown: Corporate, Social, School/University, Wedding, Nonprofit, Other &mdash; linked to <code>{{job.type}}</code></li>
               <li><strong>Event Date</strong> &mdash; Date (approximate)</li>
-              <li><strong>Estimated Guest Count</strong> &mdash; Text</li>
-              <li><strong>Experience Interest</strong> &mdash; Checkboxes: Photo Booth, GIF/Video Booth, 360&deg; Booth, Branded Activation, Not Sure</li>
-              <li><strong>Brief Description of Event / Goals</strong> &mdash; Textarea</li>
-              <li><strong>How Did You Hear About Us?</strong> &mdash; Dropdown</li>
-              <li><strong>Budget Range</strong> &mdash; Dropdown</li>
+              <li><strong>Estimated Guest Count</strong> &mdash; Dropdown: Under 50, 50-150, 150-300, 300-500, 500+</li>
+              <li><strong>How Did You Hear About Us?</strong> &mdash; Dropdown: Referral, Saw Us at an Event, Instagram, Google, Event Planner, Other &mdash; with "Other" text field. <em style="color: #4ecdc4;">AI uses this for personalized openers</em></li>
+              <li><strong>What should guests walk away remembering?</strong> &mdash; Textarea. <em style="color: #4ecdc4;">AI uses this as the emotional hook for personalized emails</em></li>
+              <li><strong>Budget Range</strong> &mdash; Dropdown: Under $1,500, $1,500-$2,500, $2,500-$4,000, $4,000-$6,000, $6,000+</li>
             </ul>
           </div>
 
@@ -1326,6 +1329,16 @@ code {
               <li><strong>Do You Need On-Site Prints?</strong> &mdash; Dropdown: Yes, No</li>
               <li><strong>Print Size Preference</strong> &mdash; Dropdown (sizes)</li>
               <li><strong>Do You Need a Gallery/Microsite After the Event?</strong> &mdash; Dropdown: Yes, No, Not Sure</li>
+            </ul>
+          </div>
+
+          <div class="bp-section">
+            <div class="bp-section-title">Your Vision</div>
+            <ul class="field-list">
+              <li><strong>Who are your guests?</strong> &mdash; Dropdown: Employees, Clients/Customers, Friends &amp; Family, VIPs/Executives, General Public, Mixed. <em style="color: #4ecdc4;">AI adjusts tone: "your team" vs "your VIP clients" vs "your friends"</em></li>
+              <li><strong>What matters most to you? (pick 2)</strong> &mdash; Multi-select: Guest Experience, Social Media Content, Custom Branding, Print Keepsakes, Data &amp; Analytics, Wow Factor. <em style="color: #4ecdc4;">AI leads with the client's priorities in proposals</em></li>
+              <li><strong>What's the vibe?</strong> &mdash; Dropdown: Elegant/Formal, Fun/Playful, Modern/Minimalist, Bold/Energetic, Glamorous, Casual/Relaxed &mdash; plus open text: "Anything else about the feel?" <em style="color: #4ecdc4;">AI matches tone to their style</em></li>
+              <li><strong>Any inspiration?</strong> &mdash; Textarea (optional). "Seen a photo booth setup you loved? Describe it or drop a link."</li>
             </ul>
           </div>
 
@@ -1666,12 +1679,32 @@ code {
           <span class="auto-value"><strong>Lead Status = "Qualified"</strong> (create this status in Settings &rsaquo; Lead Sources if it doesn't exist)</span>
         </div>
         <div class="auto-row">
-          <span class="auto-label">Action</span>
+          <span class="auto-label">Action 1</span>
           <span class="auto-value"><strong>Send Email</strong> &mdash; Use a Questionnaire Invitation template. Include <code>{{item.name_link}}</code> token so the questionnaire link auto-populates.</span>
         </div>
         <div class="auto-row">
           <span class="auto-label">Click Path</span>
           <span class="auto-value"><span class="auto-path">Settings &rsaquo; Automations &rsaquo; New Automation &rsaquo; Observable: Lead &rsaquo; Lead Status Changed &rsaquo; Condition: Status = Qualified &rsaquo; Action: Send Email</span></span>
+        </div>
+      </div>
+
+      <div class="auto-card" style="border-color: rgba(78,205,196,0.25); background: rgba(78,205,196,0.02);">
+        <h4 style="color: #4ecdc4;">Phase 2: AI-Personalized Qualified Response</h4>
+        <div class="auto-row">
+          <span class="auto-label">When</span>
+          <span class="auto-value">Add this <strong>after</strong> the core system is tested and working. Replaces or supplements the template email above.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Setup</span>
+          <span class="auto-value">Add a second action to the same automation: <strong>Post Web Request</strong> &rarr; paste your Make.com webhook URL. This sends the lead's form data to Make.com, which calls Claude API to generate a personalized email draft.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Review</span>
+          <span class="auto-value">You receive the AI draft on your phone via email notification. Tap <strong>"Approve &amp; Send"</strong> or <strong>"Edit First."</strong> Nothing sends without your approval.</span>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">Cost</span>
+          <span class="auto-value">Make.com free tier + Claude API ~$2/month. Full setup in the <a href="ai-integration.html" style="color: #4ecdc4;">AI Integration Plan</a>.</span>
         </div>
       </div>
 
@@ -1801,7 +1834,7 @@ code {
 
       <div class="checklist-progress">
         <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
-        <div class="progress-text" id="progressText">0 / 30</div>
+        <div class="progress-text" id="progressText">0 / 38</div>
       </div>
 
       <h3 style="color: var(--accent-coral); margin-bottom: 1rem;">Critical Blockers &mdash; Do These First</h3>
@@ -1844,6 +1877,19 @@ code {
         <li><input type="checkbox" data-key="chk-27"> <strong>Review 5 contact forms</strong> for redundancy &mdash; "VB Subscription" vs "Virtual Booth Inquiry" may be duplicates <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
         <li><input type="checkbox" data-key="chk-28"> Archive / delete old questionnaires &mdash; DELETE list first (8 dead forms), then MERGE list (15 forms) after confirming new forms capture everything <em style="color: var(--text-muted);">(3-4 hrs)</em></li>
         <li><input type="checkbox" data-key="chk-29"> <strong>Add product images to existing 80+ products</strong> that you're keeping &mdash; required for any product to appear as a visual card <em style="color: var(--text-muted);">(20-30 hrs)</em></li>
+      </ul>
+
+      <h3 style="color: #4ecdc4; margin: 2rem 0 1rem;">Phase 2 &mdash; AI-Personalized Communication</h3>
+      <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1rem;">Layer on AI <strong>after</strong> the core system is live and tested. These tasks require the forms, automations, and quote flow to be working first. Full walkthrough: <a href="ai-integration.html" style="color: #4ecdc4;">AI Integration Plan</a></p>
+      <ul class="checklist">
+        <li><input type="checkbox" data-key="chk-30"> Add <strong>2 fields to Form 1</strong>: "How did you hear about us?" (dropdown) + "What should guests walk away remembering?" (replaces generic event description) <em style="color: var(--text-muted);">(1-2 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-31"> Add <strong>4 fields to Form 2</strong>: "Who are your guests?" (dropdown), "What matters most?" (multi-select), "What's the vibe?" (dropdown + text), "Any inspiration?" (text) <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-32"> Sign up for <strong>Make.com</strong> (free tier) and <strong>Claude API</strong> (console.anthropic.com, $10 prepaid credit) <em style="color: var(--text-muted);">(30 min)</em></li>
+        <li><input type="checkbox" data-key="chk-33"> Build <strong>Make.com Scenario 1</strong>: Webhook &rarr; Claude API (with system prompt) &rarr; Google Sheet draft log &rarr; email notification to you <em style="color: var(--text-muted);">(3-4 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-34"> Build <strong>Make.com Scenario 2</strong>: Approve webhook &rarr; read draft from sheet &rarr; send email to client &rarr; update status <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-35"> Add <strong>Post Web Request</strong> action to the "Qualified" automation in VSCO &rarr; points to Make.com webhook URL <em style="color: var(--text-muted);">(30 min)</em></li>
+        <li><input type="checkbox" data-key="chk-36"> <strong>Test full AI flow</strong> with a dummy lead: intake &rarr; qualify &rarr; AI generates draft &rarr; review on phone &rarr; approve &rarr; client receives personalized email <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
+        <li><input type="checkbox" data-key="chk-37"> Iterate on <strong>system prompt</strong> until drafts consistently match your voice (review 5-10 real outputs and adjust) <em style="color: var(--text-muted);">(2-3 hrs)</em></li>
       </ul>
     </section>
 
@@ -1894,8 +1940,7 @@ function toggleBlueprint(id) {
 }
 
 // CHECKLIST PERSISTENCE
-const checklist = document.getElementById('checklist');
-const checkboxes = checklist.querySelectorAll('input[type="checkbox"]');
+const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
 
 function updateProgress() {
   const total = checkboxes.length;
