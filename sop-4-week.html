@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — 6-Week SOP</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #131316;
+  --bg-card: #1a1a1f;
+  --bg-card-hover: #22222a;
+  --border: #2a2a33;
+  --border-light: #3a3a44;
+  --text-primary: #f0ece4;
+  --text-secondary: #a09a8e;
+  --text-muted: #6b655a;
+  --accent-warm: #e8a849;
+  --accent-coral: #e06c5d;
+  --accent-green: #5bb67a;
+  --accent-red: #d45b5b;
+  --accent-blue: #5b8fd4;
+  --accent-purple: #a58cff;
+  --accent-cyan: #4ecdc4;
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --week1: #e8a849;
+  --week2: #5b8fd4;
+  --week3: #a58cff;
+  --week4: #e06c5d;
+  --week5: #4ecdc4;
+  --week6: #5bb67a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px; min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sidebar-logo { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.5rem; }
+.sidebar-logo h2 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
+.sidebar-logo h2 span { color: var(--accent-warm); }
+.sidebar-logo p { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+.sidebar nav { padding: 0.5rem 0; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.55rem 1.5rem; font-size: 0.82rem; color: var(--text-secondary);
+  text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent;
+}
+.sidebar nav a:hover { color: var(--text-primary); background: rgba(255,255,255,0.02); }
+.sidebar nav a.active { color: var(--accent-warm); border-left-color: var(--accent-warm); background: rgba(232,168,73,0.04); }
+.sidebar nav .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.mobile-nav-toggle {
+  display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-warm); border: none; cursor: pointer;
+}
+.mobile-nav-toggle svg { fill: var(--bg-primary); }
+
+.main { flex: 1; padding: 3rem 4rem 6rem; max-width: 960px; }
+
+.page-header { margin-bottom: 2.5rem; }
+.page-header .eyebrow {
+  font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--accent-warm);
+  background: rgba(232,168,73,0.08); display: inline-block;
+  padding: 0.3rem 0.8rem; border-radius: 4px; margin-bottom: 1rem;
+}
+.page-header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 0.6rem; }
+.page-header h1 span { color: var(--accent-warm); }
+.page-header .subtitle { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; max-width: 680px; }
+
+/* RULES */
+.rules {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+}
+.rules-title { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.8rem; }
+.rules-list { list-style: none; padding: 0; }
+.rules-list li {
+  font-size: 0.85rem; color: var(--text-secondary); padding: 0.4rem 0;
+  display: flex; align-items: flex-start; gap: 0.6rem; line-height: 1.5;
+}
+.rules-list li::before {
+  content: '\2023'; color: var(--accent-warm); font-size: 1.2rem; flex-shrink: 0; margin-top: -0.1rem;
+}
+.rules-list li strong { color: var(--text-primary); }
+
+/* CLAUDE CODE ASSIST BOX */
+.cc-intro {
+  background: linear-gradient(135deg, rgba(165,140,255,0.06), rgba(78,205,196,0.06));
+  border: 1px solid rgba(165,140,255,0.2);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+}
+.cc-intro-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
+.cc-intro-header .cc-icon {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; color: white; font-weight: 700;
+}
+.cc-intro-header h3 { font-size: 0.95rem; font-weight: 700; }
+.cc-intro p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 0.6rem; }
+.cc-intro p:last-child { margin-bottom: 0; }
+.cc-savings {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(91,182,122,0.08); border: 1px solid rgba(91,182,122,0.2);
+  padding: 0.3rem 0.8rem; border-radius: 6px;
+  font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-green); font-weight: 600;
+  margin-top: 0.4rem;
+}
+
+/* TASK-LEVEL ASSIST BADGE */
+.ai-badge {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  background: linear-gradient(135deg, rgba(165,140,255,0.1), rgba(78,205,196,0.1));
+  border: 1px solid rgba(165,140,255,0.2);
+  padding: 0.15rem 0.55rem; border-radius: 4px;
+  font-size: 0.65rem; font-weight: 600; color: var(--accent-purple);
+  margin-top: 0.3rem; width: fit-content;
+}
+.ai-badge::before { content: '\2728'; font-size: 0.6rem; }
+.ai-detail {
+  font-size: 0.72rem; color: var(--accent-cyan); margin-top: 0.2rem; line-height: 1.5;
+  font-style: italic;
+}
+
+/* TIME SAVED BADGE */
+.time-saved {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent-green);
+  margin-left: 0.5rem;
+}
+.time-saved::before { content: '\2193'; }
+
+/* WEEK OVERVIEW */
+.week-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+.week-pill {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem;
+  text-align: center;
+  border-top: 3px solid var(--border);
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.week-pill:hover { border-color: var(--border-light); transform: translateY(-2px); }
+.week-pill.w1 { border-top-color: var(--week1); }
+.week-pill.w2 { border-top-color: var(--week2); }
+.week-pill.w3 { border-top-color: var(--week3); }
+.week-pill.w4 { border-top-color: var(--week4); }
+.week-pill.w5 { border-top-color: var(--week5); }
+.week-pill.w6 { border-top-color: var(--week6); }
+.week-pill .wp-num { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+.week-pill .wp-name { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.2rem; }
+.week-pill .wp-hours { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+.week-pill .wp-steps { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+/* WEEK SECTIONS */
+.week-section { margin-bottom: 3.5rem; }
+.week-header {
+  display: flex; align-items: center; gap: 1rem;
+  padding-bottom: 0.8rem; margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+}
+.week-badge {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.3rem 0.8rem; border-radius: 5px; color: white; white-space: nowrap;
+}
+.wb-1 { background: var(--week1); color: #0a0a0b; }
+.wb-2 { background: var(--week2); }
+.wb-3 { background: var(--week3); }
+.wb-4 { background: var(--week4); }
+.wb-5 { background: var(--week5); color: #0a0a0b; }
+.wb-6 { background: var(--week6); color: #0a0a0b; }
+.week-header h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+.week-header .week-hrs {
+  margin-left: auto; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);
+}
+
+/* DAY BLOCKS */
+.day-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.day-header {
+  padding: 1rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.day-header:hover { background: var(--bg-card-hover); }
+.day-label { display: flex; align-items: center; gap: 0.8rem; }
+.day-name { font-size: 0.92rem; font-weight: 600; }
+.day-focus { font-size: 0.78rem; color: var(--text-muted); }
+.day-time {
+  font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);
+  background: rgba(255,255,255,0.03); padding: 0.2rem 0.6rem; border-radius: 4px;
+}
+
+.day-body { padding: 1rem 1.5rem; }
+
+.day-task {
+  display: flex; align-items: flex-start; gap: 0.8rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(42,42,51,0.4);
+}
+.day-task:last-child { border-bottom: none; }
+
+.day-task input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  width: 18px; height: 18px; min-width: 18px;
+  border: 2px solid var(--border-light); border-radius: 4px;
+  background: transparent; cursor: pointer; margin-top: 0.15rem;
+  transition: all 0.2s;
+}
+.day-task input[type="checkbox"]:checked {
+  background: var(--accent-green); border-color: var(--accent-green);
+}
+.day-task input[type="checkbox"]:checked::after {
+  content: '\2713'; display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 0.65rem; font-weight: 700;
+  width: 100%; height: 100%;
+}
+
+.task-content { flex: 1; }
+.task-title { font-size: 0.85rem; font-weight: 600; }
+.task-detail { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; line-height: 1.5; }
+.task-ref {
+  font-size: 0.68rem; color: var(--accent-cyan); margin-top: 0.2rem;
+}
+.task-ref a { color: var(--accent-cyan); text-decoration: none; }
+.task-ref a:hover { text-decoration: underline; }
+
+.task-time {
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* WEEK NOTE */
+.week-note {
+  background: rgba(232,168,73,0.04);
+  border-left: 3px solid var(--accent-warm);
+  padding: 1rem 1.4rem; border-radius: 0 8px 8px 0;
+  font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;
+  margin-top: 1rem;
+}
+.week-note strong { color: var(--accent-warm); }
+.week-note.note-green { background: rgba(91,182,122,0.04); border-left-color: var(--accent-green); }
+.week-note.note-green strong { color: var(--accent-green); }
+.week-note.note-blue { background: rgba(91,143,212,0.04); border-left-color: var(--accent-blue); }
+.week-note.note-blue strong { color: var(--accent-blue); }
+.week-note.note-purple { background: rgba(165,140,255,0.04); border-left-color: var(--accent-purple); }
+.week-note.note-purple strong { color: var(--accent-purple); }
+.week-note.note-coral { background: rgba(224,108,93,0.04); border-left-color: var(--accent-coral); }
+.week-note.note-coral strong { color: var(--accent-coral); }
+.week-note.note-cyan { background: rgba(78,205,196,0.04); border-left-color: var(--accent-cyan); }
+.week-note.note-cyan strong { color: var(--accent-cyan); }
+
+/* PROGRESS BAR */
+.master-progress {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+  padding: 0.8rem 0;
+  margin: 0 -4rem 2rem; padding-left: 4rem; padding-right: 4rem;
+}
+.master-progress-inner { display: flex; align-items: center; gap: 1rem; }
+.progress-week { font-size: 0.78rem; font-weight: 600; color: var(--accent-warm); white-space: nowrap; }
+.progress-bar { flex: 1; height: 6px; background: var(--bg-card); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--week1), var(--week2), var(--week3), var(--week4), var(--week5), var(--week6)); border-radius: 3px; transition: width 0.3s; }
+.progress-text { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+
+/* BACK LINK */
+.back-link {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.5rem 1rem; color: var(--text-secondary); text-decoration: none;
+  font-size: 0.78rem; font-weight: 500; z-index: 100; transition: all 0.2s;
+}
+.back-link:hover { color: var(--accent-warm); border-color: var(--accent-warm); }
+
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 149; }
+
+@media (max-width: 900px) {
+  .week-overview { grid-template-columns: 1fr 1fr; }
+  .main { padding: 2rem 2rem 5rem; }
+  .master-progress { margin: 0 -2rem 2rem; padding-left: 2rem; padding-right: 2rem; }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none !important; }
+  .main { padding: 2rem 1.2rem 5rem; max-width: 100%; }
+  .week-overview { grid-template-columns: 1fr; }
+  .master-progress { margin: 0 -1.2rem 2rem; padding-left: 1.2rem; padding-right: 1.2rem; }
+  .day-header { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+}
+@media (max-width: 768px) {
+  .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>OMG <span>Booth</span></h2>
+      <p>6-Week SOP</p>
+    </div>
+    <nav>
+      <a href="#week-1"><span class="nav-dot" style="background:var(--week1);"></span> Week 1: Foundation</a>
+      <a href="#week-2"><span class="nav-dot" style="background:var(--week2);"></span> Week 2: Products</a>
+      <a href="#week-3"><span class="nav-dot" style="background:var(--week3);"></span> Week 3: Core Forms</a>
+      <a href="#week-4"><span class="nav-dot" style="background:var(--week4);"></span> Week 4: Build Out</a>
+      <a href="#week-5"><span class="nav-dot" style="background:var(--week5);"></span> Week 5: Automations</a>
+      <a href="#week-6"><span class="nav-dot" style="background:var(--week6);"></span> Week 6: Launch</a>
+      <div style="height:1px;background:var(--border);margin:0.8rem 1.5rem;"></div>
+      <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Operations Overhaul &rarr;</a>
+      <a href="implementation-steps.html" style="color: var(--accent-green);">Implementation Playbook &rarr;</a>
+      <a href="questionnaires.html" style="color: var(--accent-warm);">Questionnaire Reference &rarr;</a>
+      <a href="products-services.html" style="color: var(--accent-warm);">Products & Packages &rarr;</a>
+      <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map &rarr;</a>
+      <a href="ai-integration.html" style="color: var(--accent-warm);">AI Integration Plan &rarr;</a>
+      <a href="style-preview.html" style="color: var(--accent-warm);">Style Preview &rarr;</a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div class="eyebrow">Standard Operating Procedure</div>
+      <h1>6-Week <span>Build Schedule</span></h1>
+      <p class="subtitle">The entire overhaul broken into 18 focused sessions across 6 weeks. Three sessions per week (Mon / Wed / Fri), ~1.5 hours each. Check off tasks as you go. Progress saves in your browser.</p>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="master-progress">
+      <div class="master-progress-inner">
+        <div class="progress-week" id="currentWeek">Week 1</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+        <div class="progress-text" id="progressText">0 / 18 sessions</div>
+      </div>
+    </div>
+
+    <!-- GROUND RULES -->
+    <div class="rules">
+      <div class="rules-title">Ground Rules</div>
+      <ul class="rules-list">
+        <li><strong>~1.5 hours per session.</strong> No marathons. Consistency beats intensity. Close the laptop when the session is done.</li>
+        <li><strong>Three sessions per week: Monday, Wednesday, Friday.</strong> 18 sessions total. If you miss a day, slide it. Don't double up.</li>
+        <li><strong>Don't skip ahead.</strong> Each session builds on the one before it. The order matters.</li>
+        <li><strong>Test as you go.</strong> After building anything (form, automation, product), test it immediately. Don't batch testing for the end.</li>
+        <li><strong>Screenshot before you delete.</strong> Every time. No exceptions.</li>
+        <li><strong>If something takes longer than expected, finish it next session.</strong> Don't rush. The timeline flexes. The quality doesn't.</li>
+      </ul>
+    </div>
+
+    <!-- CLAUDE CODE ASSIST -->
+    <div class="cc-intro" id="claude-code">
+      <div class="cc-intro-header">
+        <div class="cc-icon">CC</div>
+        <h3>Claude Code Acceleration</h3>
+      </div>
+      <p>Throughout this schedule, you'll see <span class="ai-badge" style="display:inline-flex;vertical-align:middle;margin:0 0.2rem;">Claude Code Assist</span> badges on tasks where Claude Code can do the heavy lifting. Instead of writing email templates, SMS copy, product descriptions, and CSS from scratch, you ask Claude to draft them in your brand voice. You review, tweak, paste into VSCO.</p>
+      <p>This turns 2-hour writing sessions into 20-minute review sessions. Eight of the 18 sessions have Claude Code acceleration built in.</p>
+      <div class="cc-savings">~8-10 hours saved across the build</div>
+    </div>
+
+    <!-- WEEK OVERVIEW -->
+    <div class="week-overview">
+      <a href="#week-1" class="week-pill w1">
+        <div class="wp-num">Week 1</div>
+        <div class="wp-name">Foundation</div>
+        <div class="wp-hours">~4.5 hrs</div>
+        <div class="wp-steps">Backup, fields, cleanup</div>
+      </a>
+      <a href="#week-2" class="week-pill w2">
+        <div class="wp-num">Week 2</div>
+        <div class="wp-name">Products</div>
+        <div class="wp-hours">~4.5 hrs</div>
+        <div class="wp-steps">Catalog + quote template</div>
+      </a>
+      <a href="#week-3" class="week-pill w3">
+        <div class="wp-num">Week 3</div>
+        <div class="wp-name">Core Forms</div>
+        <div class="wp-hours">~4.5 hrs</div>
+        <div class="wp-steps">Forms 1 + 2</div>
+      </a>
+      <a href="#week-4" class="week-pill w4">
+        <div class="wp-num">Week 4</div>
+        <div class="wp-name">Build Out</div>
+        <div class="wp-hours">~4.5 hrs</div>
+        <div class="wp-steps">Forms 3-6 + emails</div>
+      </a>
+      <a href="#week-5" class="week-pill w5">
+        <div class="wp-num">Week 5</div>
+        <div class="wp-name">Automations</div>
+        <div class="wp-hours">~4.5 hrs</div>
+        <div class="wp-steps">Wire it all together</div>
+      </a>
+      <a href="#week-6" class="week-pill w6">
+        <div class="wp-num">Week 6</div>
+        <div class="wp-name">Launch</div>
+        <div class="wp-hours">~4.5 hrs</div>
+        <div class="wp-steps">Test, go live, AI pipeline</div>
+      </a>
+    </div>
+
+    <!-- ==================== WEEK 1 ==================== -->
+    <div class="week-section" id="week-1">
+      <div class="week-header">
+        <span class="week-badge wb-1">Week 1</span>
+        <h2>Foundation</h2>
+        <span class="week-hrs">~4.5 hrs</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 1 (Mon)</div><div class="day-focus">Backup Everything</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-1a"><div class="task-content"><div class="task-title">Screenshot all 28 existing questionnaires</div><div class="task-detail">Open each form, screenshot the full field list, save to a "VSCO Backup" folder. This is your safety net. Focus on forms with responses first.</div><div class="task-ref"><a href="implementation-steps.html#phase-1">Playbook Step 1</a></div></div><div class="task-time">1 hr</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-1b"><div class="task-content"><div class="task-title">Screenshot all active automations</div><div class="task-detail">Go to Settings > Automations. Screenshot every enabled automation's trigger, condition, and action. Save to the same backup folder.</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 2 (Wed)</div><div class="day-focus">Lead Statuses & Custom Fields</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-2a"><div class="task-content"><div class="task-title">Create "Qualified" lead status</div><div class="task-detail">This is the trigger for the entire automation chain. Go to Settings > Lead Statuses. Add "Qualified" between "Active" and "Booked."</div><div class="task-ref"><a href="implementation-steps.html#phase-1">Playbook Step 2</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-2b"><div class="task-content"><div class="task-title">Create "contact-preference" custom field</div><div class="task-detail">Dropdown: Email, Text, Both. Token: <code style="font-family:var(--font-mono);font-size:0.72rem;background:rgba(232,168,73,0.08);color:var(--accent-warm);padding:0.1rem 0.4rem;border-radius:3px;">{{job.custom.contact-preference}}</code></div><div class="task-ref"><a href="implementation-steps.html#phase-1">Playbook Step 3</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-2c"><div class="task-content"><div class="task-title">Create 6 new custom fields</div><div class="task-detail">venue-name, venue-address, guest-count, event-vibe, guest-type, priorities. Map each to the correct token format.</div><div class="task-ref"><a href="implementation-steps.html#phase-1">Playbook Step 4</a></div></div><div class="task-time">45 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 3 (Fri)</div><div class="day-focus">Field Audit & Cleanup</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-3a"><div class="task-content"><div class="task-title">Audit all 99 existing custom fields</div><div class="task-detail">Go through every custom field. Flag the ones that are actually used in automations, forms, or templates. Mark the rest for deletion.</div><div class="task-ref"><a href="implementation-steps.html#phase-1">Playbook Step 4</a></div><div class="ai-badge">Claude Code Assist</div><div class="ai-detail">Ask Claude to review your field list and identify which ones map to the new form structure vs. which are safe to delete.</div></div><div class="task-time">1 hr</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-3b"><div class="task-content"><div class="task-title">Delete unused custom fields</div><div class="task-detail">Remove fields confirmed as unused. Don't delete anything you're unsure about. You can always delete later.</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="week-note"><strong>End of Week 1:</strong> Full backup complete. Custom fields cleaned up and new ones created. Lead statuses ready. The workspace is prepped for building.</div>
+    </div>
+
+    <!-- ==================== WEEK 2 ==================== -->
+    <div class="week-section" id="week-2">
+      <div class="week-header">
+        <span class="week-badge wb-2">Week 2</span>
+        <h2>Products</h2>
+        <span class="week-hrs">~4.5 hrs</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 4 (Mon)</div><div class="day-focus">3 Base Packages</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-4a"><div class="task-content"><div class="task-title">Create Essential Experience product</div><div class="task-detail">$1,800. 3hr booth, photos + GIFs, custom overlay, digital delivery, 1 attendant. Add product image.</div><div class="task-ref"><a href="products-services.html#packages">Products & Packages</a> | <a href="implementation-steps.html#phase-2">Playbook Step 5</a></div><div class="ai-badge">Claude Code Assist</div><div class="ai-detail">Ask Claude to write the product description in your brand voice. Copy it straight into the VSCO product description field.</div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-4b"><div class="task-content"><div class="task-title">Create Premium Experience product</div><div class="task-detail">$2,800. Photos + GIFs + video, backdrop, prints, social wall, 2 attendants. Mark as "Most Popular." Add product image.</div><div class="ai-badge">Claude Code Assist</div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-4c"><div class="task-content"><div class="task-title">Create Full Activation product</div><div class="task-detail">$4,200. 360 + standard booth, slo-mo, full branding, lead capture, 3 staff. Add product image.</div><div class="ai-badge">Claude Code Assist</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 5 (Wed)</div><div class="day-focus">Upgrades & Add-Ons</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-5a"><div class="task-content"><div class="task-title">Create 5 upgrade products</div><div class="task-detail">360 Booth ($800), Slo-Mo Station ($600), Print Station ($350), AR Filter ($800), LED Enclosure ($500). Each needs a product image.</div><div class="task-ref"><a href="products-services.html#upgrades">Products & Packages > Upgrades</a> | <a href="implementation-steps.html#phase-2">Playbook Step 6</a></div><div class="ai-badge">Claude Code Assist</div><div class="ai-detail">Ask Claude to batch-write all 5 upgrade descriptions at once. Review and paste.</div></div><div class="task-time">45 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-5b"><div class="task-content"><div class="task-title">Create 6 add-on products</div><div class="task-detail">Additional Hour ($350), Standby Hour ($150), Step-and-Repeat ($500), Lead Capture ($300), Same-Day Content ($500), Analytics Report ($350). No images needed.</div><div class="task-ref"><a href="products-services.html#addons">Products & Packages > Add-Ons</a> | <a href="implementation-steps.html#phase-2">Playbook Step 7</a></div><div class="ai-badge">Claude Code Assist</div></div><div class="task-time">45 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 6 (Fri)</div><div class="day-focus">Upgradable Quote Template</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-6a"><div class="task-content"><div class="task-title">Create Upgradable Quote Template</div><div class="task-detail">Create new quote template, set to Upgradable type. Add all 3 base packages as selectable options. Add upgrade and add-on products as upsells.</div><div class="task-ref"><a href="implementation-steps.html#phase-2">Playbook Step 8</a> | <a href="style-preview.html">Style Preview</a></div></div><div class="task-time">1 hr</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-6b"><div class="task-content"><div class="task-title">Attach General Service Contract + Square payment</div><div class="task-detail">Connect your contract template and Square payment integration to the quote template. You'll embed Form 3 later in Week 4.</div><div class="task-ref"><a href="implementation-steps.html#phase-2">Playbook Step 9</a></div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="week-note note-blue"><strong>End of Week 2:</strong> All 14 products created with pricing and images. Quote template built and connected to payment. The product catalog is live in VSCO Workspace.</div>
+    </div>
+
+    <!-- ==================== WEEK 3 ==================== -->
+    <div class="week-section" id="week-3">
+      <div class="week-header">
+        <span class="week-badge wb-3">Week 3</span>
+        <h2>Core Forms</h2>
+        <span class="week-hrs">~4.5 hrs</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 7 (Mon)</div><div class="day-focus">Build Form 1 (Lead Intake)</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-7a"><div class="task-content"><div class="task-title">Build Form 1: New Lead Intake</div><div class="task-detail">Public form, auto-create lead enabled. 12 fields: name, email, phone, org, event type (linked to job.type), date, guest count, budget range, how heard, guest memory, contact preference, referral source.</div><div class="task-ref"><a href="questionnaires.html#form-1">Questionnaire Reference > Form 1</a> | <a href="implementation-steps.html#phase-3">Playbook Step 10</a></div></div><div class="task-time">1 hr</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-7b"><div class="task-content"><div class="task-title">Test Form 1 from a fresh browser</div><div class="task-detail">Open the public URL in an incognito window. Submit a test lead. Verify the lead appears in VSCO with the correct fields populated.</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 8 (Wed)</div><div class="day-focus">Build Form 2 Part 1</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-8a"><div class="task-content"><div class="task-title">Build Form 2: Event Overview + Branding sections</div><div class="task-detail">Private form. Event date (pre-fill), start/end times, venue name/address, indoor/outdoor, guest count. Branding level dropdown, content types, lead capture needs, social sharing preferences.</div><div class="task-ref"><a href="questionnaires.html#form-2">Questionnaire Reference > Form 2</a> | <a href="implementation-steps.html#phase-3">Playbook Step 11</a></div></div><div class="task-time">1.5 hrs</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 9 (Fri)</div><div class="day-focus">Build Form 2 Part 2</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-9a"><div class="task-content"><div class="task-title">Finish Form 2: Vision + Special Requests sections</div><div class="task-detail">Print/digital preferences, guest type, priorities (pick 2), vibe dropdown + open text, inspiration, props, backdrop, theme, additional notes.</div></div><div class="task-time">1 hr</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-9b"><div class="task-content"><div class="task-title">Test the complete Form 2 end-to-end</div><div class="task-detail">Send it to a test job. Fill every field as a client would. Verify all custom field tokens save correctly to the job record.</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="week-note note-purple"><strong>End of Week 3:</strong> Form 1 (public intake) and Form 2 (event details) fully built and tested. The two most complex forms are done. Everything from here is lighter.</div>
+    </div>
+
+    <!-- ==================== WEEK 4 ==================== -->
+    <div class="week-section" id="week-4">
+      <div class="week-header">
+        <span class="week-badge wb-4">Week 4</span>
+        <h2>Build Out</h2>
+        <span class="week-hrs">~4.5 hrs</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 10 (Mon)</div><div class="day-focus">Form 3 (Logistics)</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-10a"><div class="task-content"><div class="task-title">Build Form 3: Event Logistics</div><div class="task-detail">Private form, will be embedded in quote. Venue/access details, setup requirements (power, wifi, tables), day-of contacts, timeline, virtual booth section. Pre-fill venue fields via tokens.</div><div class="task-ref"><a href="questionnaires.html#form-3">Questionnaire Reference > Form 3</a> | <a href="implementation-steps.html#phase-3">Playbook Step 12</a></div></div><div class="task-time">1 hr</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-10b"><div class="task-content"><div class="task-title">Embed Form 3 in the Quote Template</div><div class="task-detail">Go back to the Upgradable Quote Template from Session 6. Attach Form 3 so clients see it in the booking flow. Test the full quote > form > sign > pay flow.</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 11 (Wed)</div><div class="day-focus">Forms 4, 5, 6</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-11a"><div class="task-content"><div class="task-title">Build Form 4: Design & Branding Brief</div><div class="task-detail">13 fields: brand name, logos (file upload), colors, fonts, overlay style, tagline, social handles, hashtag, inspiration, approval contacts.</div><div class="task-ref"><a href="questionnaires.html#form-4">Questionnaire Reference > Form 4</a> | <a href="implementation-steps.html#phase-3">Playbook Step 13</a></div></div><div class="task-time">45 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-11b"><div class="task-content"><div class="task-title">Update Form 5: Pre-Event Report</div><div class="task-detail">Review existing form (101 responses). Clean up field names, set visibility to Private. Minimal changes needed.</div><div class="task-ref"><a href="questionnaires.html#form-5">Questionnaire Reference > Form 5</a></div></div><div class="task-time">20 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-11c"><div class="task-content"><div class="task-title">Build Form 6: Post-Event Report</div><div class="task-detail">Merge EM + Smile Squad reports. Role selector, event rating, engagement level, equipment issues, content counts, recommendations.</div><div class="task-ref"><a href="questionnaires.html#form-6">Questionnaire Reference > Form 6</a> | <a href="implementation-steps.html#phase-3">Playbook Step 15</a></div></div><div class="task-time">25 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 12 (Fri)</div><div class="day-focus">Email Templates + Cleanup</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-12a"><div class="task-content"><div class="task-title">Delete 15+ stale automations</div><div class="task-detail">Screenshot each one first. Delete everything that references a form you're replacing.</div><div class="task-ref"><a href="omg-booth-vsco-overhaul.html#automation">Operations Overhaul > Automations</a> | <a href="implementation-steps.html#phase-4">Playbook Step 16</a></div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-12b"><div class="task-content"><div class="task-title">Write 4 email templates</div><div class="task-detail">Form 2 send email, Form 4 send email, Form 5 internal send, Form 6 internal send. Use tokens for personalization.</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Steps 17-20</a> | <a href="client-journey.html">Client Journey (example copy)</a></div><div class="ai-badge">Claude Code Assist</div><div class="ai-detail">Ask Claude to draft all 4 email templates using your brand voice and the token list from the Questionnaire Reference page. Review and paste into VSCO. This saves ~45 minutes of writing.</div></div><div class="task-time">45 min</div></div>
+        </div>
+      </div>
+
+      <div class="week-note note-coral"><strong>End of Week 4:</strong> All 6 forms built. Email templates written. Old automations cleared. The form structure is complete. Now it's time to wire it all together.</div>
+    </div>
+
+    <!-- ==================== WEEK 5 ==================== -->
+    <div class="week-section" id="week-5">
+      <div class="week-header">
+        <span class="week-badge wb-5">Week 5</span>
+        <h2>Automations</h2>
+        <span class="week-hrs">~4.5 hrs</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 13 (Mon)</div><div class="day-focus">Core Automations</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-13a"><div class="task-content"><div class="task-title">Build automation: Qualified &rarr; Send Form 2</div><div class="task-detail">Observable: Lead Status Changed. Condition: status = Qualified. Action: Send Form 2 with email template.</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 21</a></div></div><div class="task-time">20 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-13b"><div class="task-content"><div class="task-title">Build automation: 21 days before &rarr; Send Form 4</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 22</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-13c"><div class="task-content"><div class="task-title">Build automation: 2 days before &rarr; Send Form 5</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 23</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-13d"><div class="task-content"><div class="task-title">Build automation: 1 day after &rarr; Send Form 6</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 24</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-13e"><div class="task-content"><div class="task-title">Re-enable 3 invoice automations</div><div class="task-detail">Invoice Due Soon, Invoice Due Today, Invoice Past Due. 36 past-due invoices need attention.</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 25</a></div></div><div class="task-time">15 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 14 (Wed)</div><div class="day-focus">SMS Automations</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-14a"><div class="task-content"><div class="task-title">Update existing "New Lead" SMS automation</div><div class="task-detail">Update copy to match brand voice. Add condition: contact preference = Text or Both.</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 26</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-14b"><div class="task-content"><div class="task-title">Build 5 core SMS automations</div><div class="task-detail">Qualified nudge, Proposal ready, Booking confirmation, Design brief reminder, Day-of arrival. All conditioned on contact preference.</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 27</a></div><div class="ai-badge">Claude Code Assist</div><div class="ai-detail">Ask Claude to draft all 5 SMS messages (160 char limit each) in your voice with the right tokens. Review and paste. Saves ~30 minutes of writing and character counting.</div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-14c"><div class="task-content"><div class="task-title">Build 4 additional SMS automations</div><div class="task-detail">Form 2 follow-up, 7-day check-in, Day-before hype, Post-event thanks.</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 28</a></div><div class="ai-badge">Claude Code Assist</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 15 (Fri)</div><div class="day-focus">CSS + Template Cleanup</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-15a"><div class="task-content"><div class="task-title">Apply custom CSS to quote pages</div><div class="task-detail">Paste OMG Booth brand CSS into Settings > Branding > Advanced Design > Page CSS.</div><div class="task-ref"><a href="style-preview.html">Style Preview (CSS reference)</a> | <a href="implementation-steps.html#phase-5">Playbook Step 30</a></div><div class="ai-badge">Claude Code Assist</div><div class="ai-detail">The CSS is already written on the Style Preview page. Ask Claude to customize it if you need adjustments for your specific brand colors or layout preferences.</div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-15b"><div class="task-content"><div class="task-title">Archive old quote templates</div><div class="task-detail">Archive 8+ date-specific quote templates. Only keep the new Upgradable template.</div><div class="task-ref"><a href="implementation-steps.html#phase-4">Playbook Step 29</a></div></div><div class="task-time">20 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-15c"><div class="task-content"><div class="task-title">Consolidate email templates</div><div class="task-detail">Merge 5+ follow-up variants into 2. Merge 5+ quote variants into 1. Delete templates referencing deleted forms.</div><div class="task-ref"><a href="implementation-steps.html#phase-5">Playbook Step 33</a></div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="week-note note-cyan"><strong>End of Week 5:</strong> All automations wired. SMS sequences active. CSS applied. Old templates archived. The system is functionally complete. One week of testing and launch left.</div>
+    </div>
+
+    <!-- ==================== WEEK 6 ==================== -->
+    <div class="week-section" id="week-6">
+      <div class="week-header">
+        <span class="week-badge wb-6">Week 6</span>
+        <h2>Launch</h2>
+        <span class="week-hrs">~4.5 hrs</span>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 16 (Mon)</div><div class="day-focus">Full System Test</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-16a"><div class="task-content"><div class="task-title">Run the complete flow with a test lead</div><div class="task-detail">Submit Form 1 from website. Verify lead creation. Mark Qualified. Verify Form 2 sends + SMS fires. Fill Form 2. Send quote. Open as client: select package, fill Form 3, sign, pay. Verify booking confirmation email + SMS. Check all date-triggered automations are queued.</div><div class="task-ref"><a href="implementation-steps.html#phase-5">Playbook Step 31</a></div></div><div class="task-time">1 hr</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-16b"><div class="task-content"><div class="task-title">Document everything that broke or felt off</div><div class="task-detail">Make a list of broken tokens, misfiring automations, missing fields, wrong conditions, confusing wording. You'll fix these in Session 17.</div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 17 (Wed)</div><div class="day-focus">Fix + Go Live</div></div>
+          <div class="day-time">~1.5 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-17a"><div class="task-content"><div class="task-title">Fix everything from Session 16 testing</div><div class="task-detail">Work through your issue list. Fix and re-test each item.</div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-17b"><div class="task-content"><div class="task-title">Embed Form 1 on OMG Booth website</div><div class="task-detail">Replace old inquiry form with the new public Form 1 URL or embed code. This is the go-live moment.</div><div class="task-ref"><a href="implementation-steps.html#phase-5">Playbook Step 32</a></div></div><div class="task-time">20 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-17c"><div class="task-content"><div class="task-title">Archive old questionnaires + dead products</div><div class="task-detail">Delete 8 forms with 0 responses. Archive 15 merged forms (keep historical data). Archive 0-order products: Boomerang, Karaoke, Light Painting, etc.</div><div class="task-ref"><a href="implementation-steps.html#phase-5">Playbook Steps 34-36</a></div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <div class="day-label"><div class="day-name">Session 18 (Fri)</div><div class="day-focus">AI Pipeline + Celebrate</div></div>
+          <div class="day-time">~2 hrs</div>
+        </div>
+        <div class="day-body">
+          <div class="day-task"><input type="checkbox" data-key="sop6-18a"><div class="task-content"><div class="task-title">Sign up for Make.com + Claude API</div><div class="task-detail">Make.com free tier. Claude API at console.anthropic.com with $10 prepaid credit.</div><div class="task-ref"><a href="ai-integration.html">AI Integration Plan</a> | <a href="implementation-steps.html#phase-6">Playbook Step 40</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-18b"><div class="task-content"><div class="task-title">Create Google Sheet draft dashboard</div><div class="task-detail">Columns: Client Name, Event Type, Event Date, Contact Preference, Email Subject, Email Body, SMS Draft, Status, Timestamp, Approve URL.</div><div class="task-ref"><a href="implementation-steps.html#phase-6">Playbook Step 41</a></div></div><div class="task-time">15 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-18c"><div class="task-content"><div class="task-title">Build Make.com Scenario 1: Draft Generation</div><div class="task-detail">Webhook &rarr; Claude API call with system prompt &rarr; Google Sheets log &rarr; Gmail notification to you.</div><div class="task-ref"><a href="ai-integration.html#architecture">AI Integration > Architecture</a> | <a href="implementation-steps.html#phase-6">Playbook Step 42</a></div><div class="ai-badge">Claude Code Assist</div><div class="ai-detail">Ask Claude to write your full AI system prompt. It already knows your packages, pricing, voice, and client types. You paste it into the Make.com Claude API module.</div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-18d"><div class="task-content"><div class="task-title">Build Make.com Scenario 2: Approval + Send</div><div class="task-detail">Webhook (approve click) &rarr; Read draft from Sheets &rarr; Gmail send to client &rarr; Router: if Text/Both, POST to Quo API &rarr; Update Sheets status to "Sent".</div><div class="task-ref"><a href="implementation-steps.html#phase-6">Playbook Step 43</a></div></div><div class="task-time">30 min</div></div>
+          <div class="day-task"><input type="checkbox" data-key="sop6-18e"><div class="task-content"><div class="task-title">Test the full AI flow + send your first real lead through</div><div class="task-detail">Create a test lead. Mark Qualified. Verify Make.com fires, draft appears in Sheet, approve it, check email + SMS delivery. Then go live. The overhaul is done.</div><div class="task-ref"><a href="implementation-steps.html#phase-6">Playbook Steps 44-46</a></div></div><div class="task-time">30 min</div></div>
+        </div>
+      </div>
+
+      <div class="week-note note-green"><strong>Session 18 complete. You're live.</strong> Forms consolidated, products with images, Upgradable quote flow, automated email and SMS, AI-personalized drafts, and a review gate. You went from 28 questionnaires and 80+ imageless products to a clean, automated sales machine. Every new lead gets the full experience.</div>
+    </div>
+
+  </main>
+</div>
+
+<a href="omg-booth-vsco-overhaul.html" class="back-link">&larr; Back to Operations Overhaul</a>
+
+<script>
+// CHECKLIST PERSISTENCE
+const allTasks = document.querySelectorAll('.day-task input[type="checkbox"]');
+
+function updateProgress() {
+  const total = document.querySelectorAll('.day-block').length;
+  const daysComplete = Array.from(document.querySelectorAll('.day-block')).filter(block => {
+    const tasks = block.querySelectorAll('input[type="checkbox"]');
+    return tasks.length > 0 && Array.from(tasks).every(cb => cb.checked);
+  }).length;
+  const pct = Math.round((daysComplete / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = daysComplete + ' / ' + total + ' sessions';
+
+  // Current week
+  const weeks = ['week-1','week-2','week-3','week-4','week-5','week-6'];
+  const weekNames = ['Week 1: Foundation','Week 2: Products','Week 3: Core Forms','Week 4: Build Out','Week 5: Automations','Week 6: Launch'];
+  let currentIdx = 0;
+  weeks.forEach((wId, i) => {
+    const section = document.getElementById(wId);
+    if (section) {
+      const tasks = section.querySelectorAll('input[type="checkbox"]');
+      const checked = Array.from(tasks).filter(c => c.checked).length;
+      if (checked < tasks.length) { currentIdx = i; return; }
+      if (checked === tasks.length && i < weeks.length - 1) currentIdx = i + 1;
+    }
+  });
+  document.getElementById('currentWeek').textContent = weekNames[currentIdx];
+}
+
+allTasks.forEach(cb => {
+  const key = cb.dataset.key;
+  if (key && localStorage.getItem(key) === 'true') cb.checked = true;
+  cb.addEventListener('change', () => {
+    if (key) localStorage.setItem(key, cb.checked);
+    updateProgress();
+  });
+});
+updateProgress();
+
+// Sidebar
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggle = document.getElementById('mobileNavToggle');
+if (toggle) toggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none'; });
+if (overlay) overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; });
+
+// Active nav on scroll
+const weekSections = document.querySelectorAll('.week-section[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+weekSections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
