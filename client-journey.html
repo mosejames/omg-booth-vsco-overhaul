@@ -876,8 +876,9 @@ code {
       <a href="#step-8"><span class="nav-number">08</span> Pre-Event Report</a>
       <a href="#step-9"><span class="nav-number">09</span> Event Day</a>
       <a href="#step-10"><span class="nav-number">10</span> Post-Event Report</a>
+      <a href="#step-11"><span class="nav-number">11</span> Review Gate</a>
       <div class="nav-divider"></div>
-      <a href="#evaluation"><span class="nav-number">11</span> Evaluation</a>
+      <a href="#evaluation"><span class="nav-number">12</span> Evaluation</a>
       <div class="nav-divider"></div>
       <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Operations Overhaul</a>
       <a href="ai-integration.html" style="color: var(--accent-warm);">AI Integration Plan</a>
@@ -908,8 +909,8 @@ code {
     <section id="overview">
       <div class="section-header">
         <div class="section-number">Overview</div>
-        <h2>10 Touchpoints, One Seamless Path</h2>
-        <p>From "I need a photo booth" to "that event was incredible" &mdash; every step is mapped, automated where possible, and designed to reduce friction for both the client and your team.</p>
+        <h2>11 Touchpoints, One Seamless Path</h2>
+        <p>From "I need a photo booth" to a five-star Google review &mdash; every step is mapped, automated where possible, and designed to reduce friction for both the client and your team.</p>
       </div>
 
       <div class="legend">
@@ -947,6 +948,7 @@ code {
             <tr><td style="font-family: var(--font-mono); color: var(--accent-warm-dim);">08</td><td><strong>Pre-Event Report</strong></td><td>OMG Team</td><td>2 days before event</td><td>Form 5 (Internal, auto-sent)</td></tr>
             <tr><td style="font-family: var(--font-mono); color: var(--accent-warm-dim);">09</td><td><strong>Event Day</strong></td><td>Both</td><td>Calendar date</td><td>&mdash;</td></tr>
             <tr><td style="font-family: var(--font-mono); color: var(--accent-warm-dim);">10</td><td><strong>Post-Event Report</strong></td><td>OMG Team</td><td>1 day after event</td><td>Form 6 (Internal, auto-sent)</td></tr>
+            <tr><td style="font-family: var(--font-mono); color: var(--accent-warm-dim);">11</td><td><strong>Review Gate</strong></td><td>Automated</td><td>Form 6 data (staff rating + engagement)</td><td>Email + SMS Templates</td></tr>
           </tbody>
         </table>
       </div>
@@ -1824,6 +1826,214 @@ code {
             <p>"Reports - Post-Event Report [Experience Manager]" (139 responses) and "Reports - Post-Event Report [Smile Squad]" (65 responses). Two forms &rarr; one form with a role selector.</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== STEP 11: REVIEW GATE ===== -->
+    <section id="step-11">
+      <div class="section-header">
+        <div class="section-number">Step 11</div>
+        <h2>Review Gate</h2>
+        <p>The final client-facing touchpoint. Triggered automatically by the Post-Event Report (Form 6) data. If the event went well, ask for a Google review. If it didn't, ask for private feedback. No guessing, no blanket review blasts.</p>
+      </div>
+
+      <div class="timeline">
+
+        <!-- Decision Logic -->
+        <div class="timeline-step">
+          <div class="timeline-dot dot-auto"></div>
+          <div class="step-meta">
+            <span class="step-number">Automation</span>
+            <span class="step-actor actor-auto">Triggered by Form 6 data</span>
+          </div>
+          <div class="step-title">Smart Review Routing</div>
+          <div class="step-desc">
+            When the Post-Event Report (Form 6) is submitted, the automation reads two fields: <strong>Event Rating</strong> (1-5 scale) and <strong>Guest Engagement</strong> (Low / Medium / High). Based on those answers, the system routes the client into one of two paths. No manual decision needed.
+          </div>
+
+          <div class="internal-block">
+            <h4>Routing Logic</h4>
+            <ul>
+              <li><strong>Happy Path:</strong> Staff rated event 4-5 AND engagement marked "High" &rarr; send personalized Google Review request (email + SMS)</li>
+              <li><strong>Concern Path:</strong> Staff flagged issues OR rated event 3 or below &rarr; send private check-in email asking for feedback (email + SMS, no Google link)</li>
+            </ul>
+          </div>
+
+          <div class="internal-block">
+            <h4>VSCO Automation Config</h4>
+            <p><strong>Observable:</strong> Questionnaire Completed (Form 6: Post-Event Report)</p>
+            <p><strong>Condition A (Happy Path):</strong> Event Rating &ge; 4 AND Guest Engagement = "High" &rarr; <strong>Action:</strong> Send "Google Review Request" email template + SMS template</p>
+            <p><strong>Condition B (Concern Path):</strong> Event Rating &le; 3 OR any issue flags present &rarr; <strong>Action:</strong> Send "Private Feedback Request" email template + SMS template</p>
+            <p><strong>Timing:</strong> Fires immediately when Form 6 is submitted (typically 1 day after the event). The email lands while the experience is still fresh.</p>
+          </div>
+        </div>
+
+        <!-- Happy Path Email -->
+        <div class="timeline-step">
+          <div class="timeline-dot dot-auto"></div>
+          <div class="step-meta">
+            <span class="step-number">Happy Path</span>
+            <span class="step-actor actor-auto">Auto-sent email</span>
+          </div>
+          <div class="step-title">Google Review Request</div>
+          <div class="step-desc">
+            This only goes out when your team confirms the event was a hit. The tone is warm and specific to their event, not a generic "please leave a review" template. Reference something real about their night.
+          </div>
+
+          <div class="mockup">
+            <div class="mockup-bar">
+              <div class="mockup-dots"><span></span><span></span><span></span></div>
+              <span class="mockup-bar-title">email &middot; inbox</span>
+            </div>
+            <div class="mockup-body">
+              <div class="mock-email">
+                <div class="mock-email-meta">
+                  <span class="meta-label">From:</span>
+                  <span class="meta-value">OMG Booth &lt;hello@omgbooth.com&gt;</span>
+                  <span class="meta-label">To:</span>
+                  <span class="meta-value">jordan@company.com</span>
+                  <span class="meta-label">Subject:</span>
+                  <span class="meta-value" style="color: var(--text-primary); font-weight: 500;">TechCo Gala Was One for the Books</span>
+                </div>
+                <div class="mock-email-body">
+                  <p class="greeting">Jordan,</p>
+                  <p>We had a blast at the TechCo Gala. Your team was incredible and that 360 booth line didn't stop all night.</p>
+                  <p>If you feel the same way, a quick Google review would mean a lot:</p>
+                  <a class="cta-btn">Leave a Google Review</a>
+                  <p>Takes 30 seconds and helps other event planners find us. Either way, it was a pleasure working with you and we'd love to do it again.</p>
+                  <div class="signature">
+                    OMG Booth Team<br>
+                    Atlanta's Premier Photo Booth Experience<br>
+                    omgbooth.com | (404) 555-0100
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="copy-block">
+            <div class="copy-label">Why This Copy Works</div>
+            <p><strong>Event-specific detail:</strong> "That 360 booth line didn't stop all night" proves you were paying attention, not mass-emailing.</p>
+            <p><strong>Low pressure:</strong> "If you feel the same way" gives them an out. No guilt, no multiple follow-ups.</p>
+            <p><strong>"30 seconds":</strong> Removes friction by setting expectations on how quick it is.</p>
+            <p><strong>No ask stacking:</strong> One CTA, one button. Don't ask for a review AND a referral AND a rebooking in the same email.</p>
+          </div>
+        </div>
+
+        <!-- Happy Path SMS -->
+        <div class="timeline-step">
+          <div class="timeline-dot dot-auto"></div>
+          <div class="step-meta">
+            <span class="step-number">Happy Path</span>
+            <span class="step-actor actor-auto">Auto-sent SMS</span>
+          </div>
+          <div class="step-title">Google Review Request (SMS)</div>
+          <div class="step-desc">
+            For clients who opted into text communication. Sent alongside the email. Keep it under 160 characters so it lands as a single message.
+          </div>
+
+          <div class="mockup">
+            <div class="mockup-bar">
+              <div class="mockup-dots"><span></span><span></span><span></span></div>
+              <span class="mockup-bar-title">sms &middot; message</span>
+            </div>
+            <div class="mockup-body" style="max-width: 360px; margin: 0 auto;">
+              <div style="background: rgba(91,182,122,0.08); border: 1px solid rgba(91,182,122,0.2); border-radius: 16px 16px 4px 16px; padding: 1rem 1.2rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                Jordan, loved working your gala! If we delivered, a quick Google review means a lot: <span style="color: var(--accent-warm);">[link]</span>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); text-align: right; margin-top: 0.4rem; font-family: var(--font-mono);">143 chars &middot; single SMS</div>
+            </div>
+          </div>
+
+          <div class="copy-block">
+            <div class="copy-label">SMS Guidelines</div>
+            <p><strong>Under 160 characters:</strong> Anything over splits into two messages and looks spammy.</p>
+            <p><strong>Only for opted-in clients:</strong> Check the SMS consent field from Form 1 or Form 2 before adding them to this automation.</p>
+            <p><strong>Direct link:</strong> Use a shortened Google Review URL so it doesn't eat your character budget.</p>
+          </div>
+        </div>
+
+        <!-- Concern Path Email -->
+        <div class="timeline-step">
+          <div class="timeline-dot dot-auto"></div>
+          <div class="step-meta">
+            <span class="step-number">Concern Path</span>
+            <span class="step-actor actor-auto">Auto-sent email</span>
+          </div>
+          <div class="step-title">Private Feedback Request</div>
+          <div class="step-desc">
+            When the team flags an issue or rates the event 3 or below, the system does not ask for a public review. Instead, it sends a private check-in. This protects your reputation and gives the client a safe space to vent or flag problems before they post about it publicly.
+          </div>
+
+          <div class="mockup">
+            <div class="mockup-bar">
+              <div class="mockup-dots"><span></span><span></span><span></span></div>
+              <span class="mockup-bar-title">email &middot; inbox</span>
+            </div>
+            <div class="mockup-body">
+              <div class="mock-email">
+                <div class="mock-email-meta">
+                  <span class="meta-label">From:</span>
+                  <span class="meta-value">OMG Booth &lt;hello@omgbooth.com&gt;</span>
+                  <span class="meta-label">To:</span>
+                  <span class="meta-value">jordan@company.com</span>
+                  <span class="meta-label">Subject:</span>
+                  <span class="meta-value" style="color: var(--text-primary); font-weight: 500;">Thanks for Trusting Us with the TechCo Gala</span>
+                </div>
+                <div class="mock-email-body">
+                  <p class="greeting">Jordan,</p>
+                  <p>Thanks again for trusting us with the TechCo Gala. We always want to get better.</p>
+                  <p>Was there anything we could've done differently? Hit reply and let us know. Honest feedback helps us improve, and we take it seriously.</p>
+                  <p>Appreciate you either way.</p>
+                  <div class="signature">
+                    OMG Booth Team<br>
+                    Atlanta's Premier Photo Booth Experience<br>
+                    omgbooth.com | (404) 555-0100
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="copy-block">
+            <div class="copy-label">Why This Copy Works</div>
+            <p><strong>No Google link:</strong> If your team flagged issues, don't invite a negative public review. Give them a private channel first.</p>
+            <p><strong>"Hit reply":</strong> Low friction. They don't have to click a link, fill out a form, or go anywhere. Just reply.</p>
+            <p><strong>Genuine tone:</strong> "We always want to get better" is honest, not defensive. It opens the door without being needy.</p>
+            <p><strong>Recovery opportunity:</strong> If they reply with a fixable issue, you can resolve it, then manually send the Google Review request later once they're satisfied.</p>
+          </div>
+        </div>
+
+        <!-- Concern Path SMS -->
+        <div class="timeline-step">
+          <div class="timeline-dot dot-auto"></div>
+          <div class="step-meta">
+            <span class="step-number">Concern Path</span>
+            <span class="step-actor actor-auto">Auto-sent SMS</span>
+          </div>
+          <div class="step-title">Private Feedback Request (SMS)</div>
+          <div class="step-desc">
+            Text version for opted-in clients on the concern path. No review link. Just a genuine check-in.
+          </div>
+
+          <div class="mockup">
+            <div class="mockup-bar">
+              <div class="mockup-dots"><span></span><span></span><span></span></div>
+              <span class="mockup-bar-title">sms &middot; message</span>
+            </div>
+            <div class="mockup-body" style="max-width: 360px; margin: 0 auto;">
+              <div style="background: rgba(212,168,75,0.08); border: 1px solid rgba(212,168,75,0.2); border-radius: 16px 16px 4px 16px; padding: 1rem 1.2rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                Jordan, thanks for having us at the gala. Anything we could've done better? Reply here, we'd love your honest take.
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); text-align: right; margin-top: 0.4rem; font-family: var(--font-mono);">120 chars &middot; single SMS</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="callout">
+        <strong>Why a gate instead of a blast:</strong> Most businesses send every client a review request. That means the client who had a printer jam and a late setup gets the same "loved working with you!" email as the client who raved all night. The review gate uses data your team already collected (Form 6) to make an intelligent decision. Happy clients get nudged toward Google. Unhappy clients get a chance to be heard privately. Your public reviews stay strong, and your at-risk clients feel respected.
       </div>
     </section>
 

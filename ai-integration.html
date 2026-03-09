@@ -856,7 +856,7 @@ code {
 
       <div class="stats-bar">
         <div class="stat-card stat-cyan">
-          <div class="stat-value">8</div>
+          <div class="stat-value">10</div>
           <div class="stat-label">AI Touchpoints</div>
         </div>
         <div class="stat-card stat-green">
@@ -869,10 +869,10 @@ code {
         </div>
       </div>
 
-      <h3>Where AI Fits (8 Touchpoints)</h3>
-      <p>3 email touchpoints + 5 SMS touchpoints. AI writes both channels from the same client data. The email gets the full treatment, the SMS gets a punchy 1-2 sentence version.</p>
+      <h3>Where AI Fits (10 Touchpoints)</h3>
+      <p>4 email touchpoints + 6 SMS touchpoints. AI writes both channels from the same client data. The email gets the full treatment, the SMS gets a punchy 1-2 sentence version.</p>
 
-      <h4 style="margin-top: 1.5rem; color: var(--text-primary);">Email Touchpoints (3)</h4>
+      <h4 style="margin-top: 1.5rem; color: var(--text-primary);">Email Touchpoints (4)</h4>
       <div class="table-wrap">
         <table>
           <thead>
@@ -897,11 +897,17 @@ code {
               <td>Writes a celebration email that recaps what they booked and previews next steps</td>
               <td>Reduces post-booking anxiety, fewer "what happens now?" emails</td>
             </tr>
+            <tr>
+              <td><strong>Review Gate</strong></td>
+              <td>Form 6 (Post-Event Report) submitted</td>
+              <td>Reads internal satisfaction rating. Happy path (4-5): writes personalized Google Review request referencing their event. Concern path (1-3): writes private feedback check-in, no Google link.</td>
+              <td>More 5-star reviews from happy clients. Private recovery channel for concerns. Never sends a review request to someone who had a bad experience.</td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <h4 style="margin-top: 1.5rem; color: var(--text-primary);">SMS Touchpoints (5)</h4>
+      <h4 style="margin-top: 1.5rem; color: var(--text-primary);">SMS Touchpoints (6)</h4>
       <p style="margin-bottom: 1rem;">These correspond to SMS automations 2, 3, 4, 7, and 9 from the overhaul plan. Each gets a personalized text message (under 155 characters) that references the client's event. Sent via Quo.</p>
       <div class="table-wrap">
         <table>
@@ -938,6 +944,12 @@ code {
               <td>1 day before event</td>
               <td>Builds excitement referencing their specific setup and guest count</td>
               <td>Pre-event engagement. They feel taken care of.</td>
+            </tr>
+            <tr>
+              <td><strong>SMS: Review Gate</strong></td>
+              <td>Post-Event Report submitted</td>
+              <td>Happy path: quick Google Review nudge. Concern path: private feedback check-in. Matches email path.</td>
+              <td>Dual-channel post-event. Reinforces the email touchpoint.</td>
             </tr>
           </tbody>
         </table>
@@ -1371,6 +1383,34 @@ SMS guidelines:
       <div class="info-card" style="border-color: rgba(165,140,255,0.2);">
         <p style="color: var(--accent-purple); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; font-weight: 600;">SMS 7: Booking Celebration (131 chars)</p>
         <p style="line-height: 1.8;">It's official Jordan! Your gala booth is locked in for April 15th. Premium Experience + 360 booth. Your guests will love it.</p>
+      </div>
+
+      <h3>Touchpoint 4: Review Gate</h3>
+      <p>Triggered by Form 6 (Post-Event Report) internal data. AI reads the satisfaction rating and routes to one of two paths. Happy clients (rating 4-5) get a personalized Google Review request referencing their specific event. Concerned clients (rating 1-3) get a private feedback check-in with no Google link. You never accidentally ask an unhappy client to leave a public review.</p>
+
+      <h4 style="color: var(--accent-green);">Happy Path (Rating 4-5): Google Review Request</h4>
+      <div class="info-card">
+        <p style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Input: Post-Event Report rating 4-5, Corporate gala, 250 guests, TechCo Gala, Jordan Mitchell</p>
+        <p style="line-height: 1.8;"><strong>Subject:</strong> Quick Favor, Jordan?</p>
+        <p style="line-height: 1.8;">Jordan, we had a blast at the TechCo Gala. Your team was incredible and that 360 booth line didn't stop all night.</p>
+        <p style="line-height: 1.8;">If you feel the same way, a quick Google review would mean a lot:</p>
+        <p style="line-height: 1.8;"><span style="color: var(--accent-cyan);">[Google Review Link]</span></p>
+      </div>
+      <div class="info-card" style="border-color: rgba(165,140,255,0.2); margin-top: -0.5rem;">
+        <p style="color: var(--accent-purple); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; font-weight: 600;">SMS: Review Gate / Happy Path (91 chars)</p>
+        <p style="line-height: 1.8;">Jordan, loved working your gala! If we delivered, a quick Google review means a lot: <span style="color: var(--accent-cyan);">[link]</span></p>
+      </div>
+
+      <h4 style="color: var(--accent-coral);">Concern Path (Rating 1-3): Private Feedback Check-in</h4>
+      <div class="info-card">
+        <p style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Input: Post-Event Report rating 1-3, Corporate gala, 250 guests, TechCo Gala, Jordan Mitchell</p>
+        <p style="line-height: 1.8;"><strong>Subject:</strong> Thanks for Trusting Us, Jordan</p>
+        <p style="line-height: 1.8;">Jordan, thanks again for trusting us with the TechCo Gala. We always want to get better.</p>
+        <p style="line-height: 1.8;">Was there anything we could've done differently? Hit reply and let us know.</p>
+      </div>
+      <div class="info-card" style="border-color: rgba(165,140,255,0.2); margin-top: -0.5rem;">
+        <p style="color: var(--accent-purple); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; font-weight: 600;">SMS: Review Gate / Concern Path (89 chars)</p>
+        <p style="line-height: 1.8;">Jordan, thanks for trusting us with the gala. Anything we could've done better? Reply here.</p>
       </div>
     </section>
 

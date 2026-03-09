@@ -443,6 +443,7 @@ body {
       <a href="#form-4"><span class="nav-number">04</span> Design & Branding</a>
       <a href="#form-5"><span class="nav-number">05</span> Pre-Event Report</a>
       <a href="#form-6"><span class="nav-number">06</span> Post-Event Report</a>
+      <a href="#review-gate"><span class="nav-number">07</span> Review Gate</a>
       <div style="height:1px;background:var(--border);margin:0.8rem 1.5rem;"></div>
       <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Operations Overhaul &rarr;</a>
       <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map &rarr;</a>
@@ -514,6 +515,11 @@ body {
         <div class="flow-num-small">Form 6</div>
         <div class="flow-label">Post-Event</div>
         <div class="flow-sub">1 day after</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num-small">Step 7</div>
+        <div class="flow-label">Review Gate</div>
+        <div class="flow-sub">Auto-routed</div>
       </div>
     </div>
 
@@ -1284,6 +1290,54 @@ body {
             <li>Reports - Post-Event Report [Experience Manager] (139 responses)</li>
             <li>Reports - Post-Event Report [Smile Squad] (65 responses)</li>
           </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== REVIEW GATE ==================== -->
+    <div class="form-card" id="review-gate">
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-num">Step 07</div>
+          <div class="form-name">Review Gate</div>
+          <div class="form-purpose">Not a form. An automation that reads Form 6 responses and routes the appropriate follow-up to the client. No staff action required after Form 6 is submitted.</div>
+        </div>
+        <div class="form-meta">
+          <span class="meta-tag tag-auto">Automation</span>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="trigger-row">
+          <div class="trigger-item">
+            <div class="trigger-label">Trigger</div>
+            <div class="trigger-value">Form 6 (Post-Event Report) submission</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Reads</div>
+            <div class="trigger-value">Overall Event Rating + Client Satisfaction Notes</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Output</div>
+            <div class="trigger-value">One of two email paths (client-facing, AI-personalized)</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Routing Logic</div>
+          <div class="field-row">
+            <div class="field-name">Rating 4-5 + positive satisfaction</div>
+            <div class="field-type">Path A</div>
+            <div class="field-detail">Auto-trigger Google Review request email (AI-personalized with event details and highlights)</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Rating 1-3 or flagged issues</div>
+            <div class="field-type">Path B</div>
+            <div class="field-detail">Auto-trigger private feedback check-in email (no Google Review link included)</div>
+          </div>
+        </div>
+
+        <div class="note">
+          <strong>Why this matters:</strong> The review gate turns your internal debrief into a client touchpoint without adding another form or manual step. Staff fills out Form 6 like they already do. The system reads the data and sends the right email. Happy clients get a frictionless path to leave a Google Review. Rough events get a private, thoughtful check-in instead. No one on your team has to decide which email to send. The data decides.
         </div>
       </div>
     </div>
