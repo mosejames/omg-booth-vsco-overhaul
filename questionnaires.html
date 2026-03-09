@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — Questionnaire Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #131316;
+  --bg-card: #1a1a1f;
+  --bg-card-hover: #22222a;
+  --border: #2a2a33;
+  --border-light: #3a3a44;
+  --text-primary: #f0ece4;
+  --text-secondary: #a09a8e;
+  --text-muted: #6b655a;
+  --accent-warm: #e8a849;
+  --accent-coral: #e06c5d;
+  --accent-green: #5bb67a;
+  --accent-red: #d45b5b;
+  --accent-blue: #5b8fd4;
+  --accent-purple: #a58cff;
+  --accent-cyan: #4ecdc4;
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+}
+.sidebar-logo h2 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
+.sidebar-logo h2 span { color: var(--accent-warm); }
+.sidebar-logo p { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+.sidebar nav { padding: 0.5rem 0; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.55rem 1.5rem; font-size: 0.82rem; color: var(--text-secondary);
+  text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent;
+}
+.sidebar nav a:hover { color: var(--text-primary); background: rgba(255,255,255,0.02); }
+.sidebar nav a.active { color: var(--accent-warm); border-left-color: var(--accent-warm); background: rgba(232,168,73,0.04); }
+.sidebar nav .nav-number {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);
+  min-width: 20px;
+}
+
+.mobile-nav-toggle {
+  display: none;
+  position: fixed; top: 1rem; left: 1rem; z-index: 200;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-warm); border: none; cursor: pointer;
+}
+.mobile-nav-toggle svg { fill: var(--bg-primary); }
+
+.main { flex: 1; padding: 3rem 4rem 6rem; max-width: 960px; }
+
+/* HEADER */
+.page-header { margin-bottom: 3rem; }
+.page-header .eyebrow {
+  font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--accent-warm);
+  background: rgba(232,168,73,0.08); display: inline-block;
+  padding: 0.3rem 0.8rem; border-radius: 4px; margin-bottom: 1rem;
+}
+.page-header h1 {
+  font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em;
+  line-height: 1.2; margin-bottom: 0.6rem;
+}
+.page-header h1 span { color: var(--accent-warm); }
+.page-header .subtitle {
+  font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7;
+  max-width: 680px;
+}
+
+/* OVERVIEW BAR */
+.overview-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+.overview-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+  text-align: center;
+}
+.overview-stat .stat-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+}
+.overview-stat .stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+.stat-green .stat-value { color: var(--accent-green); }
+.stat-warm .stat-value { color: var(--accent-warm); }
+.stat-coral .stat-value { color: var(--accent-coral); }
+
+/* FORM CARDS */
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.form-card:hover { border-color: var(--border-light); }
+
+.form-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.form-header-left { flex: 1; }
+.form-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-warm);
+  margin-bottom: 0.3rem;
+}
+.form-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.form-purpose {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+  line-height: 1.5;
+}
+
+.form-meta {
+  display: flex;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.meta-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.7rem;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.tag-public { background: rgba(91,182,122,0.12); color: var(--accent-green); }
+.tag-private { background: rgba(91,143,212,0.12); color: var(--accent-blue); }
+.tag-embedded { background: rgba(165,140,255,0.12); color: var(--accent-purple); }
+.tag-internal { background: rgba(224,108,93,0.12); color: var(--accent-coral); }
+.tag-auto { background: rgba(78,205,196,0.12); color: var(--accent-cyan); }
+
+.form-body { padding: 1.5rem 2rem; }
+
+/* TRIGGER ROW */
+.trigger-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.trigger-item { }
+.trigger-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.15rem;
+}
+.trigger-value {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* FIELD SECTIONS */
+.field-section {
+  margin-bottom: 1.5rem;
+}
+.field-section:last-child { margin-bottom: 0; }
+.section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-warm);
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(232,168,73,0.15);
+}
+
+/* FIELD ROWS */
+.field-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.5rem 0;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(42,42,51,0.4);
+}
+.field-row:last-child { border-bottom: none; }
+
+.field-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+.field-name .required {
+  color: var(--accent-coral);
+  font-size: 0.7rem;
+  margin-left: 0.3rem;
+}
+
+.field-type {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.03);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.field-detail {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex: 1;
+}
+.field-detail code {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: rgba(232,168,73,0.08);
+  color: var(--accent-warm);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+.field-detail .ai-tag {
+  font-size: 0.68rem;
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+.field-detail .options {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+/* REPLACES SECTION */
+.replaces-section {
+  margin-top: 1.2rem;
+  padding: 1rem 1.4rem;
+  background: rgba(224,108,93,0.04);
+  border-left: 3px solid var(--accent-coral);
+  border-radius: 0 8px 8px 0;
+}
+.replaces-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-coral);
+  margin-bottom: 0.5rem;
+}
+.replaces-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.replaces-list li {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.03);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(42,42,51,0.6);
+}
+
+/* NOTE */
+.note {
+  background: rgba(232,168,73,0.04);
+  border-left: 3px solid var(--accent-warm);
+  padding: 1rem 1.4rem;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 1.2rem;
+}
+.note strong { color: var(--accent-warm); }
+
+.note-green {
+  background: rgba(91,182,122,0.04);
+  border-left-color: var(--accent-green);
+}
+.note-green strong { color: var(--accent-green); }
+
+/* FLOW DIAGRAM */
+.flow-strip {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2.5rem;
+  overflow-x: auto;
+}
+.flow-step {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  position: relative;
+}
+.flow-step::after {
+  content: '\2192';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.flow-step:last-child::after { display: none; }
+.flow-num-small {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent-warm);
+  margin-bottom: 0.2rem;
+}
+.flow-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.flow-sub {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* BACK LINK */
+.back-link {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: all 0.2s;
+}
+.back-link:hover { color: var(--accent-warm); border-color: var(--accent-warm); }
+
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 149;
+}
+
+@media (max-width: 900px) {
+  .overview-bar { grid-template-columns: 1fr 1fr 1fr; }
+  .main { padding: 2rem 2rem 5rem; }
+  .field-row { flex-direction: column; gap: 0.3rem; }
+  .field-name { min-width: unset; }
+}
+@media (max-width: 768px) {
+  .sidebar, .mobile-nav-toggle { display: none !important; }
+  .main { padding: 2rem 1.2rem 5rem; max-width: 100%; }
+  .overview-bar { grid-template-columns: 1fr; }
+  .form-header { flex-direction: column; }
+  .form-meta { justify-content: flex-start; }
+  .trigger-row { flex-direction: column; gap: 0.8rem; }
+}
+@media (max-width: 768px) {
+  .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  .sidebar { width: 220px; min-width: 220px; }
+  .sidebar nav a { font-size: 0.78rem; padding: 0.5rem 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>OMG <span>Booth</span></h2>
+      <p>Questionnaire Reference</p>
+    </div>
+    <nav>
+      <a href="#form-1"><span class="nav-number">01</span> New Lead Intake</a>
+      <a href="#form-2"><span class="nav-number">02</span> Event Details</a>
+      <a href="#form-3"><span class="nav-number">03</span> Event Logistics</a>
+      <a href="#form-4"><span class="nav-number">04</span> Design & Branding</a>
+      <a href="#form-5"><span class="nav-number">05</span> Pre-Event Report</a>
+      <a href="#form-6"><span class="nav-number">06</span> Post-Event Report</a>
+      <div style="height:1px;background:var(--border);margin:0.8rem 1.5rem;"></div>
+      <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Operations Overhaul &rarr;</a>
+      <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map &rarr;</a>
+      <a href="ai-integration.html" style="color: var(--accent-warm);">AI Integration Plan &rarr;</a>
+      <a href="implementation-steps.html" style="color: var(--accent-green);">Implementation Playbook &rarr;</a>
+      <a href="products-services.html" style="color: var(--accent-warm);">Products & Packages &rarr;</a>
+      <a href="style-preview.html" style="color: var(--accent-warm);">Style Preview &rarr;</a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div class="eyebrow">Form Reference</div>
+      <h1>The 6 <span>Questionnaires</span></h1>
+      <p class="subtitle">26 old forms consolidated into 6. Each one listed here with every field, field type, options, tokens, and when it fires. This is what you're building in VSCO Workspace.</p>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="overview-bar">
+      <div class="overview-stat stat-coral">
+        <div class="stat-value">26</div>
+        <div class="stat-label">Old Forms</div>
+      </div>
+      <div class="overview-stat stat-green">
+        <div class="stat-value">6</div>
+        <div class="stat-label">New Forms</div>
+      </div>
+      <div class="overview-stat stat-warm">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Client-Facing</div>
+      </div>
+    </div>
+
+    <!-- FLOW -->
+    <div class="flow-strip">
+      <div class="flow-step">
+        <div class="flow-num-small">Form 1</div>
+        <div class="flow-label">Lead Intake</div>
+        <div class="flow-sub">Website / link</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num-small">Form 2</div>
+        <div class="flow-label">Event Details</div>
+        <div class="flow-sub">Auto after qualify</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num-small">Form 3</div>
+        <div class="flow-label">Logistics</div>
+        <div class="flow-sub">Inside quote link</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num-small">Form 4</div>
+        <div class="flow-label">Design Brief</div>
+        <div class="flow-sub">3 weeks before</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num-small">Form 5</div>
+        <div class="flow-label">Pre-Event</div>
+        <div class="flow-sub">2 days before</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num-small">Form 6</div>
+        <div class="flow-label">Post-Event</div>
+        <div class="flow-sub">1 day after</div>
+      </div>
+    </div>
+
+    <!-- ==================== FORM 1 ==================== -->
+    <div class="form-card" id="form-1">
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-num">Form 01</div>
+          <div class="form-name">New Lead Intake</div>
+          <div class="form-purpose">First touchpoint. Qualifies leads and auto-creates them in VSCO Workspace. Embedded on your website or shared as a direct link.</div>
+        </div>
+        <div class="form-meta">
+          <span class="meta-tag tag-public">Public</span>
+          <span class="meta-tag tag-auto">Auto-Create Lead</span>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="trigger-row">
+          <div class="trigger-item">
+            <div class="trigger-label">When</div>
+            <div class="trigger-value">Embedded on website / shared link</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Redirect</div>
+            <div class="trigger-value">Thank you page on OMG Booth website</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Automation</div>
+            <div class="trigger-value">None needed (public form)</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Contact Information</div>
+          <div class="field-row">
+            <div class="field-name">Contact Name <span class="required">*</span></div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Email <span class="required">*</span></div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Phone <span class="required">*</span></div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Organization / Company</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Event Basics</div>
+          <div class="field-row">
+            <div class="field-name">Event Type</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Corporate, Social, School/University, Wedding, Nonprofit, Expo/Trade Show, Multi-City Tour, School/Education, Virtual Experience, Other</span><br>Linked to <code>{{job.type}}</code></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Event Date</div>
+            <div class="field-type">Date</div>
+            <div class="field-detail">Approximate is fine at this stage</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Estimated Guest Count</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Under 50, 50-150, 150-300, 300-500, 500+</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Budget Range</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">$1,200-$2,500, $2,500-$4,000, $4,000-$7,000, $7,000-$15,000, $15,000+, Not sure yet</span></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Discovery + AI Fields</div>
+          <div class="field-row">
+            <div class="field-name">How Did You Hear About Us?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Referral, Saw Us at an Event, Instagram, Google, Event Planner, Other</span> (with "Other" text field)<br><span class="ai-tag">AI uses this for personalized openers</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">What should guests walk away remembering?</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"><span class="ai-tag">AI uses this as the emotional hook for personalized emails</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Preferred Contact Method</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Email, Text, Both</span><br>Linked to <code>{{job.custom.contact-preference}}</code><br>Controls which channels fire: SMS automations check this before sending</div>
+          </div>
+        </div>
+
+        <div class="replaces-section">
+          <div class="replaces-title">Replaces these old forms</div>
+          <ul class="replaces-list">
+            <li>Contact Form Inquiry Step 2 - Additional Info</li>
+            <li>New Lead In-take</li>
+            <li>Photo Booth Intake Questionnaire</li>
+            <li>Step 2 of 2 - Event details (partially)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FORM 2 ==================== -->
+    <div class="form-card" id="form-2">
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-num">Form 02</div>
+          <div class="form-name">Event Details</div>
+          <div class="form-purpose">Collects the specifics needed to build the upsell quote. Their answers tell you which package to recommend, which upgrades to highlight, and what to pre-fill. Replaces all 11 "Event Customizations" variants.</div>
+        </div>
+        <div class="form-meta">
+          <span class="meta-tag tag-private">Private</span>
+          <span class="meta-tag tag-auto">Auto-Send</span>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="trigger-row">
+          <div class="trigger-item">
+            <div class="trigger-label">Trigger</div>
+            <div class="trigger-value">Lead status changes to "Qualified"</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Lock</div>
+            <div class="trigger-value">Until job is booked</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Alt Send</div>
+            <div class="trigger-value">Manual after initial conversation</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Event Overview</div>
+          <div class="field-row">
+            <div class="field-name">Event Date</div>
+            <div class="field-type">Date</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Start Time</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">End Time</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Venue Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Venue Address</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Indoor / Outdoor</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Indoor, Outdoor, Both</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Expected Guest Count</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Branding & Content Goals</div>
+          <div class="field-row">
+            <div class="field-name">Primary Purpose of Booth</div>
+            <div class="field-type">Checkboxes</div>
+            <div class="field-detail"><span class="options">Brand Awareness, Entertainment, Lead Capture, Social Content, Other</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Branding Level</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Fully Custom, Light Branding, No Branding</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Content Types Desired</div>
+            <div class="field-type">Checkboxes</div>
+            <div class="field-detail"><span class="options">Photos, GIFs, Boomerangs, Video, Slo-Mo</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Need Lead/Data Capture?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Yes, No, Not Sure</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Social Sharing Requirements</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">Hashtag, handles, microsite URL</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Print & Digital Preferences</div>
+          <div class="field-row">
+            <div class="field-name">Digital Delivery Method</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Text, Email, Both</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Need On-Site Prints?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Yes, No</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Print Size Preference</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail">Sizes vary by setup</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Need Post-Event Gallery?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Yes, No, Not Sure</span></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Your Vision (AI-Powered Fields)</div>
+          <div class="field-row">
+            <div class="field-name">Who are your guests?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Employees, Clients/Customers, Friends & Family, VIPs/Executives, General Public, Mixed</span><br><span class="ai-tag">AI adjusts tone: "your team" vs "your VIP clients" vs "your friends"</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">What matters most? (pick 2)</div>
+            <div class="field-type">Multi-select</div>
+            <div class="field-detail"><span class="options">Guest Experience, Social Media Content, Custom Branding, Print Keepsakes, Data & Analytics, Wow Factor</span><br><span class="ai-tag">AI leads proposals with the client's top priorities</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">What's the vibe?</div>
+            <div class="field-type">Dropdown + Text</div>
+            <div class="field-detail"><span class="options">Elegant/Formal, Fun/Playful, Modern/Minimalist, Bold/Energetic, Glamorous, Casual/Relaxed</span><br>Plus open text: "Anything else about the feel?"<br><span class="ai-tag">AI matches tone to their style</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Any inspiration?</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail">"Seen a photo booth setup you loved? Describe it or drop a link."</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Special Requests</div>
+          <div class="field-row">
+            <div class="field-name">Props</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Bring Your Own, OMG Provides, None</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Backdrop or Step-and-Repeat?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Yes, No</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Theme or Creative Direction</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Additional Notes</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="note">
+          <strong>Feeds the upsell quote:</strong> Once submitted, you have everything to build the quote. 360 interest? Include the upgrade. Wants prints? Add Print Station. Needs lead capture? Add that module. Their answers = your product selection.
+        </div>
+
+        <div class="replaces-section" style="margin-top:1.2rem;">
+          <div class="replaces-title">Replaces these 11 old forms</div>
+          <ul class="replaces-list">
+            <li>Event Customizations - 360&deg;</li>
+            <li>Event Customizations - Design + Props</li>
+            <li>Event Customizations - Design + Props + Social</li>
+            <li>Event Customizations - Design + Props + Social + Microsite</li>
+            <li>Event Customizations - Design + Social</li>
+            <li>Event Customizations - Design + Social + Microsite</li>
+            <li>Event Customizations - Desing + Social (Bragbox)</li>
+            <li>Event Customizations - First Day of School</li>
+            <li>Event Customizations - Props Only</li>
+            <li>Event Customizations - Virtual Booth</li>
+            <li>Event Customizations - Virtual Booth Info</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FORM 3 ==================== -->
+    <div class="form-card" id="form-3">
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-num">Form 03</div>
+          <div class="form-name">Event Logistics</div>
+          <div class="form-purpose">Day-of operational details. Embedded inside the upsell quote flow. Client fills it out between selecting products and signing the contract. No separate email needed.</div>
+        </div>
+        <div class="form-meta">
+          <span class="meta-tag tag-embedded">Embedded in Quote</span>
+          <span class="meta-tag tag-private">Private</span>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="trigger-row">
+          <div class="trigger-item">
+            <div class="trigger-label">When</div>
+            <div class="trigger-value">Embedded in quote template (no automation)</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Lock</div>
+            <div class="trigger-value">5 days before event date</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Client Sees</div>
+            <div class="trigger-value">Products &rarr; This form &rarr; Contract &rarr; Payment</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Venue & Access</div>
+          <div class="field-row">
+            <div class="field-name">Venue Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">Pre-fill via <code>{{job.custom.venue-name}}</code></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Venue Address</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail">Pre-fill via <code>{{job.custom.venue-address}}</code></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Load-In Time</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Load-In Entrance / Instructions</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Elevator or Stairs?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Elevator, Stairs, Ground Level, Both</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Parking Instructions</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Other Vendors Loading In?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Yes, No, Not Sure</span></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Setup Requirements</div>
+          <div class="field-row">
+            <div class="field-name">Setup Location Description</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Power Outlet Access</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Within 10ft, Need Extension, Generator Needed</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">WiFi Network Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">WiFi Password</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Table Provided?</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Venue Provides, OMG Brings</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Ceiling Height / Space Restrictions</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Day-of Contacts</div>
+          <div class="field-row">
+            <div class="field-name">On-Site Contact Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">On-Site Contact Phone</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">On-Site Contact Email</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Secondary Contact</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Timeline</div>
+          <div class="field-row">
+            <div class="field-name">Event Start Time</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Event End Time</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Booth Open Time</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Booth Close Time</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Scheduled Activations?</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail">Any announcements, ceremonies, or pauses to plan around</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Virtual Booth Clients Only</div>
+          <div class="field-row">
+            <div class="field-name">Virtual Booth URL Preferences</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Delivery Method</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Custom Landing Page Needs</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Start Date for Virtual Access</div>
+            <div class="field-type">Date</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">End Date for Virtual Access</div>
+            <div class="field-type">Date</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="replaces-section">
+          <div class="replaces-title">Replaces these 7 old forms</div>
+          <ul class="replaces-list">
+            <li>Event Logistics (402 responses)</li>
+            <li>Logistics - Corporate Event</li>
+            <li>Logistics - Holiday Event</li>
+            <li>Logistics - Social Event</li>
+            <li>Logistics - Wedding</li>
+            <li>New Lead Logistics - Virtual Booth</li>
+            <li>Virtual Booth Event Logistics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FORM 4 ==================== -->
+    <div class="form-card" id="form-4">
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-num">Form 04</div>
+          <div class="form-name">Design & Branding Brief</div>
+          <div class="form-purpose">Collects all creative assets and design preferences. Sent automatically 2-3 weeks before the event date so you have time to build overlays and get approval.</div>
+        </div>
+        <div class="form-meta">
+          <span class="meta-tag tag-private">Private</span>
+          <span class="meta-tag tag-auto">Auto-Send</span>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="trigger-row">
+          <div class="trigger-item">
+            <div class="trigger-label">Trigger</div>
+            <div class="trigger-value">2-3 weeks before event date (date-relative)</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Lock</div>
+            <div class="trigger-value">7 days before event</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Brand Assets</div>
+          <div class="field-row">
+            <div class="field-name">Brand Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">As it should appear on the overlay</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Primary Logo</div>
+            <div class="field-type">File Upload</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Secondary Logo</div>
+            <div class="field-type">File Upload</div>
+            <div class="field-detail">If applicable</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Brand Colors</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">Hex codes or description</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Fonts</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">If specified</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Design Preferences</div>
+          <div class="field-row">
+            <div class="field-name">Overlay / Frame Style</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Classic, Modern, Minimal, Bold, Custom</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Tagline or Text on Overlay</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Social Handles to Display</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Hashtag to Display</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Design Inspiration / References</div>
+            <div class="field-type">File Upload</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Approval</div>
+          <div class="field-row">
+            <div class="field-name">Approval Contact Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Approval Contact Email</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Additional Design Notes</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="replaces-section">
+          <div class="replaces-title">Replaces</div>
+          <ul class="replaces-list">
+            <li>Design Assets Review</li>
+            <li>Branding portions from Event Customizations forms</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FORM 5 ==================== -->
+    <div class="form-card" id="form-5">
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-num">Form 05</div>
+          <div class="form-name">Pre-Event Report</div>
+          <div class="form-purpose">Internal form. Experience Manager or staff fills this out before the event to confirm readiness. Already battle-tested with 101 responses. Keep and review field names.</div>
+        </div>
+        <div class="form-meta">
+          <span class="meta-tag tag-internal">Internal</span>
+          <span class="meta-tag tag-auto">Auto-Send</span>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="trigger-row">
+          <div class="trigger-item">
+            <div class="trigger-label">Trigger</div>
+            <div class="trigger-value">2 days before event date (date-relative)</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Filled By</div>
+            <div class="trigger-value">Experience Manager / Staff</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Visibility</div>
+            <div class="trigger-value">Private fields</div>
+          </div>
+        </div>
+
+        <div class="note-green note">
+          <strong>No rebuild needed.</strong> This form has 101 responses and is working well. Review existing field names for clarity, ensure visibility is set to Private for internal-only fields, and update any outdated labels. Don't reinvent what already works.
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FORM 6 ==================== -->
+    <div class="form-card" id="form-6">
+      <div class="form-header">
+        <div class="form-header-left">
+          <div class="form-num">Form 06</div>
+          <div class="form-name">Post-Event Report</div>
+          <div class="form-purpose">Internal form. Merges the Experience Manager report (139 responses) and Smile Squad report (65 responses) into one unified form with a role selector. Sent 1 day after the event.</div>
+        </div>
+        <div class="form-meta">
+          <span class="meta-tag tag-internal">Internal</span>
+          <span class="meta-tag tag-auto">Auto-Send</span>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="trigger-row">
+          <div class="trigger-item">
+            <div class="trigger-label">Trigger</div>
+            <div class="trigger-value">1 day after event date (date-relative)</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Filled By</div>
+            <div class="trigger-value">Experience Manager or Smile Squad member</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">Visibility</div>
+            <div class="trigger-value">Private fields</div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Identification</div>
+          <div class="field-row">
+            <div class="field-name">Role</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Experience Manager, Smile Squad Member, Other</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Event Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">Pre-fill via <code>{{job.name}}</code></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Event Date</div>
+            <div class="field-type">Date</div>
+            <div class="field-detail">Pre-fill via token</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Client Name</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">Pre-fill via <code>{{primary_contact.name}}</code></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Event Assessment</div>
+          <div class="field-row">
+            <div class="field-name">Overall Event Rating</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">1, 2, 3, 4, 5</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Guest Engagement Level</div>
+            <div class="field-type">Dropdown</div>
+            <div class="field-detail"><span class="options">Low, Medium, High</span></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Equipment Issues</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Client Satisfaction Notes</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Content & Delivery</div>
+          <div class="field-row">
+            <div class="field-name">Content Delivery Confirmation</div>
+            <div class="field-type">Checkbox</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Photos / GIFs / Videos Captured</div>
+            <div class="field-type">Text</div>
+            <div class="field-detail">Count or range</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Notable Moments or Highlights</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="field-section">
+          <div class="section-title">Follow-Up</div>
+          <div class="field-row">
+            <div class="field-name">Issues or Concerns to Flag</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Recommendations for Future Events</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail">With this client specifically</div>
+          </div>
+          <div class="field-row">
+            <div class="field-name">Additional Notes</div>
+            <div class="field-type">Textarea</div>
+            <div class="field-detail"></div>
+          </div>
+        </div>
+
+        <div class="replaces-section">
+          <div class="replaces-title">Replaces</div>
+          <ul class="replaces-list">
+            <li>Reports - Post-Event Report [Experience Manager] (139 responses)</li>
+            <li>Reports - Post-Event Report [Smile Squad] (65 responses)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<a href="omg-booth-vsco-overhaul.html" class="back-link">&larr; Back to Operations Overhaul</a>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggle = document.getElementById('mobileNavToggle');
+if (toggle) {
+  toggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none'; });
+}
+if (overlay) {
+  overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; });
+}
+const sections = document.querySelectorAll('.form-card[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
