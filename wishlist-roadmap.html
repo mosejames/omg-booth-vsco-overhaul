@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMG Booth — Wishlist Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #131316;
+  --bg-card: #1a1a1f;
+  --bg-card-hover: #22222a;
+  --border: #2a2a33;
+  --border-light: #3a3a44;
+  --text-primary: #f0ece4;
+  --text-secondary: #a09a8e;
+  --text-muted: #6b655a;
+  --accent-warm: #e8a849;
+  --accent-coral: #e06c5d;
+  --accent-green: #5bb67a;
+  --accent-red: #d45b5b;
+  --accent-blue: #5b8fd4;
+  --accent-purple: #a58cff;
+  --accent-cyan: #4ecdc4;
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px; min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sidebar-logo { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.5rem; }
+.sidebar-logo h2 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
+.sidebar-logo h2 span { color: var(--accent-warm); }
+.sidebar-logo p { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+.sidebar nav { padding: 0.5rem 0; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.55rem 1.5rem; font-size: 0.82rem; color: var(--text-secondary);
+  text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent;
+}
+.sidebar nav a:hover { color: var(--text-primary); background: rgba(255,255,255,0.02); }
+.sidebar nav a.active { color: var(--accent-warm); border-left-color: var(--accent-warm); background: rgba(232,168,73,0.04); }
+.sidebar nav .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.mobile-nav-toggle {
+  display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-warm); border: none; cursor: pointer;
+}
+.mobile-nav-toggle svg { fill: var(--bg-primary); }
+
+.main { flex: 1; padding: 3rem 4rem 6rem; max-width: 960px; }
+
+.page-header { margin-bottom: 2.5rem; }
+.page-header .eyebrow {
+  font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--accent-warm);
+  background: rgba(232,168,73,0.08); display: inline-block;
+  padding: 0.3rem 0.8rem; border-radius: 4px; margin-bottom: 1rem;
+}
+.page-header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 0.6rem; }
+.page-header h1 span { color: var(--accent-warm); }
+.page-header .subtitle { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; max-width: 680px; }
+
+/* CATEGORY SECTIONS */
+.category-section { margin-bottom: 3.5rem; }
+.category-header {
+  display: flex; align-items: center; gap: 1rem;
+  padding-bottom: 0.8rem; margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+}
+.category-badge {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.3rem 0.8rem; border-radius: 5px; white-space: nowrap;
+}
+.cb-revenue { background: var(--accent-warm); color: #0a0a0b; }
+.cb-client { background: var(--accent-purple); color: white; }
+.cb-ops { background: var(--accent-cyan); color: #0a0a0b; }
+.cb-growth { background: var(--accent-green); color: #0a0a0b; }
+.category-header h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+.category-header .cat-count {
+  margin-left: auto; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);
+}
+
+/* IDEA CARDS */
+.idea-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+  border-left: 3px solid var(--border);
+}
+.idea-card:hover { border-color: var(--border-light); background: var(--bg-card-hover); }
+.idea-card.tier-1 { border-left-color: var(--accent-warm); }
+.idea-card.tier-2 { border-left-color: var(--accent-blue); }
+.idea-card.tier-3 { border-left-color: var(--accent-purple); }
+
+.idea-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.6rem; }
+.idea-number {
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);
+  background: rgba(255,255,255,0.03); padding: 0.15rem 0.5rem; border-radius: 3px;
+  white-space: nowrap;
+}
+.idea-title { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; flex: 1; }
+.idea-badges { display: flex; gap: 0.4rem; flex-shrink: 0; }
+.idea-badge {
+  font-family: var(--font-mono); font-size: 0.6rem; font-weight: 600;
+  padding: 0.15rem 0.5rem; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.badge-build { background: rgba(91,143,212,0.12); color: var(--accent-blue); }
+.badge-integrate { background: rgba(165,140,255,0.12); color: var(--accent-purple); }
+.badge-ai { background: rgba(232,168,73,0.12); color: var(--accent-warm); }
+.badge-gsd { background: rgba(91,182,122,0.12); color: var(--accent-green); }
+
+.idea-problem {
+  font-size: 0.82rem; color: var(--accent-coral); font-weight: 600; margin-bottom: 0.4rem;
+}
+.idea-desc {
+  font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 0.6rem;
+}
+.idea-edge {
+  font-size: 0.75rem; color: var(--accent-cyan); font-style: italic;
+  padding-top: 0.4rem; border-top: 1px solid rgba(42,42,51,0.5);
+}
+
+/* INTRO NOTE */
+.intro-note {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+}
+.intro-note p {
+  font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+.intro-note p:last-child { margin-bottom: 0; }
+.intro-note strong { color: var(--text-primary); }
+
+/* LEGEND */
+.legend {
+  display: flex; flex-wrap: wrap; gap: 0.8rem;
+  margin-bottom: 2.5rem;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.72rem; color: var(--text-muted);
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+.ld-build { background: var(--accent-blue); }
+.ld-integrate { background: var(--accent-purple); }
+.ld-ai { background: var(--accent-warm); }
+.ld-gsd { background: var(--accent-green); }
+
+/* BACK LINK */
+.back-link {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.5rem 1rem; color: var(--text-secondary); text-decoration: none;
+  font-size: 0.78rem; font-weight: 500; z-index: 100; transition: all 0.2s;
+}
+.back-link:hover { color: var(--accent-warm); border-color: var(--accent-warm); }
+
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 149; }
+
+@media (max-width: 768px) {
+  .sidebar { display: none !important; }
+  .main { padding: 2rem 1.2rem 5rem; max-width: 100%; }
+  .idea-top { flex-direction: column; gap: 0.4rem; }
+  .idea-badges { flex-wrap: wrap; }
+  .legend { gap: 0.5rem; }
+}
+@media (max-width: 768px) {
+  .mobile-nav-toggle { display: flex; align-items: center; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>OMG <span>Booth</span></h2>
+      <p>Wishlist Roadmap</p>
+    </div>
+    <nav>
+      <a href="#revenue"><span class="nav-dot" style="background:var(--accent-warm);"></span> Revenue & Sales</a>
+      <a href="#client"><span class="nav-dot" style="background:var(--accent-purple);"></span> Client Experience</a>
+      <a href="#ops"><span class="nav-dot" style="background:var(--accent-cyan);"></span> Operations</a>
+      <a href="#growth"><span class="nav-dot" style="background:var(--accent-green);"></span> Growth & Scale</a>
+      <div style="height:1px;background:var(--border);margin:0.8rem 1.5rem;"></div>
+      <a href="omg-booth-vsco-overhaul.html" style="color: var(--accent-warm);">Operations Overhaul &rarr;</a>
+      <a href="implementation-steps.html" style="color: var(--accent-green);">Implementation Playbook &rarr;</a>
+      <a href="sop-4-week.html" style="color: var(--accent-cyan);">6-Week SOP &rarr;</a>
+      <a href="products-services.html" style="color: var(--accent-warm);">Products & Packages &rarr;</a>
+      <a href="questionnaires.html" style="color: var(--accent-warm);">Questionnaire Reference &rarr;</a>
+      <a href="client-journey.html" style="color: var(--accent-warm);">Client Journey Map &rarr;</a>
+      <a href="ai-integration.html" style="color: var(--accent-warm);">AI Integration Plan &rarr;</a>
+      <a href="style-preview.html" style="color: var(--accent-warm);">Style Preview &rarr;</a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <main class="main">
+
+    <div class="page-header">
+      <div class="eyebrow">Future Builds</div>
+      <h1>Wishlist <span>Roadmap</span></h1>
+      <p class="subtitle">20 custom tools that would push OMG Booth past the competition. None of this is part of the current overhaul. This is the "what's next" list. When you're ready to build, pick one and go.</p>
+    </div>
+
+    <div class="intro-note">
+      <p><strong>How to read this page.</strong> Every idea on here solves a real problem, separates you from other booth operators, or unlocks revenue you're currently leaving on the table. They're grouped by what they do for the business.</p>
+      <p>Each card shows the problem, what the tool does, and why it gives you an edge. Tags tell you what kind of build it is. When you're ready to tackle one, this is where you start.</p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot ld-build"></div> Custom Build</div>
+      <div class="legend-item"><div class="legend-dot ld-integrate"></div> Integration</div>
+      <div class="legend-item"><div class="legend-dot ld-ai"></div> AI-Powered</div>
+      <div class="legend-item"><div class="legend-dot ld-gsd"></div> GSD Project</div>
+    </div>
+
+    <!-- ==================== REVENUE & SALES ==================== -->
+    <div class="category-section" id="revenue">
+      <div class="category-header">
+        <span class="category-badge cb-revenue">Revenue & Sales</span>
+        <h2>Make More Money</h2>
+        <span class="cat-count">5 ideas</span>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">01</span>
+          <div class="idea-title">Interactive Proposal Builder</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-gsd">GSD Project</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: VSCO quotes are functional but flat. They don't sell the experience.</div>
+        <div class="idea-desc">A visual, branded proposal tool where clients browse packages with embedded video clips of real activations, drag upgrades into their build, and watch the price update live. The proposal itself becomes part of the pitch. Mobile-first, shareable link, tracks when the client opens it and what they hover on.</div>
+        <div class="idea-edge">Edge: Nobody in the photo booth space sends proposals that feel like product pages. This turns a quote into a buying experience.</div>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">02</span>
+          <div class="idea-title">Smart Upsell Engine</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+            <span class="idea-badge badge-integrate">Integration</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Upsells happen manually (if at all). You're leaving money on booked events.</div>
+        <div class="idea-desc">After a client books, AI analyzes their event type, guest count, and budget headroom, then sends timed upsell nudges. "Events like yours see 40% more engagement with a print station." "Your guest count qualifies for our social wall upgrade." Automated, personalized, and triggered at the right moment (not at booking when they're already spent, but 2-3 weeks before the event when budgets loosen).</div>
+        <div class="idea-edge">Edge: Turns every booked event into a second sales opportunity without you lifting a finger.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">03</span>
+          <div class="idea-title">Event ROI Calculator</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-ai">AI-Powered</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Corporate clients need to justify the spend internally. You can't help them do that.</div>
+        <div class="idea-desc">Client-facing calculator where marketing teams input their event goals (impressions, leads, social engagement) and budget. Tool shows projected content volume, cost-per-impression, estimated social reach, and lead capture numbers based on your historical data. Outputs a one-page justification they can hand to their VP. Works as a sales tool on your site and as a post-event proof-of-value report.</div>
+        <div class="idea-edge">Edge: You speak the language of marketing departments. Other booth companies talk about "fun." You talk about ROI.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">04</span>
+          <div class="idea-title">Dynamic Availability Widget</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-integrate">Integration</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Prospects fill out a form and wait. No instant feedback on whether you're even available.</div>
+        <div class="idea-desc">Embeddable widget on the OMG Booth website. Prospect picks a date, sees real-time availability (pulls from VSCO calendar), browses packages visually, and flows straight into the Form 1 intake. No waiting, no back-and-forth, no "let me check my calendar" email. Optional: show peak/off-peak pricing signals to nudge date flexibility.</div>
+        <div class="idea-edge">Edge: Reduces time-to-response from hours to seconds. The fastest reply wins the lead.</div>
+      </div>
+
+      <div class="idea-card tier-3">
+        <div class="idea-top">
+          <span class="idea-number">05</span>
+          <div class="idea-title">Dynamic Pricing Engine</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+            <span class="idea-badge badge-build">Custom Build</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: You charge the same price on a random Tuesday as you do on New Year's Eve.</div>
+        <div class="idea-desc">Pricing adjusts automatically based on date (peak season, holidays, weekends vs. weekdays), lead volume (high demand = higher floor), event size, and market data. Rules-based with AI recommendations. Shows you a dashboard of pricing performance: average deal size by month, discount frequency, upsell conversion rates. Keeps the $1,200 floor sacred but optimizes everything above it.</div>
+        <div class="idea-edge">Edge: Airlines and hotels do this. Photo booth companies don't. You price like a business, not a freelancer.</div>
+      </div>
+    </div>
+
+    <!-- ==================== CLIENT EXPERIENCE ==================== -->
+    <div class="category-section" id="client">
+      <div class="category-header">
+        <span class="category-badge cb-client">Client Experience</span>
+        <h2>Make Clients Feel Premium</h2>
+        <span class="cat-count">5 ideas</span>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">06</span>
+          <div class="idea-title">Client Portal</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-gsd">GSD Project</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Clients get 6+ different email links across the journey. No single place to see their event status.</div>
+        <div class="idea-desc">Branded hub where clients log in and see everything: event status timeline, pending forms, design approvals, contract, invoice, content gallery, and direct messaging. Pulls data from VSCO via API. Replaces the "check your email" experience with a dashboard that looks like it belongs to a tech company, not a photo booth vendor. White-labelable for corporate clients who want their branding on it.</div>
+        <div class="idea-edge">Edge: This is what agencies and SaaS companies offer. No photo booth operator has a client portal. First one wins.</div>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">07</span>
+          <div class="idea-title">Post-Event Analytics Dashboard</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-integrate">Integration</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: The $350 Analytics Report add-on is a static document. It should be an experience.</div>
+        <div class="idea-desc">Interactive web dashboard per event. Content created (photos, GIFs, videos, boomerangs), shares by platform, peak activity times, QR scan counts, lead capture numbers, guest engagement curves. Live charts, downloadable PDF export, shareable link. Corporate clients forward this to their stakeholders. Auto-generated from Snappic data + VSCO event records. Delivered 24 hours post-event.</div>
+        <div class="idea-edge">Edge: Turns a line item into a deliverable that sells your next booking. Data is the new content.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">08</span>
+          <div class="idea-title">Activation Preview Tool</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+            <span class="idea-badge badge-build">Custom Build</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Clients can't visualize what their activation will look like until setup day.</div>
+        <div class="idea-desc">Client uploads their logo and picks brand colors. AI generates realistic mockups of their custom overlay, backdrop design, print layout, social wall display, and LED enclosure branding. They see the full experience before they commit. Works as a sales tool (show prospects what they're buying) and a production tool (client approves visuals before you build them). Replaces the "trust me, it'll look great" conversation.</div>
+        <div class="idea-edge">Edge: Visual proof before purchase. Nobody in the space shows clients a preview of their activation. You eliminate buyer uncertainty.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">09</span>
+          <div class="idea-title">Event Mood Board Generator</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+            <span class="idea-badge badge-build">Custom Build</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: The design brief (Form 4) collects text. Clients think in visuals, not words.</div>
+        <div class="idea-desc">Client describes their event vibe in a few sentences. AI generates a visual mood board: color palette, overlay style suggestions, backdrop options, prop recommendations, font pairings, and reference images. Client reacts to visuals instead of filling out text fields. The approved mood board feeds directly into your design workflow. Saves the back-and-forth revision cycle.</div>
+        <div class="idea-edge">Edge: You meet clients where they are (visual thinkers) instead of where your form is (text fields). Design becomes collaborative, not transactional.</div>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">10</span>
+          <div class="idea-title">Content Delivery Platform</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-gsd">GSD Project</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: You deliver content via Dropbox or Google Drive links. Generic. Forgettable.</div>
+        <div class="idea-desc">White-labeled gallery site per event. Guests scan a QR code at the booth and land on a branded micro-site with their photos, GIFs, and videos. Social sharing built in. Client gets their own branded version with full gallery, download-all, and analytics. Your branding lives on the page as the experience provider. Optional: guest contact capture for client lead generation. The gallery link stays live for 90 days, giving the event extended social shelf life.</div>
+        <div class="idea-edge">Edge: The deliverable IS the marketing. Every share from the gallery is a branded touchpoint that drives new leads back to you.</div>
+      </div>
+    </div>
+
+    <!-- ==================== OPERATIONS ==================== -->
+    <div class="category-section" id="ops">
+      <div class="category-header">
+        <span class="category-badge cb-ops">Operations</span>
+        <h2>Run Smoother</h2>
+        <span class="cat-count">5 ideas</span>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">11</span>
+          <div class="idea-title">Staff App (Smile Squad)</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-gsd">GSD Project</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Staff coordination runs through texts, emails, and paper checklists. Nothing is centralized.</div>
+        <div class="idea-desc">Mobile-first app for your team. Upcoming event assignments with venue details and client specs. Pre-event checklist (equipment loaded, arrival time confirmed, dress code). GPS check-in so you know when crew arrives. Real-time content counter pulling from Snappic. Post-event report submission (replaces Form 5/6). Equipment condition logging with photo capture. Push notifications for schedule changes.</div>
+        <div class="idea-edge">Edge: Your staff looks organized because they are. Professionalism scales when the system handles the coordination.</div>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">12</span>
+          <div class="idea-title">AI Lead Qualifier</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+            <span class="idea-badge badge-integrate">Integration</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: You manually review every lead and decide who's qualified. That's time you don't have.</div>
+        <div class="idea-desc">Scores incoming leads automatically based on event type, budget range, date availability, guest count, and your historical close-rate data. High-value leads (corporate, large guest count, premium budget) get auto-qualified and fast-tracked into the pipeline. Low-fit leads (budget below floor, date conflicts) get a polite redirect with alternative recommendations. Medium leads get flagged for your manual review. Removes the bottleneck between Form 1 submission and the "Qualified" status trigger.</div>
+        <div class="idea-edge">Edge: Your best leads get a response in minutes, not hours. Speed-to-response is the single biggest factor in closing event bookings.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">13</span>
+          <div class="idea-title">Inventory & Asset Tracker</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: No system tracks which equipment is booked where, what needs maintenance, or what's available.</div>
+        <div class="idea-desc">Every backdrop, enclosure, printer, prop set, cable kit, and specialty item tracked with status and location. Calendar view shows what's booked for which event. Maintenance flags surface before game day (printer needs new cartridge, LED panel has a dead pixel). Staff checks equipment in/out via the Staff App. Prevents double-booking gear and eliminates the night-before "where is this" scramble.</div>
+        <div class="idea-edge">Edge: Reliability is the brand promise. This makes sure the gear matches the promise every time.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">14</span>
+          <div class="idea-title">Recurring Client Dashboard</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-ai">AI-Powered</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Repeat corporate clients (Delta, Coleman) have no single view of their history with you.</div>
+        <div class="idea-desc">Dedicated dashboard for clients with 2+ bookings. Shows all past events, total spend, content library across events, engagement trends, and AI-recommended next activation based on their history. "Your last 3 events averaged 850 photos. Based on your upcoming guest count, we recommend the social wall upgrade." Makes switching to a competitor painful because you hold their event history, content archive, and performance data.</div>
+        <div class="idea-edge">Edge: Retention tool disguised as a client benefit. The more events they book, the more valuable the dashboard becomes. Lock-in through value, not contracts.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">15</span>
+          <div class="idea-title">Training & Certification Platform</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Training new staff is manual, inconsistent, and doesn't scale.</div>
+        <div class="idea-desc">Online training platform for the Smile Squad. Video modules covering equipment setup, client interaction standards, troubleshooting, brand guidelines, and emergency procedures. Quizzes after each module. Certification badge on completion. Recertification annually. Track who's trained on which equipment. New hires get trained before their first event, not during it. If you ever license your brand to operators in other cities, this is how you maintain quality.</div>
+        <div class="idea-edge">Edge: Consistent quality at any scale. Every staff member delivers the same experience whether it's their first event or their fiftieth.</div>
+      </div>
+    </div>
+
+    <!-- ==================== GROWTH & SCALE ==================== -->
+    <div class="category-section" id="growth">
+      <div class="category-header">
+        <span class="category-badge cb-growth">Growth & Scale</span>
+        <h2>Expand the Reach</h2>
+        <span class="cat-count">5 ideas</span>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">16</span>
+          <div class="idea-title">Reputation Engine</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+            <span class="idea-badge badge-integrate">Integration</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Reviews trickle in. Testimonials sit in email threads. Social proof is scattered.</div>
+        <div class="idea-desc">Goes beyond the Review Gate. Aggregates Google reviews, social mentions, testimonials from post-event surveys, and user-generated content into a live social proof feed. AI auto-generates case study drafts from post-event data (event type, content volume, client feedback). Feeds a "Results" page on your website that updates itself. Pulls the best quotes into email signatures and proposal footers automatically.</div>
+        <div class="idea-edge">Edge: Your reputation markets itself. Every event generates proof that feeds the next sale.</div>
+      </div>
+
+      <div class="idea-card tier-1">
+        <div class="idea-top">
+          <span class="idea-number">17</span>
+          <div class="idea-title">Referral & Affiliate Platform</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-gsd">GSD Project</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Planners, venues, and past clients send you referrals. You have no system to track, reward, or scale this.</div>
+        <div class="idea-desc">Every referral partner gets a branded link and a dashboard showing their referrals, conversion status, and earned commissions. Planners see which of their referrals booked. Venues see co-marketing opportunities. Past clients get a reward for every booking they generate. Auto-pay commissions via Stripe. Leaderboard for top referrers. Turns your network into a distributed sales force with zero ongoing effort from you.</div>
+        <div class="idea-edge">Edge: Incentivized word-of-mouth at scale. Your best salespeople are the people who've already experienced the product.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">18</span>
+          <div class="idea-title">AI Content Captioner</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: You deliver photos and GIFs. The client still has to write captions, pick hashtags, and schedule posts.</div>
+        <div class="idea-desc">AI analyzes event photos and generates ready-to-post social captions for every piece of content. Branded to the client with their hashtags, handles, and voice. Deliverable includes a content calendar with suggested posting schedule. Client gets a zip file of images paired with caption cards. For corporate clients, captions are written in their brand guidelines. Optional: auto-schedule to Buffer/Hootsuite via API.</div>
+        <div class="idea-edge">Edge: You don't just capture content. You deliver a social media strategy. The deliverable does the client's job for them.</div>
+      </div>
+
+      <div class="idea-card tier-2">
+        <div class="idea-top">
+          <span class="idea-number">19</span>
+          <div class="idea-title">Event Intelligence Engine</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-ai">AI-Powered</span>
+            <span class="idea-badge badge-build">Custom Build</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: You have data from hundreds of events but no way to turn it into insights or thought leadership.</div>
+        <div class="idea-desc">Aggregates patterns across all your events: peak photo hours, most popular content types by event category, average content per guest, engagement curves by time of day, most requested upgrades by event type, seasonal booking trends. Anonymized insights become blog posts, social content, and sales talking points. "Based on 200+ corporate activations, the first 45 minutes generate 60% of total content." You become the expert with receipts.</div>
+        <div class="idea-edge">Edge: Data-driven authority. When you quote a stat in a pitch, it comes from your own platform, not a blog post.</div>
+      </div>
+
+      <div class="idea-card tier-3">
+        <div class="idea-top">
+          <span class="idea-number">20</span>
+          <div class="idea-title">Multi-Location Booking Coordinator</div>
+          <div class="idea-badges">
+            <span class="idea-badge badge-build">Custom Build</span>
+            <span class="idea-badge badge-integrate">Integration</span>
+            <span class="idea-badge badge-gsd">GSD Project</span>
+          </div>
+        </div>
+        <div class="idea-problem">Problem: Corporate clients with events in multiple cities have to book separately in each market. Coordination is manual.</div>
+        <div class="idea-desc">Single interface for multi-city corporate clients to book activations across markets. You coordinate with trusted partners (Boogie Booth in New Orleans, others in their cities) through a shared backend. Client sees one proposal, one invoice, one point of contact. You take the margin on coordination. Partners get bookings they wouldn't have found alone. The platform handles scheduling, specs, and quality standards across all locations. This is how you go from local operator to national network without owning equipment in every city.</div>
+        <div class="idea-edge">Edge: You become the booking platform, not just the booth. Scale without capital. Every partner city is revenue you didn't have to build infrastructure for.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<a href="omg-booth-vsco-overhaul.html" class="back-link">&larr; Back to Operations Overhaul</a>
+
+<script>
+// Sidebar
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggle = document.getElementById('mobileNavToggle');
+if (toggle) toggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none'; });
+if (overlay) overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.style.display = 'none'; });
+
+// Active nav on scroll
+const sections = document.querySelectorAll('.category-section[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
